@@ -8,8 +8,10 @@ import 'package:savyminds/models/error_response.dart';
 import 'package:savyminds/models/user_register_model.dart';
 import 'package:savyminds/providers/registration_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/func_new.dart';
+import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/utils/validator.dart';
 import 'package:savyminds/widgets/load_indicator.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -60,11 +62,8 @@ class _SignUpStep3State extends State<SignUpStep3>
     d.init(context);
     return PopScope(
       canPop: !isLoading,
-      child: Container(
+      child: SizedBox(
           height: d.getPhoneScreenHeight(),
-          color: bright == Brightness.dark
-              ? AppColors.kDarkScaffoldBackground
-              : AppColors.kScaffoldBackground,
           child: Stack(
             alignment: Alignment.topCenter,
             children: [
@@ -267,10 +266,9 @@ class _SignUpStep3State extends State<SignUpStep3>
               isLoading = false;
             });
             Fluttertoast.showToast(msg: "Activated successfully");
-            // Navigator.of(context).pushAndRemoveUntil(
-            //     PageRouteBuilder(
-            //         pageBuilder: (_, __, ___) => const PersonalizeShs()),
-            //s  ((route) => false));
+            if (context.mounted) {
+              nextScreen(context, const CustomBottomNav());
+            }
           } else {
             setState(() {
               isLoading = false;

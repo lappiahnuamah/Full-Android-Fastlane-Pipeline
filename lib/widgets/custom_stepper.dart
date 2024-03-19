@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:savyminds/constants.dart';
+import 'package:savyminds/screens/game/game/components/game_background.dart';
 
 enum HalloaStepState {
   indexed,
@@ -285,46 +286,37 @@ class StepperState extends State<HalloaStepper> with TickerProviderStateMixin {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      // appBar: AppBar(
-      //   toolbarHeight: d.pSH(150),
-      //   backgroundColor: AppColors.kScaffoldBackground,
-      //   automaticallyImplyLeading: false,
-      //   title: SizedBox(
-      //     width: d.pSW(200),
-      //     child: Row(
-      //       children: children,
-      //     ),
-      //   ),
-      //   centerTitle: true,
-      // ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              flex: 1,
-              child: SizedBox(
-                width: d.pSW(200),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                    children: children,
+      body: Stack(
+        children: [
+          const GameBackground(),
+          SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: SizedBox(
+                    width: d.pSW(200),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Row(
+                        children: children,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                Expanded(
+                  flex: 7,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      widget.steps[widget.currentStep].content,
+                    ],
+                  ),
+                ),
+              ],
             ),
-            Expanded(
-              flex: 7,
-              child: Stack(
-                alignment: Alignment.center,
-                // mainAxisAlignment: MainAxisAlignment.start,
-                // crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  widget.steps[widget.currentStep].content,
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

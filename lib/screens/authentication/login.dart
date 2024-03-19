@@ -16,8 +16,12 @@ import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/authentication/email_verification.dart';
 import 'package:savyminds/screens/authentication/forgot_password.dart';
+import 'package:savyminds/screens/authentication/login_options_screen.dart';
 import 'package:savyminds/screens/authentication/signup_screens/sign_up.dart';
+import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
+import 'package:savyminds/screens/game/game/components/game_background.dart';
 import 'package:savyminds/utils/func_new.dart';
+import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/utils/validator.dart';
 import 'package:savyminds/widgets/custom_button.dart';
 import 'package:savyminds/widgets/custom_textfeild_with_label.dart';
@@ -62,12 +66,13 @@ class _LoginState extends State<Login> {
                 : AppColors.kTopBarColor,
           ),
           child: PopScope(
-            canPop: true,
+            canPop: false,
             onPopInvoked: (popValue) => onWillPop(popValue),
             child: Scaffold(
               key: _scaffoldKey,
               body: Stack(
                 children: [
+                  const GameBackground(),
                   SafeArea(
                     child: SingleChildScrollView(
                       child: SizedBox(
@@ -260,18 +265,10 @@ class _LoginState extends State<Login> {
                                                         isLoading = false;
                                                       });
 
-                                                      // Navigator.of(context)
-                                                      //     .push(
-                                                      //   PageRouteBuilder(
-                                                      //       pageBuilder: (_, __,
-                                                      //               ___) =>
-                                                      //           BottomNavigation(
-                                                      //               uri: initialGlobalDeepLinkURI ??
-                                                      //                   HalloaDeepLinkHandler()
-                                                      //                       .initialUri ??
-                                                      //                   HalloaDeepLinkHandler()
-                                                      //                       .latestUri)),
-                                                      //);
+                                                      if (context.mounted) {
+                                                        nextScreen(context,
+                                                            const CustomBottomNav());
+                                                      }
                                                     }
                                                     /////////////////////////////////////////// Inactive Account ////////////////
                                                     else if (loginResponse
@@ -444,13 +441,12 @@ class _LoginState extends State<Login> {
                                 ],
                               ),
                             ),
+
+                            //
                             IconButton(
                                 onPressed: () {
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) =>
-                                  //             const UnathorisedNavigator()));
+                                  nextScreen(
+                                      context, const LoginOptionsScreen());
                                 },
                                 icon: Icon(
                                   Icons.arrow_back,
@@ -459,6 +455,8 @@ class _LoginState extends State<Login> {
                                       ? const Color(0xFFE4E4E4)
                                       : AppColors.kSecondaryColor,
                                 )),
+
+                            //
                             Positioned(
                               right: 0,
                               child: IconButton(
@@ -471,8 +469,8 @@ class _LoginState extends State<Login> {
                                         },
                                   icon: Icon(
                                     bright == Brightness.dark
-                                        ? Icons.light_mode
-                                        : Icons.dark_mode,
+                                        ? Icons.light_mode_outlined
+                                        : Icons.dark_mode_outlined,
                                     size: d.pSH(28),
                                     color: bright == Brightness.dark
                                         ? const Color(0xFFE4E4E4)

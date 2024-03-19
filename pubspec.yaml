@@ -58,6 +58,7 @@ dependencies:
   libphonenumber_plugin: ^0.3.3
   collection: ^1.18.0
   equatable: ^2.0.5
+  firebase_core: ^2.27.0
 
 dev_dependencies:
   flutter_test:
@@ -86,6 +87,7 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/audio/
+    - assets/flags/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

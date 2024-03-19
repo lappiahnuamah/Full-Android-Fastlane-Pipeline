@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
@@ -14,9 +14,13 @@ import 'package:savyminds/functions/games/game_function.dart';
 import 'package:savyminds/models/auth/app_user.dart';
 import 'package:savyminds/providers/dark_theme_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
-import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/resources/app_images.dart';
+import 'package:savyminds/screens/authentication/login_options_screen.dart';
+import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
+import 'package:savyminds/screens/game/game/components/game_background.dart';
 import 'package:savyminds/utils/cache/save_secure.dart';
 import 'package:savyminds/utils/enums/auth_eums.dart';
+import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/utils/shared_pref_utils.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -45,60 +49,49 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Brightness bright = Theme.of(context).brightness;
     SharedPreferenceUtils.init();
     d.init(context);
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle(
-          statusBarColor: bright == Brightness.dark
-              ? AppColors.kDarkTopBarColor
-              : AppColors.kScaffoldBackground,
-        ),
-        child: Scaffold(
-          body: SafeArea(
-              child: Stack(
-            children: [
-              /////////////////////////////////////////
-              /////////////// TERATECK SOLUTIONS ////////////////
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: EdgeInsets.all(d.pSH(10.0)),
-                  child: Text(
-                    "®Terateck Solutions",
-                    style: TextStyle(fontSize: d.pSH(17)),
-                  ),
-                ),
+    return Scaffold(
+      body: Stack(
+        children: [
+          const GameBackground(),
+          /////////////////////////////////////////
+          /////////////// TERATECK SOLUTIONS ////////////////
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.all(d.pSH(10.0)),
+              child: Text(
+                "®Terateck Solutions",
+                style: TextStyle(fontSize: d.pSH(17)),
               ),
-              /////////////////////////////////////////®Terateck Solutions
-              /////////////// APP LOGO ////////////////
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/images/hc_logo.png",
-                      height: d.pSH(150),
-                      width: d.pSH(150),
-                      fit: BoxFit.cover,
-                    ),
-                    SizedBox(
-                      height: d.pSH(15),
-                    ),
-                    Text(
-                      kAppName,
-                      style: TextStyle(
-                          fontSize: d.pSH(25), fontWeight: FontWeight.w600),
-                    ),
-                    SizedBox(
-                      height: d.pSH(50),
-                    )
-                  ],
+            ),
+          ),
+          /////////////////////////////////////////®Terateck Solutions
+          /////////////// APP LOGO ////////////////
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(AppImages.gameLogoSvg),
+                SvgPicture.asset(
+                  AppImages.quizWhizSvg,
+                  height: d.pSH(50),
                 ),
-              ),
-            ],
-          )),
-        ));
+                const Text(
+                  'Think you are smart?',
+                  style: TextStyle(
+                      fontFamily: 'Architects_Daughter',
+                      fontWeight: FontWeight.w300,
+                      letterSpacing: 1.8,
+                      height: 1.5),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
 /////////////
@@ -131,16 +124,10 @@ class _SplashScreenState extends State<SplashScreen> {
           loadAndSendUserHome(context, allValues);
         }
       } else {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => const UnathorisedNavigator()),
-        // );
+        nextScreen(context, const LoginOptionsScreen());
       }
     } catch (e) {
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => const UnathorisedNavigator()),
-      // );
+      nextScreen(context, const LoginOptionsScreen());
     }
   }
 
@@ -156,14 +143,9 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     /////////////////// Navigate to HomePage////////////
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //       builder: (context) => BottomNavigation(
-    //           uri: initialGlobalDeepLinkURI ??
-    //               HalloaDeepLinkHandler().initialUri ??
-    //               HalloaDeepLinkHandler().latestUri)),
-    // );
+    if (context.mounted) {
+      nextScreen(context, const CustomBottomNav());
+    }
   }
 
   getNewApiAccessToken(Map<String, String> allValues) async {
@@ -200,29 +182,22 @@ class _SplashScreenState extends State<SplashScreen> {
           }
 
           /////////////////// Navigate to HomePage////////////
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //       builder: (context) => BottomNavigation(
-          //           uri: initialGlobalDeepLinkURI ??
-          //               HalloaDeepLinkHandler().initialUri ??
-          //               HalloaDeepLinkHandler().latestUri)),
-          // );
+          if (context.mounted) {
+            nextScreen(context, const CustomBottomNav());
+          }
         }
       } else {
         clearStorageData();
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => const UnathorisedNavigator()),
-        // );
+        if (context.mounted) {
+          nextScreen(context, const LoginOptionsScreen());
+        }
         Fluttertoast.showToast(msg: 'Session expired');
       }
     } catch (e) {
       clearStorageData();
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => const UnathorisedNavigator()),
-      // );
+      if (context.mounted) {
+        nextScreen(context, const LoginOptionsScreen());
+      }
       Fluttertoast.showToast(msg: 'Session expired');
     }
   }
@@ -241,7 +216,7 @@ class _SplashScreenState extends State<SplashScreen> {
         ],
         clientId: Platform.isAndroid
             ? null
-            : '1011318011254-pmvib2hippl2rvpla1b8i10uhcn6jvru.apps.googleusercontent.com',
+            : '642728101123-8j74rq7lvbm20ok30f7j1us977sdo93n.apps.googleusercontent.com',
       );
       final GoogleSignInAccount? googleSignInAccount =
           await googleSignIn.signInSilently();
@@ -262,30 +237,23 @@ class _SplashScreenState extends State<SplashScreen> {
           }
 
           /////////////////// Navigate to HomePage////////////
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //       builder: (context) => BottomNavigation(
-          //           uri: initialGlobalDeepLinkURI ??
-          //               HalloaDeepLinkHandler().initialUri ??
-          //               HalloaDeepLinkHandler().latestUri)),
-          // );
+          if (context.mounted) {
+            nextScreen(context, const CustomBottomNav());
+          }
         } else {
           clearStorageData();
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //       builder: (context) => const UnathorisedNavigator()),
-          // );
+          if (context.mounted) {
+            nextScreen(context, const LoginOptionsScreen());
+            Fluttertoast.showToast(msg: 'Session expired');
+          }
           Fluttertoast.showToast(msg: 'Session expired');
         }
       } else {
         clearStorageData();
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => const UnathorisedNavigator()),
-        // );
-        Fluttertoast.showToast(msg: 'Session expired');
+        if (context.mounted) {
+          nextScreen(context, const LoginOptionsScreen());
+          Fluttertoast.showToast(msg: 'Session expired');
+        }
       }
     }
 

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "642728101123",
+    "project_id": "savyminds-c4f53",
+    "storage_bucket": "savyminds-c4f53.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:642728101123:android:1ba5a595ee796655a65536",
+        "android_client_info": {
+          "package_name": "com.terateck.games.savyminds"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaP1V39X9-KDPLWOOhAI2zEUR3EDqoiz4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

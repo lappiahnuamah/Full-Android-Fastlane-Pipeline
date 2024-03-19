@@ -60,11 +60,8 @@ class _SignUpStep2State extends State<SignUpStep2> {
 
     return PopScope(
       canPop: !isLoading,
-      child: Container(
+      child: SizedBox(
         height: d.getPhoneScreenHeight(),
-        color: bright == Brightness.dark
-            ? AppColors.kDarkScaffoldBackground
-            : AppColors.kScaffoldBackground,
         child: SafeArea(
           child: SizedBox(
             child: Stack(

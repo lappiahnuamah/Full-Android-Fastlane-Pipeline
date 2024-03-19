@@ -1,7 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:provider/provider.dart';
+import 'package:savyminds/providers/appsocket_provider.dart';
+import 'package:savyminds/providers/dark_theme_provider.dart';
+import 'package:savyminds/providers/game_provider.dart';
+import 'package:savyminds/providers/registration_provider.dart';
+import 'package:savyminds/providers/user_details_provider.dart';
+import 'package:savyminds/screens/authentication/splashscreen.dart';
+import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
+import 'package:savyminds/utils/theme_manager.dart';
+import 'firebase_options.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await SharedPreferencesHelper().init();
+
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => UserDetailsProvider()),
+    ChangeNotifierProvider(create: (_) => RegistrationProvider()),
+    ChangeNotifierProvider(create: (_) => DarkThemeProvider()),
+    ChangeNotifierProvider(create: (_) => GameProvider()),
+    ChangeNotifierProvider(create: (_) => GameWebSocket())
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -9,61 +34,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Savy Minds',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
+    return Consumer<DarkThemeProvider>(
+        builder: (BuildContext context, value, child) {
+      return OverlaySupport.global(
+          child: MaterialApp(
+        title: 'Savy Minds',
+        theme: CustomTheme().lightTheme,
+        darkTheme: CustomTheme().darkTheme,
+        themeMode: value.theme == 0
+            ? ThemeMode.system
+            : value.theme == 2
+                ? ThemeMode.dark
+                : ThemeMode.light,
+        debugShowCheckedModeBanner: false,
+        home: const SplashScreen(),
+      ));
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
   }
 }

@@ -1,4 +1,4 @@
-package com.terateck.games.savyminds.savyminds;
+package com.terateck.games.savyminds;
 
 import io.flutter.embedding.android.FlutterActivity;
 

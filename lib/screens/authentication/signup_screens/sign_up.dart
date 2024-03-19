@@ -74,7 +74,7 @@ class _SignUpState extends State<SignUp> {
                       ? HalloaStepState.complete
                       : HalloaStepState.disabled,
             ),
-      
+
             ///Second HalloaStep
             ///
             /// Handles the OTP entry
@@ -89,7 +89,7 @@ class _SignUpState extends State<SignUp> {
                       ? HalloaStepState.complete
                       : HalloaStepState.disabled,
             ),
-      
+
             ///Third HalloaStep
             ///
             /// Handles the scanning of ID Card

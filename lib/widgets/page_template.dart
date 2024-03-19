@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/screens/game/game/components/game_background.dart';
 import 'package:savyminds/utils/route_behaviour.dart';
 import 'package:savyminds/widgets/nav_btn_w.dart';
 import 'package:savyminds/widgets/twin_text_wn.dart';
@@ -136,14 +137,9 @@ class _PageTemplateState extends State<PageTemplate> {
             ),
             child: Stack(
               children: [
+                const GameBackground(),
                 Container(
                   height: size.height,
-                  decoration: BoxDecoration(
-                      color: bright == Brightness.dark
-                          ? widget.darkBackgroundColor ??
-                              AppColors.kDarkScaffoldBackground
-                          : widget.lightBackgroundColor ??
-                              AppColors.kScaffoldBackground),
                   foregroundDecoration: widget.foreGroundDecoration,
                   child: Column(
                     children: [

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -54,137 +52,125 @@ class _SignUpStep1State extends State<SignUpStep1> {
     final userRegister =
         Provider.of<RegistrationProvider>(context, listen: false);
     UserRegisterModel userInfo = userRegister.getUser();
-    // Size size = MediaQuery.of(context).size;
 
     d.init(context);
     return Container(
-      color: bright == Brightness.dark
-          ? AppColors.kDarkScaffoldBackground
-          : AppColors.kScaffoldBackground,
       padding:
           EdgeInsets.only(left: d.pSW(25), right: d.pSW(25), top: d.pSH(4)),
       child: Form(
         key: _firstSignUpFormKey,
         child: Scaffold(
-          body: SingleChildScrollView(
-            child: SizedBox(
-              height: Platform.isIOS
-                  ? d.getPhoneScreenHeight() - d.pSH(165)
-                  : d.getPhoneScreenHeight() - d.pSH(135),
-              child: Column(
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: Align(
-                      child: SingleChildScrollView(
-                        child:
-                            Column(mainAxisSize: MainAxisSize.max, children: [
-                          SizedBox(
-                            height: d.pSH(50),
-                          ),
-                          /////////////////////////////////////////////////////////
-                          //////////////(- Firstname textfeild -)/////////////////
-                          CustomTextFieldWithLabel(
+          backgroundColor: Colors.transparent,
+          body: SizedBox(
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: Align(
+                    child: SingleChildScrollView(
+                      child: Column(mainAxisSize: MainAxisSize.max, children: [
+                        SizedBox(
+                          height: d.pSH(50),
+                        ),
+                        /////////////////////////////////////////////////////////
+                        //////////////(- Firstname textfeild -)/////////////////
+                        CustomTextFieldWithLabel(
+                          enabled: enabled,
+                          initialValue: userInfo.fullname,
+                          controller: fullNameController,
+                          labelText: 'Full name',
+                          hintText: "Full name",
+                          labelStyle: TextStyle(color: getColor(name)),
+                          prefixIcon: Icons.edit_outlined,
+                          //(Validation)//
+                          validator: (value) =>
+                              authValidate.validateFullName(value),
+
+                          onSaved: (value) {
+                            fullNameController.text = value!;
+                          },
+                        ),
+                        SizedBox(
+                          height: d.pSH(15),
+                        ),
+                        ////////////////////////////////////////////////////
+                        //////////////(- Middle textfeild -)/////////////////
+                        CustomTextFieldWithLabel(
                             enabled: enabled,
-                            initialValue: userInfo.fullname,
-                            controller: fullNameController,
-                            labelText: 'Full name',
-                            hintText: "Full name",
-                            labelStyle: TextStyle(color: getColor(name)),
-                            prefixIcon: Icons.edit_outlined,
-                            //(Validation)//
-                            validator: (value) =>
-                                authValidate.validateFullName(value),
-
-                            onSaved: (value) {
-                              fullNameController.text = value!;
-                            },
-                          ),
-                          SizedBox(
-                            height: d.pSH(15),
-                          ),
-                          ////////////////////////////////////////////////////
-                          //////////////(- Middle textfeild -)/////////////////
-                          CustomTextFieldWithLabel(
-                              enabled: enabled,
-                              initialValue: userInfo.username,
-                              controller: usernameController,
-                              labelStyle:
-                                  TextStyle(color: getColor(usernameState)),
-                              labelText: usernameState == 0
-                                  ? "Username not available"
-                                  : 'Username',
-                              hintText: "Username",
-                              prefixIcon: Icons.person_outline_rounded,
-
-                              //(Validation)//
-                              validator: (value) =>
-                                  authValidate.validateusername(value),
-                              onSaved: (value) {
-                                usernameController.text = value!;
-                              }),
-                          SizedBox(
-                            height: d.pSH(15),
-                          ),
-
-                          ///////////////////////////////////////////////////////////
-                          //////////////(- Phone number textfeild -)/////////////////
-                          CustomIntlTextFeild(
-                            enabled: enabled,
-                            initialValue: userInfo.phoneNumber,
-                            controller: numberController,
+                            initialValue: userInfo.username,
+                            controller: usernameController,
                             labelStyle:
-                                TextStyle(color: getColor(phoneNumberSate)),
-                            labelText: phoneNumberSate == 0
-                                ? "Phone number not available"
-                                : 'Phone number',
-                            counterText: '',
-                            onChanged: (text) {},
-                            onSaved: (phone) {
-                              phoneNumber = phone;
-                            },
-                          ),
-                          SizedBox(
-                            height: d.pSH(15),
-                          ),
+                                TextStyle(color: getColor(usernameState)),
+                            labelText: usernameState == 0
+                                ? "Username not available"
+                                : 'Username',
+                            hintText: "Username",
+                            prefixIcon: Icons.person_outline_rounded,
 
-                          /////////////////////////////////////////////////////
-                          //////////////(- Email textfeild -)/////////////////
-                          CustomTextFieldWithLabel(
-                            enabled: enabled,
-                            initialValue: userInfo.email,
-                            controller: emailController,
-                            labelText: emailState == 0
-                                ? "Email not available"
-                                : 'Email',
-                            hintText: "Email",
-                            labelStyle: TextStyle(color: getColor(emailState)),
-                            prefixIcon: Icons.email_outlined,
-                            keyboardType: TextInputType.emailAddress,
                             //(Validation)//
                             validator: (value) =>
-                                authValidate.validateEmail(value),
+                                authValidate.validateusername(value),
                             onSaved: (value) {
-                              emailController.text = value!;
-                            },
-                          ),
+                              usernameController.text = value!;
+                            }),
+                        SizedBox(
+                          height: d.pSH(15),
+                        ),
 
-                          SizedBox(
-                            height: d.pSH(25),
-                          ),
-                        ]),
-                      ),
+                        ///////////////////////////////////////////////////////////
+                        //////////////(- Phone number textfeild -)/////////////////
+                        CustomIntlTextFeild(
+                          enabled: enabled,
+                          initialValue: userInfo.phoneNumber,
+                          controller: numberController,
+                          labelStyle:
+                              TextStyle(color: getColor(phoneNumberSate)),
+                          labelText: phoneNumberSate == 0
+                              ? "Phone number not available"
+                              : 'Phone number',
+                          counterText: '',
+                          onChanged: (text) {},
+                          onSaved: (phone) {
+                            phoneNumber = phone;
+                          },
+                        ),
+                        SizedBox(
+                          height: d.pSH(15),
+                        ),
+
+                        /////////////////////////////////////////////////////
+                        //////////////(- Email textfeild -)/////////////////
+                        CustomTextFieldWithLabel(
+                          enabled: enabled,
+                          initialValue: userInfo.email,
+                          controller: emailController,
+                          labelText:
+                              emailState == 0 ? "Email not available" : 'Email',
+                          hintText: "Email",
+                          labelStyle: TextStyle(color: getColor(emailState)),
+                          prefixIcon: Icons.email_outlined,
+                          keyboardType: TextInputType.emailAddress,
+                          //(Validation)//
+                          validator: (value) =>
+                              authValidate.validateEmail(value),
+                          onSaved: (value) {
+                            emailController.text = value!;
+                          },
+                        ),
+                      ]),
                     ),
                   ),
-                  Expanded(
-                    flex: 2,
+                ),
+                Expanded(
+                  flex: 2,
+                  child: SingleChildScrollView(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ///////////////////////////////////////////////////
                         //////////////(- NEXT STEP Button -)/////////////////
-                        SizedBox(
+                        Container(
                           width: double.infinity,
+                          margin: EdgeInsets.symmetric(vertical: d.pSH(25)),
                           child: CustomButton(
                               enabled: enabled,
                               onTap: () async {
@@ -276,6 +262,8 @@ class _SignUpStep1State extends State<SignUpStep1> {
                               },
                               child: getWidget(state)),
                         ),
+                        SizedBox(height: d.pSH(10)),
+
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: ///////////////////////////////////////////////////////
@@ -316,8 +304,8 @@ class _SignUpStep1State extends State<SignUpStep1> {
                       ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
