@@ -1,9 +1,11 @@
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/categories/categories.dart';
 import 'package:savyminds/screens/contest/contest.dart';
+import 'package:savyminds/screens/game/game/components/game_background.dart';
 import 'package:savyminds/screens/profile/profile.dart';
 import 'package:savyminds/screens/records/records.dart';
 import 'package:savyminds/screens/solo_quest/solo_quest.dart';
@@ -23,22 +25,33 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
   @override
   void initState() {
     currentIndex = widget.currentIndex;
+    playMusic();
+
     super.initState();
+  }
+
+  void playMusic() async {
+    FlameAudio.bgm.initialize();
+    FlameAudio.bgm.play('game_intro.mp3', volume: 0.5);
   }
 
   @override
   Widget build(BuildContext context) {
-    return PageTemplate(
-        hasTopNav: false,
+    return Scaffold(
         bottomNavigationBar: bottomNavigationBar(),
-        child: IndexedStack(
-          index: currentIndex,
-          children: const [
-            Categories(),
-            SoloQuest(),
-            Contest(),
-            Records(),
-            Profile()
+        body: Stack(
+          children: [
+            const GameBackground(),
+            IndexedStack(
+              index: currentIndex,
+              children: const [
+                Categories(),
+                SoloQuest(),
+                Contest(),
+                Records(),
+                Profile()
+              ],
+            ),
           ],
         ));
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:savyminds/screens/game/players.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -10,8 +11,6 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Profile'),
-    );
+    return const PlayersSelect();
   }
 }
