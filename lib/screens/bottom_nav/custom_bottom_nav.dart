@@ -9,7 +9,6 @@ import 'package:savyminds/screens/game/game/components/game_background.dart';
 import 'package:savyminds/screens/profile/profile.dart';
 import 'package:savyminds/screens/records/records.dart';
 import 'package:savyminds/screens/solo_quest/solo_quest.dart';
-import 'package:savyminds/widgets/page_template.dart';
 
 class CustomBottomNav extends StatefulWidget {
   const CustomBottomNav({super.key, this.currentIndex = 0});
@@ -42,15 +41,17 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
         body: Stack(
           children: [
             const GameBackground(),
-            IndexedStack(
-              index: currentIndex,
-              children: const [
-                Categories(),
-                SoloQuest(),
-                Contest(),
-                Records(),
-                Profile()
-              ],
+            SafeArea(
+              child: IndexedStack(
+                index: currentIndex,
+                children: const [
+                  Categories(),
+                  SoloQuest(),
+                  Contest(),
+                  Records(),
+                  Profile()
+                ],
+              ),
             ),
           ],
         ));
