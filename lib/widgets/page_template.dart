@@ -225,7 +225,7 @@ class _PageTemplateState extends State<PageTemplate> {
                         child: MediaQuery.removePadding(
                             context: context,
                             removeTop: true,
-                            child: widget.child!),
+                            child: widget.child ?? Container()),
                       ))
                     ],
                   ),
@@ -288,7 +288,7 @@ class TopNoticeBarWState extends State<TopNoticeBarW> {
                 ),
                 Container(
                   width: size.width,
-                  color: widget.noticeBgColor ?? AppColors.kChatMeCardColor,
+                  color: widget.noticeBgColor ?? AppColors.kSecondaryColor,
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                         horizontal: d.pSW(

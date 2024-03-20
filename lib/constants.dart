@@ -71,7 +71,7 @@ const halloaGameSocketUrl =
     'wss://api.stage.linklounge.dev/ws/game-session/?token=';
 const halloaAppleRedirectUrl =
     "https://api.stage.linklounge.dev/accounts/apple/login/callback/";
-const halloaAppleClientId = "com.terateck.halloaOauth";
+const halloaAppleClientId = "com.terateck.halloaOauth";  //TODD:Change
 
 
 // // prod

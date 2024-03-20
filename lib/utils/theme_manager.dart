@@ -28,7 +28,7 @@ class CustomTheme {
         bodyMedium: TextStyle(),
       ).apply(
           displayColor: AppColors.kTextColor, bodyColor: AppColors.kTextColor),
-      fontFamily: 'Outfit');
+      fontFamily: 'Inter');
 
   ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
@@ -55,6 +55,6 @@ class CustomTheme {
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: AppColors.kPrimaryColor,
         foregroundColor: Colors.white),
-    fontFamily: 'Outfit',
+    fontFamily: 'Inter',
   );
 }
