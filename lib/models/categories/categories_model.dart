@@ -26,13 +26,18 @@ class CategoryModel extends Equatable {
       color: _parseColor(json['color']),
       noOfQuestion: json['no_of_questions'] ?? 0,
       icon: json['icon'] ?? "",
-      isLocked: json['is_locked'] ?? true,
+      isLocked: json['name'] == "Sports" ? true : json['is_locked'] ?? true,
     );
   }
 
   static Color _parseColor(String colorString) {
     try {
-      return Color(int.parse(colorString.replaceAll('#', ''), radix: 16));
+      final buffer = StringBuffer();
+      if (colorString.length == 6 || colorString.length == 7) {
+        buffer.write('ff');
+      }
+      buffer.write(colorString.replaceFirst('#', ''));
+      return Color(int.parse(buffer.toString(), radix: 16));
     } catch (e) {
       return AppColors.kPrimaryColor;
     }

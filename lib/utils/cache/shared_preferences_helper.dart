@@ -79,4 +79,10 @@ class SharedPreferencesHelper {
     String? data = _prefs?.getString(key);
     return json.decode(data!);
   }
+
+
+  // Clear cache
+ static clearCache(){
+    _prefs?.clear();
+  }
 }

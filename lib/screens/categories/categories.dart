@@ -23,7 +23,7 @@ class _CategoriesState extends State<Categories> {
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       getCategories();
-      CategoryFunctions().getFavoriteCategories(context: context);
+      //  CategoryFunctions().getFavoriteCategories(context: context);
     });
     super.initState();
   }
@@ -97,7 +97,10 @@ class _CategoriesState extends State<Categories> {
                                     (index) {
                                   final category = categoryProvider
                                       .favoriteCategories[index];
-                                  return CategoryCard(category: category);
+                                  return CategoryCard(
+                                    category: category,
+                                    index: index,
+                                  );
                                 }),
                               ]),
                           SizedBox(height: d.pSH(16)),
@@ -126,7 +129,10 @@ class _CategoriesState extends State<Categories> {
                                     (index) {
                                   final category =
                                       categoryProvider.categories[index];
-                                  return CategoryCard(category: category);
+                                  return CategoryCard(
+                                    category: category,
+                                    index: index,
+                                  );
                                 }),
                               ]),
                         ],

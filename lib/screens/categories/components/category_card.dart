@@ -6,8 +6,9 @@ import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class CategoryCard extends StatelessWidget {
-  const CategoryCard({super.key, required this.category});
+  const CategoryCard({super.key, required this.category, required this.index});
   final CategoryModel category;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,7 @@ class CategoryCard extends StatelessWidget {
               top: d.pSH(20),
               child: RotationTransition(
                 turns: const AlwaysStoppedAnimation(40 / 360),
-                child: SvgPicture.asset(
+                child: SvgPicture.network(
                   category.icon,
                   fit: BoxFit.cover,
                   height: d.pSH(130),
@@ -58,7 +59,7 @@ class CategoryCard extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SvgPicture.asset(
+                          SvgPicture.network(
                             category.icon,
                             fit: BoxFit.cover,
                           ),
@@ -67,6 +68,7 @@ class CategoryCard extends StatelessWidget {
                             label: category.name,
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
+                            textAlign: TextAlign.center,
                           )
                         ],
                       ),
@@ -106,6 +108,7 @@ class CategoryCard extends StatelessWidget {
                                         category.isLocked ? 'Unlock' : 'Play',
                                     color: Colors.white,
                                     fontSize: 12.5,
+                                    textAlign: TextAlign.center,
                                   )
                                 ],
                               ),
