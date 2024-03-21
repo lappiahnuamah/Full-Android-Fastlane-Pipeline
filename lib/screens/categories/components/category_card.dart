@@ -25,7 +25,8 @@ class CategoryCard extends StatelessWidget {
         child: Stack(
           children: [
             Container(
-              color: category.isLocked ? const Color(0xFF717582) : category.color,
+              color:
+                  category.isLocked ? const Color(0xFF717582) : category.color,
               width: double.infinity,
               height: double.maxFinite,
             ),
@@ -86,10 +87,8 @@ class CategoryCard extends StatelessWidget {
                                   vertical: d.pSH(3), horizontal: d.pSW(5)),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(d.pSH(5)),
-                                border: Border.all(
-                                    color:
-                                        const Color.fromARGB(255, 28, 10, 10),
-                                    width: 0.5),
+                                border:
+                                    Border.all(color: Colors.white, width: 0.5),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -103,7 +102,8 @@ class CategoryCard extends StatelessWidget {
                                   ),
                                   SizedBox(width: d.pSW(5)),
                                   CustomText(
-                                    label: category.isLocked ? 'Unlock' : 'Play',
+                                    label:
+                                        category.isLocked ? 'Unlock' : 'Play',
                                     color: Colors.white,
                                     fontSize: 12.5,
                                   )

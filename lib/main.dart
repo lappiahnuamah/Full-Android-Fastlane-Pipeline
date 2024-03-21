@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/providers/appsocket_provider.dart';
+import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/providers/dark_theme_provider.dart';
 import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/providers/registration_provider.dart';
@@ -25,7 +26,8 @@ void main() async {
     ChangeNotifierProvider(create: (_) => RegistrationProvider()),
     ChangeNotifierProvider(create: (_) => DarkThemeProvider()),
     ChangeNotifierProvider(create: (_) => GameProvider()),
-    ChangeNotifierProvider(create: (_) => GameWebSocket())
+    ChangeNotifierProvider(create: (_) => GameWebSocket()),
+    ChangeNotifierProvider(create: (_) => CategoryProvider())
   ], child: const MyApp()));
 }
 

@@ -21,7 +21,6 @@ import 'package:savyminds/screens/game/game/components/game_background.dart';
 import 'package:savyminds/utils/cache/save_secure.dart';
 import 'package:savyminds/utils/enums/auth_eums.dart';
 import 'package:savyminds/utils/next_screen.dart';
-import 'package:savyminds/utils/shared_pref_utils.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -49,7 +48,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SharedPreferenceUtils.init();
     d.init(context);
     return Scaffold(
       body: Stack(

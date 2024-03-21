@@ -18,15 +18,13 @@ class HttpResponseModel {
     count = json['count'];
     hasError = json['hasError'] ?? false;
     statusCode = 0;
-    next = json['next'] != null ? json['next'][0] : "";
+    next = json['next'] != null
+        ? (json['next'] is List)
+            ? json['next'][0]
+            : json['next']
+        : "";
     previous = json['previous'] != null ? json['previous'][0] : "";
-
-    if (json['results'] != null) {
-      results = <dynamic>[];
-      json['results'].forEach((v) {
-        results!.add(v);
-      });
-    }
+    results = json['results'] ?? [];
   }
 
   checkNextPreviousDataType(dynamic data) {

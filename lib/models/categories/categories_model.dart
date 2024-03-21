@@ -1,15 +1,16 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:savyminds/resources/app_colors.dart';
 
-class CategoryModel {
-  int id;
-  String name;
-  Color color;
-  int noOfQuestion;
-  String icon;
-  bool isLocked;
+class CategoryModel extends Equatable {
+  final int id;
+  final String name;
+  final Color color;
+  final int noOfQuestion;
+  final String icon;
+  final bool isLocked;
 
-  CategoryModel({
+  const CategoryModel({
     required this.id,
     required this.name,
     required this.color,
@@ -36,4 +37,10 @@ class CategoryModel {
       return AppColors.kPrimaryColor;
     }
   }
+
+  @override
+  List<Object?> get props => [id, name, color, noOfQuestion, icon, isLocked];
+
+  @override
+  bool get stringify => true; // Enable toString() method for better debugging
 }

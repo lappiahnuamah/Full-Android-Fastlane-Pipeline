@@ -10,9 +10,9 @@ import 'package:savyminds/models/games/question_model.dart';
 import 'package:savyminds/models/games/start_game.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/game/game/multi_game.dart/multi_question_page.dart';
+import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/enums/game_enums.dart';
 import 'package:savyminds/utils/next_screen.dart';
-import 'package:savyminds/utils/shared_pref_utils.dart';
 import 'package:savyminds/widgets/default_snackbar.dart';
 import 'package:savyminds/widgets/two_images.dart';
 import '../models/games/game_session.dart';
@@ -312,36 +312,37 @@ class GameProvider extends ChangeNotifier {
 /////////////////
 ///// Cache data
   cacheTotalPoints() {
-    SharedPreferenceUtils()
+    SharedPreferencesHelper()
         .setInt(key: 'totalPoints', value: gameStreaks.totalPoints);
   }
 
   cacheGoldenBadges() {
-    SharedPreferenceUtils().setInt(key: 'goldenChances', value: goldenChances);
+    SharedPreferencesHelper()
+        .setInt(key: 'goldenChances', value: goldenChances);
   }
 
   cacheFiftyfifty() async {
-    SharedPreferenceUtils().setInt(key: 'fiftyFifty', value: fiftyFifty);
+    SharedPreferencesHelper().setInt(key: 'fiftyFifty', value: fiftyFifty);
   }
 
   cacheNextUrl() async {
-    SharedPreferenceUtils().setString(key: 'nextUrl', value: nextUrl);
+    SharedPreferencesHelper().setString(key: 'nextUrl', value: nextUrl);
   }
 
   cacheLongestAnswerStreaks() {
-    final int oldStreak = SharedPreferenceUtils().getInt('longestStreaks') ?? 0;
+    final int oldStreak = SharedPreferencesHelper.getInt('longestStreaks') ?? 0;
     if (longestStreaks > oldStreak) {
-      SharedPreferenceUtils()
+      SharedPreferencesHelper()
           .setInt(key: 'longestStreaks', value: longestStreaks);
     }
   }
 
   loadCachedData() {
-    goldenChances = SharedPreferenceUtils().getInt('goldenChances') ?? 0;
-    fiftyFifty = SharedPreferenceUtils().getInt('fiftyFifty') ?? 3;
+    goldenChances = SharedPreferencesHelper.getInt('goldenChances') ?? 0;
+    fiftyFifty = SharedPreferencesHelper.getInt('fiftyFifty') ?? 3;
     gameStreaks.totalPoints =
-        SharedPreferenceUtils().getInt('totalPoints') ?? 0;
-    nextUrl = SharedPreferenceUtils().getString('nextUrl') ?? '';
+        SharedPreferencesHelper.getInt('totalPoints') ?? 0;
+    nextUrl = SharedPreferencesHelper.getString('nextUrl') ?? '';
     notifyListeners();
   }
 
