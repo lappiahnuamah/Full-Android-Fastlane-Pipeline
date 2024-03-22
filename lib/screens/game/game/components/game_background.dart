@@ -18,7 +18,7 @@ class GameBackground extends StatelessWidget {
               : null,
         ),
         Opacity(
-          opacity: 0.65,
+          opacity: 0.5,
           child: Container(
             width: double.infinity,
             height: double.maxFinite,

@@ -36,7 +36,7 @@ class AppColors {
   static const kGrey200 = Color(0xFFE5E7EB);
 
   static const kGrey900 = Color(0xFF111827);
-static const hintTextBlack = Color(0xFF525252);
+  static const hintTextBlack = Color(0xFF525252);
 
   static const List<Color> kReplyOnMeToGradient = [
     Color(0xFFC2EFFE),
@@ -68,6 +68,11 @@ static const hintTextBlack = Color(0xFF525252);
   static const kDarkAppBarColor = Color(0xFF010101);
   static const kDarkCardColor = Color(0xFF080808);
   static const kDarkBottomNavBarColor = Color(0xFF010101);
+
+////
+  ///
+  static const borderPrimary = Color(0xFF066FAA);
+  static const borderAccent = Color(0xFFAE3A4F);
 
   static const List<Color> kDarkHomeGradient = [
     Color(0xFF1A1F25),
