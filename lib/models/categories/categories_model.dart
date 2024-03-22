@@ -26,7 +26,7 @@ class CategoryModel extends Equatable {
       color: _parseColor(json['color']),
       noOfQuestion: json['no_of_questions'] ?? 0,
       icon: json['icon'] ?? "",
-      isLocked: json['name'] == "Sports" ? true : json['is_locked'] ?? true,
+      isLocked: json['is_locked'] ?? true,
     );
   }
 
@@ -47,5 +47,6 @@ class CategoryModel extends Equatable {
   List<Object?> get props => [id, name, color, noOfQuestion, icon, isLocked];
 
   @override
-  bool get stringify => true; // Enable toString() method for better debugging
+  bool get stringify =>
+      true; // Enable toString() method for better debugging  "🇬🇭 +233(0) "
 }
