@@ -8,116 +8,142 @@ import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class QuestCard extends StatelessWidget {
-  const QuestCard({super.key, required this.quest, this.isMultiCard = false});
+  const QuestCard(
+      {super.key,
+      required this.quest,
+      this.isMultiCard = false,
+      this.isDailyTraining = false});
   final QuestModel quest;
   final bool isMultiCard;
+  final bool isDailyTraining;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     return Stack(
       children: [
-        Transform(
-            alignment: Alignment.center,
-            transform: Matrix4.identity()
-              ..setEntry(3, 2, 0.002)
-              ..rotateX(0.4)
-              ..rotateY(0.05),
-            child: Container(
-              width: double.infinity,
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              padding: EdgeInsets.fromLTRB(
-                  d.pSW(5), d.pSH(10), d.pSH(10), d.pSH(10)),
-              margin: EdgeInsets.only(left: d.pSH(5), right: d.pSW(8)),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.75),
-                borderRadius: BorderRadius.circular(d.pSH(5)),
-                border: Border.all(
-                  color: quest.isLocked
-                      ? const Color(0xFF717582)
-                      : isMultiCard
-                          ? AppColors.borderAccent
-                          : AppColors.borderPrimary,
-                ),
+        SvgPicture.asset(
+          quest.isLocked
+              ? AppImages.darkQuestCardSvg
+              : isMultiCard
+                  ? AppImages.redQuestCardSvg
+                  : AppImages.blueQuestCardSvg,
+          fit: BoxFit.fill,
+          width: double.infinity,
+          height: d.pSH(74),
+        ),
+        Container(
+          width: double.infinity,
+          padding:
+              EdgeInsets.fromLTRB(d.pSW(5), d.pSH(10), d.pSH(10), d.pSH(10)),
+          margin: EdgeInsets.only(left: d.pSH(5), right: d.pSW(8)),
+          child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Opacity(
+              opacity: quest.isLocked ? 1 : 0,
+              child: SvgPicture.asset(
+                AppImages.closedLock,
+                fit: BoxFit.cover,
+                colorFilter:
+                    const ColorFilter.mode(Color(0xFF717582), BlendMode.srcIn),
               ),
-              child:
-                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Opacity(
-                  opacity: quest.isLocked ? 1 : 0,
-                  child: SvgPicture.asset(
-                    AppImages.closedLock,
-                    fit: BoxFit.cover,
-                    colorFilter: const ColorFilter.mode(
-                        Color(0xFF717582), BlendMode.srcIn),
+            ),
+            SizedBox(
+              width: d.pSW(7),
+            ),
+            //card
+            Expanded(
+              child: Row(
+                children: [
+                  SizedBox(
+                    height: d.pSH(51),
+                    width: d.pSH(59),
+                    child: Stack(
+                      children: [
+                        SvgPicture.asset(
+                          "assets/icons/quest_icon_container.svg",
+                          fit: BoxFit.fill,
+                          colorFilter: ColorFilter.mode(
+                            quest.isLocked
+                                ? const Color(0xFF717582)
+                                : isMultiCard
+                                    ? AppColors.borderAccent
+                                    : AppColors.borderPrimary,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                        Align(
+                          child: SvgPicture.asset(quest.icon),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: d.pSW(7),
-                ),
-                //card
-                Expanded(
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        height: d.pSH(55),
-                        width: d.pSH(55),
-                      ),
-                      SizedBox(
-                        width: d.pSW(25),
-                      ),
-                      Expanded(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  SizedBox(
+                    width: d.pSW(25),
+                  ),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
                           children: [
-                            CustomText(
-                              label: quest.name,
-                              fontWeight: FontWeight.w600,
+                            Expanded(
+                              child: CustomText(
+                                label: quest.name,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                            SizedBox(height: d.pSH(5)),
-                            CustomText(
-                              label: quest.description,
-                              fontWeight: FontWeight.w300,
-                              fontSize: getFontSize(12, size),
-                            ),
+                            if (isDailyTraining)
+                              InkWell(
+                                onTap: () {},
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: d.pSH(2), horizontal: d.pSW(4)),
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.circular(d.pSH(3)),
+                                    border: Border.all(
+                                        color: AppColors.borderPrimary,
+                                        width: 0.5),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SvgPicture.asset(
+                                        AppImages.playCategoryIcon,
+                                        fit: BoxFit.cover,
+                                        height: d.pSH(9),
+                                        colorFilter: const ColorFilter.mode(
+                                            AppColors.borderPrimary,
+                                            BlendMode.srcIn),
+                                      ),
+                                      SizedBox(width: d.pSW(5)),
+                                      const CustomText(
+                                        label: 'Start',
+                                        color: AppColors.borderPrimary,
+                                        fontSize: 10.5,
+                                        textAlign: TextAlign.center,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
                           ],
                         ),
-                      ),
-                    ],
+                        SizedBox(height: d.pSH(5)),
+                        CustomText(
+                          label: quest.description,
+                          fontWeight: FontWeight.w300,
+                          fontSize: getFontSize(12, size),
+                        ),
+                      ],
+                    ),
                   ),
-                )
-              ]),
-            )),
-
-        //
-        Positioned(
-          top: d.pSH(10),
-          left: d.pSW(26),
-          child: SizedBox(
-            height: d.pSH(51),
-            width: d.pSH(59),
-            child: Stack(
-              children: [
-                SvgPicture.asset(
-                  "assets/icons/quest_icon_container.svg",
-                  fit: BoxFit.fill,
-                  colorFilter: ColorFilter.mode(
-                    quest.isLocked
-                        ? const Color(0xFF717582)
-                        : isMultiCard
-                            ? AppColors.borderAccent
-                            : AppColors.borderPrimary,
-                    BlendMode.srcIn,
-                  ),
-                ),
-                Align(
-                  child: SvgPicture.asset(quest.icon),
-                )
-              ],
-            ),
-          ),
-        )
+                ],
+              ),
+            )
+          ]),
+        ),
       ],
     );
   }

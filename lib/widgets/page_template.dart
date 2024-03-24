@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/game/game/components/game_background.dart';
+import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/route_behaviour.dart';
 import 'package:savyminds/widgets/nav_btn_w.dart';
 import 'package:savyminds/widgets/twin_text_wn.dart';
@@ -41,7 +42,7 @@ class PageTemplate extends StatefulWidget {
       this.foreGroundDecoration,
       this.showBackBtn = true,
       this.showTopSpace = true,
-      this.topNavHeight = 80,
+      this.topNavHeight = 40,
       this.topNavIconColor,
       this.backIcon = Icons.arrow_back_rounded,
       this.pageTitleColor = Colors.black,
@@ -138,96 +139,96 @@ class _PageTemplateState extends State<PageTemplate> {
             child: Stack(
               children: [
                 const GameBackground(),
-                Container(
-                  height: size.height,
-                  foregroundDecoration: widget.foreGroundDecoration,
-                  child: Column(
-                    children: [
-                      widget.hasNotice
-                          ? widget.topNoticeWidget ?? const SizedBox()
-                          : const SizedBox(),
-                      widget.hasTopNav
-                          ? Container(
-                              color: widget.topNavColor ??
-                                  (bright == Brightness.dark
-                                      ? AppColors.kDarkAppBarColor
-                                      : AppColors.kWhiteAppBarColor),
-                              height: d.pSH(widget.topNavHeight),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  widget.showBackBtn
-                                      ? NavBtn(
-                                          iconColor: widget.topNavIconColor ??
-                                              (bright == Brightness.dark
-                                                  ? Colors.white
-                                                  : AppColors.kDarkCardColor),
-                                          onTap: widget.onBackPressed != null
-                                              ? widget.onBackPressed!
-                                              : () {
-                                                  // print('I want to go back.');
-                                                  Navigator.pop(context);
-                                                },
-                                          icon: widget.backIcon,
-                                        )
-                                      : const SizedBox.shrink(),
-
-//                         icon: backIcon,
-//                       ),
-
-                                  SizedBox(
-                                    height: d.pSH(12),
-                                  ),
-
-                                  Expanded(
-                                      child: Padding(
-                                    padding: EdgeInsets.only(
-                                      top: size.height * 0.03 /*24.0*/,
-                                    ),
-                                    child: widget.isWidgetTitle ?? false
-                                        ? widget.widgetTitle
-                                        : Text(
-                                            widget.pageTitle,
-                                            style: widget.pageTitleStyle ??
-                                                TextStyle(
-                                                    fontSize: d.pSW(
-                                                        14) /*getScaledDimension(16, Palette.kStandardWidth, size.width)*/,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: bright ==
-                                                            Brightness.dark
+                SafeArea(
+                  child: Container(
+                    foregroundDecoration: widget.foreGroundDecoration,
+                    child: Column(
+                      children: [
+                        widget.hasNotice
+                            ? widget.topNoticeWidget ?? const SizedBox()
+                            : const SizedBox(),
+                        widget.hasTopNav
+                            ? SizedBox(
+                                height: d.pSH(widget.topNavHeight),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    widget.showBackBtn
+                                        ? InkWell(
+                                            onTap: widget.onBackPressed != null
+                                                ? widget.onBackPressed!
+                                                : () {
+                                                    // print('I want to go back.');
+                                                    Navigator.pop(context);
+                                                  },
+                                            child: Padding(
+                                              padding: EdgeInsets.only(
+                                                  left: size.width * 0.04,
+                                                  right: size.width * 0.01),
+                                              child: Icon(
+                                                widget.backIcon,
+                                                color: widget.topNavIconColor ??
+                                                    (bright == Brightness.dark
                                                         ? Colors.white
                                                         : AppColors
                                                             .kDarkCardColor),
-                                          ),
-                                  )),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        top: size.height * 0.03 /*24.0*/,
-                                        right: size.width * 0.04),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: widget.navActionItems ?? [],
+                                                size: size.height * 0.03 /*24*/,
+                                              ),
+                                            ),
+                                          )
+                                        : const SizedBox(),
+                                    SizedBox(
+                                      width: d.pSW(8),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : const SizedBox.shrink(),
-                      !widget.hasTopNav && widget.showTopSpace
-                          ? SizedBox(
-                              height: d.pSH(widget.topSpace),
-                            )
-                          : const SizedBox.shrink(),
-                      Expanded(
-                          child: ScrollConfiguration(
-                        behavior: RouteBehaviour(),
-                        child: MediaQuery.removePadding(
-                            context: context,
-                            removeTop: true,
-                            child: widget.child ?? Container()),
-                      ))
-                    ],
+                                    Expanded(
+                                        child: Padding(
+                                      padding: const EdgeInsets.only(top: 0),
+                                      child: widget.isWidgetTitle ?? false
+                                          ? widget.widgetTitle
+                                          : Text(
+                                              widget.pageTitle,
+                                              style: widget.pageTitleStyle ??
+                                                  TextStyle(
+                                                      fontSize:
+                                                          getFontSize(18, size),
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: bright ==
+                                                              Brightness.dark
+                                                          ? Colors.white
+                                                          : AppColors
+                                                              .kDarkCardColor),
+                                            ),
+                                    )),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          top: size.height * 0.03 /*24.0*/,
+                                          right: size.width * 0.04),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: widget.navActionItems ?? [],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : const SizedBox.shrink(),
+                        !widget.hasTopNav && widget.showTopSpace
+                            ? SizedBox(
+                                height: d.pSH(widget.topSpace),
+                              )
+                            : const SizedBox.shrink(),
+                        Expanded(
+                            child: ScrollConfiguration(
+                          behavior: RouteBehaviour(),
+                          child: MediaQuery.removePadding(
+                              context: context,
+                              removeTop: true,
+                              child: widget.child ?? Container()),
+                        ))
+                      ],
+                    ),
                   ),
                 ),
                 widget.showRefreshWidget

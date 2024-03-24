@@ -36,7 +36,7 @@ class _ContestState extends State<Contest> {
         ...List.generate(
           6,
           (index) => Padding(
-            padding: EdgeInsets.only(bottom: d.pSH(10)),
+            padding: EdgeInsets.only(bottom: d.pSH(15)),
             child: QuestCard(
               isMultiCard: true,
               quest: QuestModel(

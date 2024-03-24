@@ -57,14 +57,14 @@ class _SoloQuestState extends State<SoloQuest> {
                 ),
                 SizedBox(height: d.pSH(16)),
                 const QuestCard(
-                  quest: QuestModel(
+                    quest: QuestModel(
                       id: 1,
-                      name: 'Learner Mode',
-                      description:
-                          'Feel free to not know but give yourself a chance',
-                      icon: "assets/icons/learner.svg",
-                      isLocked: false),
-                ),
+                      name: 'Daily Training',
+                      description: 'Exercise your brain one day at a time',
+                      icon: "assets/icons/daily_training_icon.svg",
+                      isLocked: false,
+                    ),
+                    isDailyTraining: true),
                 SizedBox(height: d.pSH(16)),
                 const CustomText(
                   label: 'All Solo Quests',
@@ -75,7 +75,7 @@ class _SoloQuestState extends State<SoloQuest> {
                 ...List.generate(
                   6,
                   (index) => Padding(
-                    padding: EdgeInsets.only(bottom: d.pSH(10)),
+                    padding: EdgeInsets.only(bottom: d.pSH(15)),
                     child: QuestCard(
                       quest: QuestModel(
                           id: 1,

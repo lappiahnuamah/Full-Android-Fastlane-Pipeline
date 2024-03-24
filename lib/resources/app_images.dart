@@ -7,4 +7,9 @@ class AppImages {
   static String openedLock = "assets/icons/opened_lock.svg";
 
   static String playCategoryIcon = "assets/icons/play_category.svg";
+
+  //quest card
+  static String redQuestCardSvg = "assets/icons/red_quest_card.svg";
+  static String blueQuestCardSvg = "assets/icons/blue_quest_card.svg";
+  static String darkQuestCardSvg = "assets/icons/dark_quest_card.svg";
 }

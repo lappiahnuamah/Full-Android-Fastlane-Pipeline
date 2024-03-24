@@ -3,12 +3,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/resources/app_images.dart';
+import 'package:savyminds/screens/categories/category_details_page.dart';
+import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class CategoryCard extends StatelessWidget {
-  const CategoryCard({super.key, required this.category, required this.index});
+  const CategoryCard(
+      {super.key, required this.category, this.index, this.hidePlay = false});
   final CategoryModel category;
-  final int index;
+  final int? index;
+  final bool hidePlay;
 
   @override
   Widget build(BuildContext context) {
@@ -75,46 +79,49 @@ class CategoryCard extends StatelessWidget {
                     ),
 
                     //Play or Unlock
-                    Align(
-                        alignment: Alignment.bottomRight,
-                        child: InkWell(
-                          onTap: () {
-                            if (!category.isLocked) {
-                            } else {}
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.all(d.pSH(8)),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: d.pSH(3), horizontal: d.pSW(5)),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(d.pSH(5)),
-                                border:
-                                    Border.all(color: Colors.white, width: 0.5),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  SvgPicture.asset(
-                                    category.isLocked
-                                        ? AppImages.openedLock
-                                        : AppImages.playCategoryIcon,
-                                    fit: BoxFit.cover,
-                                    height: d.pSH(10),
-                                  ),
-                                  SizedBox(width: d.pSW(5)),
-                                  CustomText(
-                                    label:
-                                        category.isLocked ? 'Unlock' : 'Play',
-                                    color: Colors.white,
-                                    fontSize: 12.5,
-                                    textAlign: TextAlign.center,
-                                  )
-                                ],
+                    if (!hidePlay)
+                      Align(
+                          alignment: Alignment.bottomRight,
+                          child: InkWell(
+                            onTap: () {
+                              if (!category.isLocked) {
+                                nextScreen(context,
+                                    CategoryDetailsPage(category: category));
+                              } else {}
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.all(d.pSH(8)),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: d.pSH(3), horizontal: d.pSW(5)),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(d.pSH(5)),
+                                  border: Border.all(
+                                      color: Colors.white, width: 0.5),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SvgPicture.asset(
+                                      category.isLocked
+                                          ? AppImages.openedLock
+                                          : AppImages.playCategoryIcon,
+                                      fit: BoxFit.cover,
+                                      height: d.pSH(10),
+                                    ),
+                                    SizedBox(width: d.pSW(5)),
+                                    CustomText(
+                                      label:
+                                          category.isLocked ? 'Unlock' : 'Play',
+                                      color: Colors.white,
+                                      fontSize: 12.5,
+                                      textAlign: TextAlign.center,
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ))
+                          ))
                   ],
                 ),
               ),

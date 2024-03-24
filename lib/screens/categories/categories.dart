@@ -97,9 +97,12 @@ class _CategoriesState extends State<Categories> {
                                     (index) {
                                   final category = categoryProvider
                                       .favoriteCategories[index];
-                                  return CategoryCard(
-                                    category: category,
-                                    index: index,
+                                  return Hero(
+                                    tag: "Category ${category.id}",
+                                    child: CategoryCard(
+                                      category: category,
+                                      index: index,
+                                    ),
                                   );
                                 }),
                               ]),
