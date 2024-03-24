@@ -73,6 +73,7 @@ class AppColors {
   ///
   static const borderPrimary = Color(0xFF066FAA);
   static const borderAccent = Color(0xFFAE3A4F);
+  static const blueBird = Color(0xFF12A1D5);
 
   static const List<Color> kDarkHomeGradient = [
     Color(0xFF1A1F25),

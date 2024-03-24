@@ -6,7 +6,6 @@ import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/game/game/components/game_background.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/route_behaviour.dart';
-import 'package:savyminds/widgets/nav_btn_w.dart';
 import 'package:savyminds/widgets/twin_text_wn.dart';
 
 class PageTemplate extends StatefulWidget {
