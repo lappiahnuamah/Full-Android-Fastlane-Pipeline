@@ -38,7 +38,7 @@ class CategoryFunctions {
         for (var item in responseModel.results ?? []) {
           categories.add(CategoryModel.fromJson(item));
         }
-        categoryProvider.addCategories(categories);
+        categoryProvider.setCategories(categories);
         if (nextUrl == null) {
           //Save to shared preference
           SharedPreferencesHelper.setObjectList(
