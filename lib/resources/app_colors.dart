@@ -42,7 +42,7 @@ class AppColors {
     Color(0xFFC2EFFE),
   ];
 
-  static const kGameRed = Color(0xFFAE3A4F);
+  static const kGameRed = Color(0xFFBC3F3F); //AE3A4F);
   static const kGameBlue = Color(0xFF3A50A0);
   static const kGameLightBlue = Color(0xFF697DC1);
   static const kGameGreen = Color(0xFF37806A);
@@ -74,6 +74,8 @@ class AppColors {
   static const borderPrimary = Color(0xFF066FAA);
   static const borderAccent = Color(0xFFAE3A4F);
   static const blueBird = Color(0xFF12A1D5);
+  static const notSelectedColor = Color(0xFFA9A9A9);
+  static const everGreen = Color(0xFF368948);
 
   static const List<Color> kDarkHomeGradient = [
     Color(0xFF1A1F25),

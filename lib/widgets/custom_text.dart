@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/utils/func.dart';
 
 class CustomText extends StatelessWidget {
@@ -41,7 +42,7 @@ class CustomText extends StatelessWidget {
       style: TextStyle(
           fontSize: getFontSize(fontSize, size),
           fontWeight: fontWeight,
-          color: color,
+          color: color ?? AppColors.hintTextBlack,
           fontStyle: fontStyle,
           height: height,
           shadows: shadows,

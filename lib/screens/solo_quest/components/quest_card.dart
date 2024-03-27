@@ -4,7 +4,9 @@ import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_images.dart';
+import 'package:savyminds/screens/solo_quest/daily_training/daily_raininng.dart';
 import 'package:savyminds/utils/func.dart';
+import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class QuestCard extends StatelessWidget {
@@ -95,7 +97,9 @@ class QuestCard extends StatelessWidget {
                             ),
                             if (isDailyTraining)
                               InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  nextScreen(context, const DailyTraining());
+                                },
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
                                       vertical: d.pSH(2), horizontal: d.pSW(4)),

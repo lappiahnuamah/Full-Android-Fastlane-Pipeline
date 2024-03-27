@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/utils/func.dart';
@@ -41,22 +42,26 @@ class TransformedButton extends StatelessWidget {
             child: Stack(
               alignment: AlignmentDirectional.center,
               children: [
-                Image.asset(
-                  buttonColor == AppColors.kGameRed ||
-                          buttonColor == AppColors.kGameDarkRed
-                      ? "assets/images/red_button.png"
-                      : buttonColor == AppColors.kGameGreen ||
-                              buttonColor == AppColors.kGameDarkGreen
-                          ? "assets/images/green_button.png"
-                          : bright == Brightness.dark
-                              ? keepBlue ?? false
-                                  ? "assets/images/blue_button.png"
-                                  : "assets/images/grey_button.png"
-                              : "assets/images/blue_button.png",
-                  height: height,
-                  width: width,
-                  fit: BoxFit.fill,
-                ),
+                (buttonColor == AppColors.kGameGreen )
+                    ? SvgPicture.asset(
+                        "assets/icons/buttons/green_button.svg",
+                        height: height,
+                        width: width,
+                        fit: BoxFit.fill,
+                      )
+                    : Image.asset(
+                        buttonColor == AppColors.kGameRed ||
+                                buttonColor == AppColors.kGameDarkRed
+                            ? "assets/images/red_button.png"
+                            : bright == Brightness.dark
+                                ? keepBlue ?? false
+                                    ? "assets/images/blue_button.png"
+                                    : "assets/images/grey_button.png"
+                                : "assets/images/blue_button.png",
+                        height: height,
+                        width: width,
+                        fit: BoxFit.fill,
+                      ),
                 Align(
                   child: Padding(
                     padding: EdgeInsets.symmetric(

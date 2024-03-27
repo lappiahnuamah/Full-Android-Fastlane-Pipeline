@@ -79,36 +79,86 @@ class _RecordRanksState extends State<RecordRanks> {
         ),
         SizedBox(height: d.pSH(15)),
 
-        ////
-        Expanded(
-          child: Column(
-            children: [
-              CategoryRankTableHeader(size: size),
-              SizedBox(height: d.pSH(10)),
-
-              //Categories
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      ...List.generate(
-                          10,
-                          (index) => Padding(
-                                padding: EdgeInsets.only(bottom: d.pSH(10.0)),
-                                child: categoryRankList[index % 4],
-                              )),
-                    ],
+        //// //Categories
+        if (_selectedRankIndex == 0)
+          Expanded(
+            child: Column(
+              children: [
+                CategoryRankTableHeader(size: size),
+                SizedBox(height: d.pSH(10)),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ...List.generate(
+                            4,
+                            (index) => Padding(
+                                  padding: EdgeInsets.only(bottom: d.pSH(10.0)),
+                                  child: categoryRankList[index % 4],
+                                )),
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
-        )
+
+        ////// Contest
+        if (_selectedRankIndex == 2)
+          Expanded(
+            child: Column(
+              children: [
+                ContestRankTableHeader(size: size),
+                SizedBox(height: d.pSH(10)),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ...List.generate(
+                            4,
+                            (index) => Padding(
+                                  padding: EdgeInsets.only(bottom: d.pSH(10.0)),
+                                  child: contestRankList[index % 4],
+                                )),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+
+        ////// Solo Quest
+        if (_selectedRankIndex == 4)
+          Expanded(
+            child: Column(
+              children: [
+                SoloQuestRankTableHeader(size: size),
+                SizedBox(height: d.pSH(10)),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ...List.generate(
+                            4,
+                            (index) => Padding(
+                                  padding: EdgeInsets.only(bottom: d.pSH(10.0)),
+                                  child: soloQuestRankList[index % 4],
+                                )),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )
       ],
     );
   }
 }
 
+//Headers
 class CategoryRankTableHeader extends StatelessWidget {
   const CategoryRankTableHeader({
     super.key,
@@ -126,7 +176,7 @@ class CategoryRankTableHeader extends StatelessWidget {
       ),
       Expanded(
         child: CustomText(
-          label: "Playd",
+          label: "Plyd",
           fontSize: getFontSize(16, size),
           textAlign: TextAlign.center,
           fontWeight: FontWeight.w600,
@@ -152,6 +202,82 @@ class CategoryRankTableHeader extends StatelessWidget {
   }
 }
 
+class ContestRankTableHeader extends StatelessWidget {
+  const ContestRankTableHeader({
+    super.key,
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      Expanded(
+        flex: 5,
+        child: SizedBox(height: d.pSH(15)),
+      ),
+      Expanded(
+        flex: 2,
+        child: CustomText(
+          label: "Level",
+          fontSize: getFontSize(16, size),
+          textAlign: TextAlign.end,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      Expanded(
+        flex: 2,
+        child: CustomText(
+          label: "Rank",
+          fontSize: getFontSize(16, size),
+          textAlign: TextAlign.end,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ]);
+  }
+}
+
+class SoloQuestRankTableHeader extends StatelessWidget {
+  const SoloQuestRankTableHeader({
+    super.key,
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      Expanded(
+        flex: 5,
+        child: SizedBox(height: d.pSH(15)),
+      ),
+      Expanded(
+        flex: 2,
+        child: CustomText(
+          label: "Sessions",
+          fontSize: getFontSize(16, size),
+          textAlign: TextAlign.end,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      Expanded(
+        flex: 2,
+        child: CustomText(
+          label: "Rank",
+          fontSize: getFontSize(16, size),
+          textAlign: TextAlign.end,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ]);
+  }
+}
+
+//
+//Rows
 class CustomRankRow extends StatelessWidget {
   const CustomRankRow(
       {super.key,
@@ -220,6 +346,123 @@ class CustomRankRow extends StatelessWidget {
   }
 }
 
+class ContestRankRow extends StatelessWidget {
+  const ContestRankRow(
+      {super.key, required this.rank, required this.name, required this.level});
+  final String rank;
+  final String name;
+  final String level;
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return Row(
+      children: [
+        Expanded(
+          flex: 5,
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                'assets/icons/learner.svg',
+                height: d.pSH(15),
+                colorFilter: const ColorFilter.mode(
+                    AppColors.hintTextBlack, BlendMode.srcIn),
+              ),
+              SizedBox(width: d.pSW(10)),
+              Expanded(
+                child: CustomText(
+                  label: name,
+                  fontSize: getFontSize(15, size),
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: CustomText(
+            label: level,
+            fontSize: getFontSize(15, size),
+            textAlign: TextAlign.end,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: CustomText(
+            label: rank,
+            fontSize: getFontSize(15, size),
+            textAlign: TextAlign.end,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class SoloQuestRankRow extends StatelessWidget {
+  const SoloQuestRankRow(
+      {super.key,
+      required this.rank,
+      required this.name,
+      required this.sessions});
+  final String rank;
+  final String name;
+  final String sessions;
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return Row(
+      children: [
+        Expanded(
+          flex: 5,
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                'assets/icons/learner.svg',
+                height: d.pSH(15),
+                colorFilter: const ColorFilter.mode(
+                    AppColors.hintTextBlack, BlendMode.srcIn),
+              ),
+              SizedBox(width: d.pSW(10)),
+              Expanded(
+                child: CustomText(
+                  label: name,
+                  fontSize: getFontSize(15, size),
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: CustomText(
+            label: sessions,
+            fontSize: getFontSize(15, size),
+            textAlign: TextAlign.end,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: CustomText(
+            label: rank,
+            fontSize: getFontSize(15, size),
+            textAlign: TextAlign.end,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 List categoryRankList = const [
   CustomRankRow(
     rank: '58.98%',
@@ -244,5 +487,51 @@ List categoryRankList = const [
     name: 'Sports',
     points: '13227',
     gamesPlayed: '8',
+  ),
+];
+
+List contestRankList = const [
+  ContestRankRow(
+    rank: '58.98%',
+    name: 'Learner Mode',
+    level: '20',
+  ),
+  ContestRankRow(
+    rank: '78.76%',
+    name: 'Pro Learner',
+    level: '8',
+  ),
+  ContestRankRow(
+    rank: '44.67%',
+    name: 'Timed Challenge',
+    level: '90',
+  ),
+  ContestRankRow(
+    rank: '24.60%',
+    name: 'Survival',
+    level: '17',
+  ),
+];
+
+List soloQuestRankList = const [
+  SoloQuestRankRow(
+    rank: '58.98%',
+    name: 'Learner Mode',
+    sessions: '20',
+  ),
+  SoloQuestRankRow(
+    rank: '78.76%',
+    name: 'Pro Learner',
+    sessions: '8',
+  ),
+  SoloQuestRankRow(
+    rank: '44.67%',
+    name: 'Timed Challenge',
+    sessions: '90',
+  ),
+  SoloQuestRankRow(
+    rank: '24.60%',
+    name: 'Survival',
+    sessions: '20',
   ),
 ];

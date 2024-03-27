@@ -115,7 +115,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
                 TextStyle(
                     color: bright == Brightness.dark
                         ? AppColors.kTrendEmojiColor
-                        : AppColors.kHintColor),
+                        : AppColors.hintTextBlack),
             contentPadding: EdgeInsets.symmetric(
                 horizontal: d.pSW(10), vertical: d.pSH(10)),
             prefixIcon: noPrefix != null
@@ -148,6 +148,11 @@ class CustomTextFieldWithLabel extends StatelessWidget {
             errorBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.red, width: d.pSH(0.5)),
             ),
+            border: OutlineInputBorder(
+                borderSide: BorderSide(
+                    color:
+                        bright == Brightness.dark ? Colors.grey : Colors.grey,
+                    width: d.pSH(0.5))),
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                     color:

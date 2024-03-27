@@ -202,7 +202,6 @@ class _PageTemplateState extends State<PageTemplate> {
                                     )),
                                     Padding(
                                       padding: EdgeInsets.only(
-                                          top: size.height * 0.03 /*24.0*/,
                                           right: size.width * 0.04),
                                       child: Row(
                                         mainAxisSize: MainAxisSize.min,
