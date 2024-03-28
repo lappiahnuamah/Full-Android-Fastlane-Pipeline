@@ -36,6 +36,12 @@ class QuestCard extends StatelessWidget {
               TimeRush(
                 quest: quest,
               ));
+        } else if (quest.name == 'Training Mode') {
+          nextScreen(
+              context,
+              TimeRush(
+                quest: quest,
+              ));
         }
       },
       child: Stack(
