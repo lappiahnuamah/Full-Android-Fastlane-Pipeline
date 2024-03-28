@@ -12,4 +12,7 @@ class AppImages {
   static String redQuestCardSvg = "assets/icons/red_quest_card.svg";
   static String blueQuestCardSvg = "assets/icons/blue_quest_card.svg";
   static String darkQuestCardSvg = "assets/icons/dark_quest_card.svg";
+
+  //
+  static String randomIcon = "assets/icons/random_icon.svg";
 }

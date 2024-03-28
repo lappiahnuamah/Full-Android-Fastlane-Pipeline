@@ -5,6 +5,8 @@ import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/screens/categories/components/level_card.dart';
+import 'package:savyminds/screens/profile/components/key_card.dart';
+import 'package:savyminds/screens/profile/profile.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/page_template.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
@@ -28,76 +30,95 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
       child: Padding(
         padding:
             EdgeInsets.symmetric(vertical: d.pSH(16), horizontal: d.pSW(30)),
-        child: Column(
-          children: [
-            SizedBox(
-                height: d.pSH(150.5),
-                width: d.pSW(160.2),
-                child: Hero(
-                  tag: "Category ${widget.category.id}",
-                  child: CategoryCard(
-                    category: widget.category,
-                    hidePlay: true,
-                  ),
-                )),
-            SizedBox(
-              height: d.pSH(40),
-            ),
-            GridView(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 4.5,
-                  mainAxisSpacing: d.pSH(10),
-                  crossAxisSpacing: d.pSW(15)),
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              children: [
-                for (int i = 0; i < levelList.length; i++)
-                  LevelCard(
-                    level: levelList[i],
-                  )
-              ],
-            ),
-            RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                  style: TextStyle(
-                      color: bright == Brightness.dark
-                          ? AppColors.kGameDarkText2Color
-                          : AppColors.kGameText2Color,
-                      fontSize: getFontSize(20, size),
-                      fontFamily: 'Architects_Daughter',
-                      height: 1.7),
-                  children: [
-                    const TextSpan(
-                      text:
-                          'These questions have been selected at random from a pool of questions.\n',
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                  height: d.pSH(150.5),
+                  width: d.pSH(160.2),
+                  child: Hero(
+                    tag: "Category ${widget.category.id}",
+                    child: CategoryCard(
+                      category: widget.category,
+                      hidePlay: true,
                     ),
-                    TextSpan(
-                      style: TextStyle(
+                  )),
+              SizedBox(
+                height: d.pSH(40),
+              ),
+              GridView(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 4.5,
+                    mainAxisSpacing: d.pSH(10),
+                    crossAxisSpacing: d.pSW(15)),
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                children: [
+                  for (int i = 0; i < levelList.length; i++)
+                    LevelCard(
+                      level: levelList[i],
+                    )
+                ],
+              ),
+              RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                    style: TextStyle(
                         color: bright == Brightness.dark
-                            ? AppColors.kGameDarkRed
-                            : AppColors.kGameRed,
+                            ? AppColors.kGameDarkText2Color
+                            : AppColors.kGameText2Color,
+                        fontSize: getFontSize(20, size),
+                        fontFamily: 'Architects_Daughter',
+                        height: 1.7),
+                    children: [
+                      const TextSpan(
+                        text:
+                            'These questions have been selected at random from a pool of questions.\n',
                       ),
-                      text: 'Once started you cannot pause the game.\n',
-                    ),
-                    const TextSpan(
-                      text: 'Take a deep breath and let us go!',
-                    ),
-                  ]),
-            ),
-            SizedBox(
-              height: d.pSH(50),
-            ),
-            TransformedButton(
-              onTap: () {},
-              buttonColor: AppColors.kGameGreen,
-              buttonText: ' START ',
-              textColor: Colors.white,
-              textWeight: FontWeight.bold,
-              height: d.pSH(66),
-            ),
-          ],
+                      TextSpan(
+                        style: TextStyle(
+                          color: bright == Brightness.dark
+                              ? AppColors.kGameDarkRed
+                              : AppColors.kGameRed,
+                        ),
+                        text: 'Once started you cannot pause the game.\n',
+                      ),
+                      const TextSpan(
+                        text: 'Take a deep breath and let us go!',
+                      ),
+                    ]),
+              ),
+              SizedBox(
+                height: d.pSH(40),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ...List.generate(4, (index) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: d.pSW(8)),
+                      child: KeyCard(
+                        gameKey: gameKeyList[index],
+                        height: 35,
+                      ),
+                    );
+                  }),
+                ],
+              ),
+              SizedBox(
+                height: d.pSH(30),
+              ),
+              TransformedButton(
+                onTap: () {},
+                buttonColor: AppColors.kGameGreen,
+                buttonText: ' START ',
+                textColor: Colors.white,
+                textWeight: FontWeight.bold,
+                height: d.pSH(66),
+              ),
+            ],
+          ),
         ),
       ),
     );

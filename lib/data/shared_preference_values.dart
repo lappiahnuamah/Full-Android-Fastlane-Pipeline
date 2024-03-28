@@ -11,4 +11,8 @@ class SharedPreferenceValues {
   //category
   static const String allCategories = 'ALL_CATEGORIES';
   static const String favoriteCategories = 'FAVORITE_CATEGORIES';
+
+  //Quests
+  static const String soloQuests = 'SOLO_QUESTS';
+  static const String contests = 'CONTESTS';
 }

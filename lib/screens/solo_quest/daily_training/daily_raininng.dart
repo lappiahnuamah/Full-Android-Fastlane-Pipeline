@@ -62,7 +62,8 @@ class _DailyTrainingState extends State<DailyTraining> {
                         ),
                       ),
                       Align(
-                        child: SvgPicture.asset("assets/icons/learner.svg"),
+                        child: SvgPicture.asset(
+                            "assets/icons/daily_training_icon.svg"),
                       )
                     ],
                   ),

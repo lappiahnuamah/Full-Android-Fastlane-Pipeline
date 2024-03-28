@@ -1,8 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
+import 'package:savyminds/data/shared_preference_values.dart';
+import 'package:savyminds/functions/contests/contests_functions.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
+import 'package:savyminds/providers/contest_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/solo_quest/components/quest_card.dart';
+import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
@@ -14,6 +22,16 @@ class Contest extends StatefulWidget {
 }
 
 class _ContestState extends State<Contest> {
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      getContests();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -33,22 +51,55 @@ class _ContestState extends State<Contest> {
           color: AppColors.hintTextBlack,
         ),
         SizedBox(height: d.pSH(16)),
-        ...List.generate(
-          6,
-          (index) => Padding(
-            padding: EdgeInsets.only(bottom: d.pSH(15)),
-            child: QuestCard(
-              isMultiCard: true,
-              quest: QuestModel(
-                  id: 1,
-                  name: 'Contest Mode',
-                  description: 'Play with friends and flex your muscles',
-                  icon: "assets/icons/learner.svg",
-                  isLocked: index.isEven),
-            ),
-          ),
-        ),
+        Expanded(
+          child: Consumer<ContestProvider>(
+              builder: (context, contestProvider, child) {
+            return isLoading
+                ?
+                //Loading states
+                const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.kPrimaryColor,
+                    ),
+                  )
+                : SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ...List.generate(
+                          contestProvider.contests.length,
+                          (index) => Padding(
+                            padding: EdgeInsets.only(bottom: d.pSH(15)),
+                            child: QuestCard(
+                              isMultiCard: true,
+                              quest: contestProvider.contests[index],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+          }),
+        )
       ]),
     );
+  }
+
+  Future<void> getContests() async {
+    final contestProvider = context.read<ContestProvider>();
+    setState(() {
+      isLoading = true;
+    });
+    final result =
+        SharedPreferencesHelper.getStringList(SharedPreferenceValues.contests);
+    if (result != null) {
+      List<QuestModel> soloQuests = result.map((value) {
+        return QuestModel.fromJson(json.decode(value));
+      }).toList();
+      contestProvider.setContests(soloQuests);
+    }
+    await ContestFunctions().getQuests(context: context);
+    setState(() {
+      isLoading = false;
+    });
   }
 }

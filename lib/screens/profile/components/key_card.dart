@@ -8,8 +8,9 @@ import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class KeyCard extends StatelessWidget {
-  const KeyCard({super.key, required this.gameKey});
+  const KeyCard({super.key, required this.gameKey, this.height = 40});
   final GameKeyModel gameKey;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +20,8 @@ class KeyCard extends StatelessWidget {
       children: [
         SvgPicture.asset(
           gameKey.icon,
-          width: d.pSH(45),
-          height: d.pSH(45),
+          width: d.pSH(height),
+          height: d.pSH(height),
         ),
         SizedBox(width: d.pSW(5)),
         gameKey.isLocked

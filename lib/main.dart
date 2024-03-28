@@ -4,9 +4,11 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/providers/appsocket_provider.dart';
 import 'package:savyminds/providers/categories_provider.dart';
+import 'package:savyminds/providers/contest_provider.dart';
 import 'package:savyminds/providers/dark_theme_provider.dart';
 import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/providers/registration_provider.dart';
+import 'package:savyminds/providers/solo_quest_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/screens/authentication/splashscreen.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
@@ -27,7 +29,9 @@ void main() async {
     ChangeNotifierProvider(create: (_) => DarkThemeProvider()),
     ChangeNotifierProvider(create: (_) => GameProvider()),
     ChangeNotifierProvider(create: (_) => GameWebSocket()),
-    ChangeNotifierProvider(create: (_) => CategoryProvider())
+    ChangeNotifierProvider(create: (_) => CategoryProvider()),
+    ChangeNotifierProvider(create: (_) => SoloQuestProvider()),
+    ChangeNotifierProvider(create: (_) => ContestProvider()),
   ], child: const MyApp()));
 }
 
