@@ -107,6 +107,9 @@ flutter:
     - family: Architects_Daughter
       fonts:
         - asset: assets/fonts/ArchitectsDaughter-Regular.ttf
+    - family: Caveat
+      fonts:
+        - asset: assets/fonts/Caveat-VariableFont_wght.ttf
     - family: Inter
       fonts:
             - asset: assets/fonts/inter/Inter-Thin.ttf

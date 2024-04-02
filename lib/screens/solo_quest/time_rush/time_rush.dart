@@ -10,6 +10,7 @@ import 'package:savyminds/screens/categories/components/level_card.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 import 'package:savyminds/widgets/page_template.dart';
+import 'package:savyminds/widgets/quest_icon_desc_card.dart';
 
 class TimeRush extends StatefulWidget {
   const TimeRush({super.key, required this.quest});
@@ -29,46 +30,17 @@ class _TimeRushState extends State<TimeRush> {
           padding: EdgeInsets.all(d.pSH(16)),
           child: Column(
             children: [
-              Row(
-                children: [
-                  SizedBox(
-                    height: d.pSH(51),
-                    width: d.pSH(59),
-                    child: Stack(
-                      children: [
-                        SvgPicture.asset(
-                          "assets/icons/quest_icon_container.svg",
-                          fit: BoxFit.fill,
-                          colorFilter: const ColorFilter.mode(
-                            AppColors.borderPrimary,
-                            BlendMode.srcIn,
-                          ),
-                        ),
-                        Align(
-                          child: SvgPicture.network(
-                            widget.quest.icon,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: d.pSW(16)),
-                  Expanded(
-                      child: CustomText(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 13,
-                    label: widget.quest.description,
-                  ))
-                ],
-              ),
+              QuestIconDescCard(quest: widget.quest),
               SizedBox(height: d.pSH(40)),
               Row(
                 children: [
                   ...List.generate(
                     3,
-                    (index) => const Expanded(
+                    (index) => Expanded(
                       child: Center(
-                        child: CategoryPlaceholder(),
+                        child: CategoryPlaceholder(
+                          onTap: () {},
+                        ),
                       ),
                     ),
                   )
@@ -86,14 +58,10 @@ class _TimeRushState extends State<TimeRush> {
                 AppImages.randomIcon,
               ),
               SizedBox(height: d.pSH(50)),
-              GridView(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 4.5,
-                    mainAxisSpacing: d.pSH(10),
-                    crossAxisSpacing: d.pSW(15)),
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
+              Wrap(
+                runSpacing: d.pSH(10),
+                spacing: d.pSW(15),
+                alignment: WrapAlignment.center,
                 children: [
                   for (int i = 0; i < levelList.length; i++)
                     LevelCard(

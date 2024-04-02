@@ -11,8 +11,12 @@ import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/solo_quest_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/solo_quest/components/quest_card.dart';
+import 'package:savyminds/screens/solo_quest/daily_training/daily_raininng.dart';
+import 'package:savyminds/screens/solo_quest/time_rush/time_rush.dart';
+import 'package:savyminds/screens/solo_quest/training_mode/training_mode.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/func.dart';
+import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class SoloQuest extends StatefulWidget {
@@ -74,8 +78,11 @@ class _SoloQuestState extends State<SoloQuest> {
                   ],
                 ),
                 SizedBox(height: d.pSH(16)),
-                const QuestCard(
-                    quest: QuestModel(
+                QuestCard(
+                    onTap: () {
+                      nextScreen(context, const DailyTraining());
+                    },
+                    quest: const QuestModel(
                         id: 1,
                         name: 'Daily Training',
                         subtitle: 'Exercise your brain one day at a time',
@@ -110,6 +117,24 @@ class _SoloQuestState extends State<SoloQuest> {
                                 padding: EdgeInsets.only(bottom: d.pSH(15)),
                                 child: QuestCard(
                                   quest: quest,
+                                  onTap: () {
+                                    if (quest.isLocked) {
+                                      return;
+                                    }
+                                    if (quest.name == 'Time Rush') {
+                                      nextScreen(
+                                          context,
+                                          TimeRush(
+                                            quest: quest,
+                                          ));
+                                    } else if (quest.name == 'Training Mode') {
+                                      nextScreen(
+                                          context,
+                                          TrainingMode(
+                                            quest: quest,
+                                          ));
+                                    }
+                                  },
                                 ),
                               );
                             },

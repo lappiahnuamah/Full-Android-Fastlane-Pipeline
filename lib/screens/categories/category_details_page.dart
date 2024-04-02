@@ -46,14 +46,10 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
               SizedBox(
                 height: d.pSH(40),
               ),
-              GridView(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 4.5,
-                    mainAxisSpacing: d.pSH(10),
-                    crossAxisSpacing: d.pSW(15)),
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
+              Wrap(
+                runSpacing: d.pSH(10),
+                spacing: d.pSW(15),
+                alignment: WrapAlignment.center,
                 children: [
                   for (int i = 0; i < levelList.length; i++)
                     LevelCard(
@@ -125,14 +121,14 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
   }
 }
 
-List levelList = const [
+List levelList = [
   LevelModel(
     name: 'Beginner',
     isLocked: false,
     progress: 1.0,
     active: true,
     id: 1,
-    color: Color(0xFF85DB98),
+    color: const Color(0xFF85DB98),
   ),
   LevelModel(
     name: 'Intermediate',
@@ -140,23 +136,22 @@ List levelList = const [
     progress: 0.4,
     active: true,
     id: 2,
-    color: Color(0xFF85C6DB),
+    color: const Color(0xFF85C6DB),
   ),
   LevelModel(
-    name: 'Advanced',
-    isLocked: false,
-    progress: 0.0,
-    active: false,
-    id: 3,
-    color: Color(0xFF85C6DB),
-  ),
+      name: 'Advanced',
+      isLocked: false,
+      progress: 0.0,
+      active: false,
+      id: 3,
+      color: const Color(0xFFE8DD72)),
   LevelModel(
     name: 'Expert',
     isLocked: true,
     progress: 0.0,
     active: false,
     id: 4,
-    color: Color(0xFF85C6DB),
+    color: const Color(0xFF85C6DB),
   ),
   LevelModel(
     name: 'Elite',
@@ -164,6 +159,6 @@ List levelList = const [
     progress: 0.0,
     active: false,
     id: 5,
-    color: Color(0xFF85C6DB),
+    color: const Color(0xFF85C6DB),
   ),
 ];

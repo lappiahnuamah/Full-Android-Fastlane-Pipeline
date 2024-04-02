@@ -13,56 +13,57 @@ class LevelCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return LayoutBuilder(builder: (context, layout) {
-      return Container(
+    return Container(
+        height: d.pSH(23),
+        width: d.pSH(90),
         clipBehavior: Clip.antiAliasWithSaveLayer,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Stack(
-          children: [
-            Container(
-              width: layout.maxWidth * level.progress,
-              height: layout.maxHeight,
-              color: level.color,
-            ),
-            Container(
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: level.active
-                      ? AppColors.hintTextBlack
-                      : AppColors.notSelectedColor,
-                ),
+        child: LayoutBuilder(builder: (context, layout) {
+          return Stack(
+            children: [
+              Container(
+                width: layout.maxWidth * level.progress,
+                height: layout.maxHeight,
+                color: level.color,
               ),
-              child: Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (level.isLocked)
-                      SvgPicture.asset(
-                        AppImages.closedLock,
-                        colorFilter: const ColorFilter.mode(
-                            AppColors.hintTextBlack, BlendMode.srcIn),
-                        height: d.pSH(10),
+              Container(
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: level.active
+                        ? AppColors.hintTextBlack
+                        : AppColors.notSelectedColor,
+                  ),
+                ),
+                child: Center(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (level.isLocked)
+                        SvgPicture.asset(
+                          AppImages.closedLock,
+                          colorFilter: const ColorFilter.mode(
+                              AppColors.hintTextBlack, BlendMode.srcIn),
+                          height: d.pSH(10),
+                        ),
+                      if (level.isLocked) SizedBox(width: d.pSW(5)),
+                      CustomText(
+                        label: level.name,
+                        fontSize: getFontSize(12, size),
+                        fontWeight: FontWeight.w400,
+                        color: level.active
+                            ? AppColors.hintTextBlack
+                            : AppColors.notSelectedColor,
                       ),
-                    if (level.isLocked) SizedBox(width: d.pSW(5)),
-                    CustomText(
-                      label: level.name,
-                      fontSize: getFontSize(12, size),
-                      fontWeight: FontWeight.w400,
-                      color: level.active
-                          ? AppColors.hintTextBlack
-                          : AppColors.notSelectedColor,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            )
-          ],
-        ),
-      );
-    });
+              )
+            ],
+          );
+        }));
   }
 }

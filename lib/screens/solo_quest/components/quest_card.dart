@@ -5,7 +5,6 @@ import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/screens/solo_quest/daily_training/daily_raininng.dart';
-import 'package:savyminds/screens/solo_quest/time_rush/time_rush.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
@@ -15,35 +14,18 @@ class QuestCard extends StatelessWidget {
       {super.key,
       required this.quest,
       this.isMultiCard = false,
-      this.isDailyTraining = false});
+      this.isDailyTraining = false,
+      required this.onTap});
   final QuestModel quest;
   final bool isMultiCard;
   final bool isDailyTraining;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return InkWell(
-      onTap: () {
-        if (quest.isLocked) {
-          return;
-        }
-        if (isDailyTraining) {
-          nextScreen(context, const DailyTraining());
-        } else if (quest.name == 'Time Rush') {
-          nextScreen(
-              context,
-              TimeRush(
-                quest: quest,
-              ));
-        } else if (quest.name == 'Training Mode') {
-          nextScreen(
-              context,
-              TimeRush(
-                quest: quest,
-              ));
-        }
-      },
+      onTap: onTap,
       child: Stack(
         children: [
           SvgPicture.asset(

@@ -1,15 +1,14 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class LevelModel extends Equatable {
-  final int id;
-  final String name;
-  final bool active;
-  final double progress;
-  final bool isLocked;
-  final Color color;
+class LevelModel {
+  int id;
+  String name;
+  bool active;
+  double progress;
+  bool isLocked;
+  Color color;
 
-  const LevelModel(
+  LevelModel(
       {required this.id,
       required this.name,
       required this.active,
@@ -26,10 +25,4 @@ class LevelModel extends Equatable {
         isLocked: json['is_locked'] ?? true,
         color: json['color']);
   }
-
-  @override
-  List<Object?> get props => [id, name, active, progress, isLocked];
-
-  @override
-  bool get stringify => true;
 }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 
@@ -77,5 +79,14 @@ class CategoryProvider extends ChangeNotifier {
   void clearCategory(CategoryModel category) {
     _categories.remove(category);
     notifyListeners();
+  }
+
+  CategoryModel getRandomCategory() {
+    final int randomIndex = Random().nextInt(_categories.length);
+    if (_categories[randomIndex].isLocked) {
+      return getRandomCategory();
+    } else {
+      return _categories[randomIndex];
+    }
   }
 }

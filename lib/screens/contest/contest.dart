@@ -72,6 +72,7 @@ class _ContestState extends State<Contest> {
                             child: QuestCard(
                               isMultiCard: true,
                               quest: contestProvider.contests[index],
+                              onTap: () {},
                             ),
                           ),
                         ),

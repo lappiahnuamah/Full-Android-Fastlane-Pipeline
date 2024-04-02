@@ -6,40 +6,57 @@ import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class CategoryPlaceholder extends StatelessWidget {
-  const CategoryPlaceholder({super.key});
+  const CategoryPlaceholder(
+      {super.key,
+      this.height = 87,
+      this.width = 103,
+      this.label,
+      required this.onTap});
+  final double height;
+  final double width;
+  final String? label;
+  final Function() onTap;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return SizedBox(
-      height: d.pSH(87),
-      width: d.pSH(103),
-      child: Stack(children: [
-        SvgPicture.asset('assets/icons/category_placeholder.svg'),
-
-        //
-        Align(
-          child: Padding(
-            padding: EdgeInsets.all(d.pSH(16)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomText(
-                  label: '?',
-                  color: AppColors.notSelectedColor,
-                  fontSize: getFontSize(24, size),
-                ),
-                CustomText(
-                  label: 'Select Category',
-                  fontSize: getFontSize(12, size),
-                  color: AppColors.notSelectedColor,
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
+    return InkWell(
+      onTap: onTap,
+      child: SizedBox(
+        height: d.pSH(height),
+        width: d.pSH(width),
+        child: Stack(children: [
+          SvgPicture.asset(
+            'assets/icons/category_placeholder.svg',
+            height: d.pSH(height),
+            width: d.pSH(width),
+            fit: BoxFit.fill,
           ),
-        )
-      ]),
+
+          //
+          Align(
+            child: Padding(
+              padding: EdgeInsets.all(d.pSH(width * 0.12)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomText(
+                    label: '?',
+                    color: AppColors.notSelectedColor,
+                    fontSize: getFontSize(width * 0.233, size),
+                  ),
+                  CustomText(
+                    label: label ?? 'Select Category',
+                    fontSize: getFontSize(width * 0.11, size),
+                    color: AppColors.notSelectedColor,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          )
+        ]),
+      ),
     );
   }
 }

@@ -76,6 +76,7 @@ class AppColors {
   static const blueBird = Color(0xFF12A1D5);
   static const notSelectedColor = Color(0xFFA9A9A9);
   static const everGreen = Color(0xFF368948);
+  static const textBlack = Color(0xFF2c2c2c);
 
   static const List<Color> kDarkHomeGradient = [
     Color(0xFF1A1F25),
