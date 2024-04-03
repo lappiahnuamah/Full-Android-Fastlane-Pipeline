@@ -3,12 +3,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
-import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_fonts.dart';
 import 'package:savyminds/resources/app_images.dart';
+import 'package:savyminds/screens/categories/category_details_page.dart';
 import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/screens/categories/components/category_placeholder.dart';
 import 'package:savyminds/screens/categories/components/level_card.dart';
@@ -20,60 +20,17 @@ import 'package:savyminds/widgets/page_template.dart';
 import 'package:savyminds/widgets/quest_icon_desc_card.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
 
-class TrainingMode extends StatefulWidget {
-  const TrainingMode({super.key, required this.quest});
+class SurvivalQuest extends StatefulWidget {
+  const SurvivalQuest({super.key, required this.quest});
   final QuestModel quest;
 
   @override
-  State<TrainingMode> createState() => _TrainingModeState();
+  State<SurvivalQuest> createState() => _SurvivalQuestState();
 }
 
-class _TrainingModeState extends State<TrainingMode> {
+class _SurvivalQuestState extends State<SurvivalQuest> {
   late CategoryProvider categoryProvider;
   CategoryModel? selectedCategory;
-
-  List<LevelModel> levelList = [
-    LevelModel(
-      name: 'Beginner',
-      isLocked: false,
-      progress: 0,
-      active: true,
-      id: 1,
-      color: const Color(0xFF85DB98),
-    ),
-    LevelModel(
-      name: 'Intermediate',
-      isLocked: false,
-      progress: 0,
-      active: true,
-      id: 2,
-      color: const Color(0xFF85C6DB),
-    ),
-    LevelModel(
-      name: 'Advanced',
-      isLocked: false,
-      progress: 0.0,
-      active: true,
-      id: 3,
-      color: const Color(0xFFE8DD72),
-    ),
-    LevelModel(
-      name: 'Expert',
-      isLocked: false,
-      progress: 0.0,
-      active: true,
-      id: 4,
-      color: const Color(0xFF85C6DB),
-    ),
-    LevelModel(
-      name: 'Elite',
-      isLocked: false,
-      progress: 0.0,
-      active: true,
-      id: 5,
-      color: const Color(0xFF85C6DB),
-    ),
-  ];
 
   @override
   void initState() {
@@ -144,19 +101,9 @@ class _TrainingModeState extends State<TrainingMode> {
               alignment: WrapAlignment.center,
               children: [
                 for (int i = 0; i < levelList.length; i++)
-                  InkWell(
-                    onTap: () {
-                      for (var level in levelList) {
-                        level.progress = 0;
-                      }
-                      setState(() {
-                        levelList[i].progress = 1;
-                      });
-                    },
-                    child: LevelCard(
-                      level: levelList[i],
-                    ),
-                  )
+                  LevelCard(
+                    level: levelList[i],
+                  ),
               ],
             ),
             SizedBox(height: d.pSH(20)),
@@ -180,22 +127,36 @@ class _TrainingModeState extends State<TrainingMode> {
                       if (selectedCategory == null)
                         const TextSpan(
                             text:
-                                ' You progress through in the levels by playing games in a particular category'),
+                                ' Having a recharge mystery box can be really useful if you are about to lose all your lives.'),
 
                       //Category selected
                       if (selectedCategory != null)
                         const TextSpan(
                             text:
-                                'These questions has been selected at random from a pool of questions.\n'),
+                                'The goal is to not lose all your lives. However, each remaining live Fetches points.\n'),
                       if (selectedCategory != null)
                         const TextSpan(
                           text: 'Once started you cannot pause the game.',
                           style: TextStyle(color: AppColors.kGameDarkRed),
                         ),
                     ])),
-            SizedBox(
-              height: d.pSH(30),
-            ),
+            SizedBox(height: d.pSH(20)),
+            if (selectedCategory != null)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ...List.generate(
+                    4,
+                    (index) => Padding(
+                      padding: EdgeInsets.symmetric(horizontal: d.pSW(5)),
+                      child: SvgPicture.asset(
+                        AppImages.lifeSvg,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            SizedBox(height: d.pSH(25)),
             if (selectedCategory != null) const AvailalableKeysWidget(),
             SizedBox(
               height: d.pSH(30),

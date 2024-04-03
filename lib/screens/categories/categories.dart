@@ -118,10 +118,10 @@ class _CategoriesState extends State<Categories> {
                                           shrinkWrap: true,
                                           gridDelegate:
                                               SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 2,
-                                            crossAxisSpacing: d.pSW(30),
-                                            mainAxisSpacing: d.pSH(16),
-                                          ),
+                                                  crossAxisCount: 2,
+                                                  crossAxisSpacing: d.pSH(24),
+                                                  mainAxisSpacing: d.pSH(10),
+                                                  childAspectRatio: 1.05),
                                           children: [
                                             ...List.generate(
                                                 categoryProvider
@@ -161,10 +161,10 @@ class _CategoriesState extends State<Categories> {
                                           shrinkWrap: true,
                                           gridDelegate:
                                               SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 2,
-                                            crossAxisSpacing: d.pSW(30),
-                                            mainAxisSpacing: d.pSH(16),
-                                          ),
+                                                  crossAxisCount: 2,
+                                                  crossAxisSpacing: d.pSH(24),
+                                                  mainAxisSpacing: d.pSH(10),
+                                                  childAspectRatio: 1.05),
                                           children: [
                                             ...List.generate(
                                                 categoryProvider.categories

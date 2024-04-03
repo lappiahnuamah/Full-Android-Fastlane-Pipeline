@@ -5,9 +5,8 @@ import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/screens/categories/components/level_card.dart';
-import 'package:savyminds/screens/profile/components/key_card.dart';
-import 'package:savyminds/screens/profile/profile.dart';
 import 'package:savyminds/utils/func.dart';
+import 'package:savyminds/widgets/availalble_keys_widget.dart';
 import 'package:savyminds/widgets/page_template.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
 
@@ -43,9 +42,7 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
                       hidePlay: true,
                     ),
                   )),
-              SizedBox(
-                height: d.pSH(40),
-              ),
+              SizedBox(height: d.pSH(40)),
               Wrap(
                 runSpacing: d.pSH(10),
                 spacing: d.pSW(15),
@@ -57,6 +54,7 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
                     )
                 ],
               ),
+              SizedBox(height: d.pSH(20)),
               RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
@@ -88,20 +86,7 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
               SizedBox(
                 height: d.pSH(40),
               ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ...List.generate(4, (index) {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: d.pSW(8)),
-                      child: KeyCard(
-                        gameKey: gameKeyList[index],
-                        height: 35,
-                      ),
-                    );
-                  }),
-                ],
-              ),
+              const AvailalableKeysWidget(),
               SizedBox(
                 height: d.pSH(30),
               ),

@@ -6,8 +6,14 @@ import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class QuestIconDescCard extends StatefulWidget {
-  const QuestIconDescCard({super.key, required this.quest});
+  const QuestIconDescCard(
+      {super.key,
+      required this.quest,
+      this.isContest = false,
+      this.description});
   final QuestModel quest;
+  final bool isContest;
+  final String? description;
 
   @override
   State<QuestIconDescCard> createState() => _QuestIconDescCardState();
@@ -26,8 +32,10 @@ class _QuestIconDescCardState extends State<QuestIconDescCard> {
               SvgPicture.asset(
                 "assets/icons/quest_icon_container.svg",
                 fit: BoxFit.fill,
-                colorFilter: const ColorFilter.mode(
-                  AppColors.borderPrimary,
+                colorFilter: ColorFilter.mode(
+                  widget.isContest
+                      ? AppColors.borderAccent
+                      : AppColors.borderPrimary,
                   BlendMode.srcIn,
                 ),
               ),
@@ -44,7 +52,7 @@ class _QuestIconDescCardState extends State<QuestIconDescCard> {
             child: CustomText(
           fontWeight: FontWeight.w400,
           fontSize: 13,
-          label: widget.quest.description,
+          label:widget.description?? widget.quest.description,
         ))
       ],
     );

@@ -10,8 +10,10 @@ import 'package:savyminds/functions/solo_quest/solo_quest_functions.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/solo_quest_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/screens/solo_quest/challlenge_of_the_day/challenge_of_day.dart';
 import 'package:savyminds/screens/solo_quest/components/quest_card.dart';
-import 'package:savyminds/screens/solo_quest/daily_training/daily_raininng.dart';
+import 'package:savyminds/screens/solo_quest/daily_training/daily_training.dart';
+import 'package:savyminds/screens/solo_quest/survival_quest/survival_quest.dart';
 import 'package:savyminds/screens/solo_quest/time_rush/time_rush.dart';
 import 'package:savyminds/screens/solo_quest/training_mode/training_mode.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
@@ -118,9 +120,9 @@ class _SoloQuestState extends State<SoloQuest> {
                                 child: QuestCard(
                                   quest: quest,
                                   onTap: () {
-                                    if (quest.isLocked) {
-                                      return;
-                                    }
+                                    // if (quest.isLocked) {
+                                    //   return;
+                                    // }
                                     if (quest.name == 'Time Rush') {
                                       nextScreen(
                                           context,
@@ -131,6 +133,18 @@ class _SoloQuestState extends State<SoloQuest> {
                                       nextScreen(
                                           context,
                                           TrainingMode(
+                                            quest: quest,
+                                          ));
+                                    } else if (quest.name == 'Survival Quest') {
+                                      nextScreen(
+                                          context,
+                                          SurvivalQuest(
+                                            quest: quest,
+                                          ));
+                                    } else if (quest.name == 'Challenge of the day') {
+                                      nextScreen(
+                                          context,
+                                          ChallengeOfTheDay(
                                             quest: quest,
                                           ));
                                     }

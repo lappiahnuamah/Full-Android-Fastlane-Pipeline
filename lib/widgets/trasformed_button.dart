@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/resources/app_fonts.dart';
 import 'package:savyminds/utils/func.dart';
 
 class TransformedButton extends StatelessWidget {
@@ -42,7 +43,7 @@ class TransformedButton extends StatelessWidget {
             child: Stack(
               alignment: AlignmentDirectional.center,
               children: [
-                (buttonColor == AppColors.kGameGreen )
+                (buttonColor == AppColors.kGameGreen)
                     ? SvgPicture.asset(
                         "assets/icons/buttons/green_button.svg",
                         height: height,
@@ -71,11 +72,11 @@ class TransformedButton extends StatelessWidget {
                       maxLines: 3,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontFamily: 'Architects_Daughter',
-                        color: textColor ?? Colors.white,
-                        fontSize: fontSize ?? getFontSize(22, size),
-                        fontWeight: textWeight,
-                      ),
+                          fontFamily: AppFonts.caveat,
+                          color: textColor ?? Colors.white,
+                          fontSize: fontSize ?? getFontSize(22, size),
+                          fontWeight: textWeight,
+                          letterSpacing: 1.2),
                     ),
                   ),
                 ),

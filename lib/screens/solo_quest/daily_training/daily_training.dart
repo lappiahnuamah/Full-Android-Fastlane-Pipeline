@@ -97,6 +97,7 @@ class _DailyTrainingState extends State<DailyTraining> {
                       ),
                     );
                   }),
+                  SizedBox(height: d.pSH(16)),
                 ],
               ),
             ))

@@ -15,4 +15,9 @@ class AppImages {
 
   //
   static String randomIcon = "assets/icons/random_icon.svg";
+  static String shopBag = "assets/icons/shop_bag.svg";
+
+  static String categoryCard = "assets/icons/category_card.svg";
+
+  static String lifeSvg = "assets/icons/life.svg";
 }

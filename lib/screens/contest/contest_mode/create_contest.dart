@@ -9,26 +9,32 @@ import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_fonts.dart';
 import 'package:savyminds/resources/app_images.dart';
-import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/screens/categories/components/category_placeholder.dart';
 import 'package:savyminds/screens/categories/components/level_card.dart';
 import 'package:savyminds/screens/categories/select_categoiries.dart';
+import 'package:savyminds/screens/contest/contest_mode/join_contest.dart';
+import 'package:savyminds/screens/game/game/components/game_text_feild.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
-import 'package:savyminds/widgets/availalble_keys_widget.dart';
+import 'package:savyminds/utils/validator.dart';
+import 'package:savyminds/widgets/custom_text.dart';
 import 'package:savyminds/widgets/page_template.dart';
 import 'package:savyminds/widgets/quest_icon_desc_card.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
 
-class TrainingMode extends StatefulWidget {
-  const TrainingMode({super.key, required this.quest});
+import '../../categories/components/category_card.dart';
+
+class CreateContest extends StatefulWidget {
+  const CreateContest({super.key, required this.quest});
   final QuestModel quest;
 
   @override
-  State<TrainingMode> createState() => _TrainingModeState();
+  State<CreateContest> createState() => _CreateContestState();
 }
 
-class _TrainingModeState extends State<TrainingMode> {
+class _CreateContestState extends State<CreateContest> {
+  TextEditingController gameName = TextEditingController();
+
   late CategoryProvider categoryProvider;
   CategoryModel? selectedCategory;
 
@@ -59,17 +65,17 @@ class _TrainingModeState extends State<TrainingMode> {
     ),
     LevelModel(
       name: 'Expert',
-      isLocked: false,
+      isLocked: true,
       progress: 0.0,
-      active: true,
+      active: false,
       id: 4,
       color: const Color(0xFF85C6DB),
     ),
     LevelModel(
       name: 'Elite',
-      isLocked: false,
+      isLocked: true,
       progress: 0.0,
-      active: true,
+      active: false,
       id: 5,
       color: const Color(0xFF85C6DB),
     ),
@@ -90,8 +96,33 @@ class _TrainingModeState extends State<TrainingMode> {
         padding: EdgeInsets.all(d.pSH(16)),
         child: SingleChildScrollView(
           child: Column(children: [
-            QuestIconDescCard(quest: widget.quest),
+            QuestIconDescCard(
+              quest: widget.quest,
+              isContest: true,
+              description:
+                  "Setup a contest and share the code with your friends. This is a fresh session and a clean sheet. Let’s go!",
+            ),
             SizedBox(height: d.pSH(40)),
+            RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                  style: TextStyle(
+                    color: AppColors.textBlack,
+                    fontSize: getFontSize(24, size),
+                    fontFamily: AppFonts.caveat,
+                    height: 1.7,
+                    fontStyle: FontStyle.italic,
+                  ),
+                  children: const [
+                    TextSpan(
+                        text: 'Hint:',
+                        style: TextStyle(color: AppColors.kGameDarkRed)),
+                    TextSpan(
+                        text:
+                            ' Be sure of the category you want to play as a group'),
+                  ]),
+            ),
+            SizedBox(height: d.pSH(25)),
             selectedCategory != null
                 ? SizedBox(
                     height: 159.6,
@@ -138,6 +169,12 @@ class _TrainingModeState extends State<TrainingMode> {
                     ],
                   ),
             SizedBox(height: d.pSH(30)),
+            CustomText(
+              label: 'Select you the level you want to play',
+              fontSize: getFontSize(13, size),
+              fontWeight: FontWeight.w400,
+            ),
+            SizedBox(height: d.pSH(15)),
             Wrap(
               runSpacing: d.pSH(10),
               spacing: d.pSW(15),
@@ -160,56 +197,44 @@ class _TrainingModeState extends State<TrainingMode> {
               ],
             ),
             SizedBox(height: d.pSH(20)),
-            RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                    style: TextStyle(
-                      color: AppColors.textBlack,
-                      fontSize: getFontSize(24, size),
-                      fontFamily: AppFonts.caveat,
-                      height: 1.5,
-                      fontStyle: FontStyle.italic,
-                    ),
-                    children: [
-                      //Category not selected
-                      if (selectedCategory == null)
-                        const TextSpan(
-                            text: 'Hint:',
-                            style: TextStyle(color: AppColors.kGameDarkRed)),
-
-                      if (selectedCategory == null)
-                        const TextSpan(
-                            text:
-                                ' You progress through in the levels by playing games in a particular category'),
-
-                      //Category selected
-                      if (selectedCategory != null)
-                        const TextSpan(
-                            text:
-                                'These questions has been selected at random from a pool of questions.\n'),
-                      if (selectedCategory != null)
-                        const TextSpan(
-                          text: 'Once started you cannot pause the game.',
-                          style: TextStyle(color: AppColors.kGameDarkRed),
-                        ),
-                    ])),
-            SizedBox(
-              height: d.pSH(30),
+            SizedBox(height: d.pSH(30)),
+            GameTextFeild(
+              controller: gameName,
+              labelText: '',
+              hintText: "Enter Game Name",
+              keyboardType: TextInputType.emailAddress,
+              prefixIcon: Icons.person_outline_rounded,
+              onChanged: (value) {
+                return;
+              },
+              //(Validation)//
+              validator: (value) => AuthValidate().validateNotEmpty(value),
+              onSaved: (value) {
+                gameName.text = value ?? '';
+              },
             ),
-            if (selectedCategory != null) const AvailalableKeysWidget(),
-            SizedBox(
-              height: d.pSH(30),
+            SizedBox(height: d.pSH(40)),
+            TransformedButton(
+              onTap: () {},
+              buttonColor: AppColors.kGameGreen,
+              buttonText: 'SUBMIT',
+              textColor: Colors.white,
+              textWeight: FontWeight.bold,
+              height: d.pSH(66),
             ),
-            if (selectedCategory != null)
-              TransformedButton(
-                onTap: () {},
-                buttonColor: AppColors.kGameGreen,
-                buttonText: ' START ',
-                textColor: Colors.white,
-                textWeight: FontWeight.bold,
-                height: d.pSH(66),
+            SizedBox(height: d.pSH(40)),
+            InkWell(
+              onTap: () {
+                nextScreen(context, JoinContest(quest: widget.quest));
+              },
+              child: CustomText(
+                label: 'Join A Game',
+                fontSize: getFontSize(20, size),
+                fontWeight: FontWeight.w600,
+                color: AppColors.kPrimaryColor,
               ),
-            SizedBox(height: d.pSH(16)),
+            ),
+            SizedBox(height: d.pSH(40)),
           ]),
         ),
       ),

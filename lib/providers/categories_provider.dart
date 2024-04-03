@@ -89,4 +89,30 @@ class CategoryProvider extends ChangeNotifier {
       return _categories[randomIndex];
     }
   }
+
+  List<CategoryModel> getThreeRandomCategories() {
+    List<CategoryModel> randomCategories = [];
+
+    while (randomCategories.length < 3) {
+      final randomCategory = getRandomCategory();
+      if (!(randomCategories.contains(randomCategory))) {
+        randomCategories.add(randomCategory);
+      }
+    }
+
+    return randomCategories;
+  }
+
+  List<CategoryModel> getTwoRandomCategories() {
+    List<CategoryModel> randomCategories = [];
+
+    while (randomCategories.length < 2) {
+      final randomCategory = getRandomCategory();
+      if (!(randomCategories.contains(randomCategory))) {
+        randomCategories.add(randomCategory);
+      }
+    }
+
+    return randomCategories;
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/resources/app_fonts.dart';
 
 class GameTextFeild extends StatelessWidget {
   const GameTextFeild(
@@ -77,7 +78,7 @@ class GameTextFeild extends StatelessWidget {
       style: TextStyle(
         fontSize: d.pSH(25),
         color: bright == Brightness.dark ? Colors.white : AppColors.kTextColor,
-        fontFamily: 'Architects_Daughter',
+        fontFamily: AppFonts.caveat,
       ),
       maxLines: maxLines ?? 1,
       maxLength: maxLength,
@@ -92,14 +93,13 @@ class GameTextFeild extends StatelessWidget {
             TextStyle(
               color: bright == Brightness.dark
                   ? AppColors.kTrendEmojiColor
-                  : AppColors.kHintColor,
-              fontFamily: 'Architects_Daughter',
+                  : AppColors.hintTextBlack,
+              fontFamily: AppFonts.caveat,
             ),
         contentPadding:
-            EdgeInsets.symmetric(horizontal: d.pSW(15), vertical: d.pSH(20)),
-        fillColor: bright == Brightness.dark
-            ? AppColors.kDarkCardColor
-            : Colors.white,
+            EdgeInsets.symmetric(horizontal: d.pSW(15), vertical: d.pSH(10)),
+        fillColor:
+            bright == Brightness.dark ? AppColors.kDarkCardColor : Colors.white,
         filled: true,
         suffix: suffix,
         focusedBorder: OutlineInputBorder(

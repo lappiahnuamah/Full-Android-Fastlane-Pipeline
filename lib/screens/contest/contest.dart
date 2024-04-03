@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/data/shared_preference_values.dart';
@@ -9,9 +10,11 @@ import 'package:savyminds/functions/contests/contests_functions.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/contest_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/screens/contest/contest_mode/join_contest.dart';
 import 'package:savyminds/screens/solo_quest/components/quest_card.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/func.dart';
+import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class Contest extends StatefulWidget {
@@ -65,17 +68,32 @@ class _ContestState extends State<Contest> {
                 : SingleChildScrollView(
                     child: Column(
                       children: [
-                        ...List.generate(
-                          contestProvider.contests.length,
-                          (index) => Padding(
+                        ...List.generate(contestProvider.contests.length,
+                            (index) {
+                          final quest = contestProvider.contests[index];
+                          return Padding(
                             padding: EdgeInsets.only(bottom: d.pSH(15)),
                             child: QuestCard(
                               isMultiCard: true,
                               quest: contestProvider.contests[index],
-                              onTap: () {},
+                              onTap: () {
+                                if (quest.isLocked) {
+                                  Fluttertoast.showToast(
+                                      msg: 'This contest is locked');
+                                } else {
+                                  if (quest.name == "Contest Mode") {
+                                    nextScreen(
+                                        context, JoinContest(quest: quest));
+                                  } else {
+                                    Fluttertoast.showToast(
+                                        msg:
+                                            'This contest is not available yet');
+                                  }
+                                }
+                              },
                             ),
-                          ),
-                        ),
+                          );
+                        }),
                       ],
                     ),
                   );
