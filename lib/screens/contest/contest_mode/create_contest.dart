@@ -12,7 +12,7 @@ import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/screens/categories/components/category_placeholder.dart';
 import 'package:savyminds/screens/categories/components/level_card.dart';
 import 'package:savyminds/screens/categories/select_categoiries.dart';
-import 'package:savyminds/screens/contest/contest_mode/join_contest.dart';
+import 'package:savyminds/screens/contest/contest_mode/start_contest_mode.dart';
 import 'package:savyminds/screens/game/game/components/game_text_feild.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
@@ -34,9 +34,11 @@ class CreateContest extends StatefulWidget {
 
 class _CreateContestState extends State<CreateContest> {
   TextEditingController gameName = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   late CategoryProvider categoryProvider;
   CategoryModel? selectedCategory;
+  LevelModel? selectedLevel;
 
   List<LevelModel> levelList = [
     LevelModel(
@@ -188,6 +190,7 @@ class _CreateContestState extends State<CreateContest> {
                       }
                       setState(() {
                         levelList[i].progress = 1;
+                        selectedLevel = levelList[i];
                       });
                     },
                     child: LevelCard(
@@ -198,24 +201,41 @@ class _CreateContestState extends State<CreateContest> {
             ),
             SizedBox(height: d.pSH(20)),
             SizedBox(height: d.pSH(30)),
-            GameTextFeild(
-              controller: gameName,
-              labelText: '',
-              hintText: "Enter Game Name",
-              keyboardType: TextInputType.emailAddress,
-              prefixIcon: Icons.person_outline_rounded,
-              onChanged: (value) {
-                return;
-              },
-              //(Validation)//
-              validator: (value) => AuthValidate().validateNotEmpty(value),
-              onSaved: (value) {
-                gameName.text = value ?? '';
-              },
+            Form(
+              key: _formKey,
+              child: GameTextFeild(
+                controller: gameName,
+                labelText: '',
+                hintText: "Enter Game Name",
+                keyboardType: TextInputType.emailAddress,
+                prefixIcon: Icons.person_outline_rounded,
+                onChanged: (value) {
+                  return;
+                },
+                //(Validation)//
+                validator: (value) => AuthValidate().validateNotEmpty(value),
+                onSaved: (value) {
+                  gameName.text = value ?? '';
+                },
+              ),
             ),
             SizedBox(height: d.pSH(40)),
             TransformedButton(
-              onTap: () {},
+              onTap: () {
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState?.save();
+                  if (selectedCategory == null || selectedLevel == null) return;
+                  nextScreen(
+                      context,
+                      StartContestMode(
+                        quest: widget.quest,
+                        category: selectedCategory!,
+                        level: selectedLevel!,
+                        gameName: gameName.text,
+                        isCreator: true,
+                      ));
+                }
+              },
               buttonColor: AppColors.kGameGreen,
               buttonText: 'SUBMIT',
               textColor: Colors.white,
@@ -223,17 +243,6 @@ class _CreateContestState extends State<CreateContest> {
               height: d.pSH(66),
             ),
             SizedBox(height: d.pSH(40)),
-            InkWell(
-              onTap: () {
-                nextScreen(context, JoinContest(quest: widget.quest));
-              },
-              child: CustomText(
-                label: 'Join A Game',
-                fontSize: getFontSize(20, size),
-                fontWeight: FontWeight.w600,
-                color: AppColors.kPrimaryColor,
-              ),
-            ),
             SizedBox(height: d.pSH(40)),
           ]),
         ),

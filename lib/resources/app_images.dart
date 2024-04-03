@@ -20,4 +20,10 @@ class AppImages {
   static String categoryCard = "assets/icons/category_card.svg";
 
   static String lifeSvg = "assets/icons/life.svg";
+  static String clipboardSvg = "assets/icons/clipboard.svg";
+  static String qrCreateSvg = "assets/icons/qr_create.svg";
+
+  //
+  static String copySvg = "assets/icons/copy.svg";
+  static String qrCodeSvg = "assets/icons/gr_code.svg";
 }

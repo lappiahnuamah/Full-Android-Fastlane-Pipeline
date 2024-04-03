@@ -30,15 +30,31 @@ class UserProfileList extends StatelessWidget {
                   return Positioned(
                     left: d.pSH(23) * index,
                     top: 0,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(d.pSH(28)),
-                      child: CircleAvatar(
-                        radius: d.pSH(20),
-                        child: Image.network(
-                          users[index].profileImage ?? '',
-                          errorBuilder: (context, error, stackTrace) {
-                            return Icon(index == 5 ? Icons.add : Icons.person);
-                          },
+                    child: Opacity(
+                      opacity: 0.8,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(d.pSH(28)),
+                        child: CircleAvatar(
+                          radius: d.pSH(18),
+                          backgroundColor: AppColors.kWhite,
+                          child: Container(
+                            height: double.maxFinite,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: AppColors.textBlack, width: 1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Image.network(
+                              users[index].profileImage ?? '',
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(
+                                  index == 5 ? Icons.add : Icons.person,
+                                  color: AppColors.hintTextBlack,
+                                );
+                              },
+                            ),
+                          ),
                         ),
                       ),
                     ),

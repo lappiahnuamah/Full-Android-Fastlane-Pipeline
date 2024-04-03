@@ -17,6 +17,7 @@ class CustomText extends StatelessWidget {
     this.height,
     this.decoration,
     this.fontWeight = FontWeight.w500,
+     this.fontFamily,
   }) : super(key: key);
 
   final String label;
@@ -31,6 +32,7 @@ class CustomText extends StatelessWidget {
   final double? height;
   final List<Shadow>? shadows;
   final TextDecoration? decoration;
+  final String? fontFamily;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -47,7 +49,8 @@ class CustomText extends StatelessWidget {
           height: height,
           shadows: shadows,
           letterSpacing: letterSpacing,
-          decoration: decoration),
+          decoration: decoration,
+          fontFamily: fontFamily),
     );
   }
 }
