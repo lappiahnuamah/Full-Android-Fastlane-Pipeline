@@ -26,4 +26,7 @@ class AppImages {
   //
   static String copySvg = "assets/icons/copy.svg";
   static String qrCodeSvg = "assets/icons/gr_code.svg";
+
+  //
+  static String groupPicBackground = "assets/icons/group_pic_back.png";
 }

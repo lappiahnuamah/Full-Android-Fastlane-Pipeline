@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
@@ -9,30 +8,24 @@ import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_fonts.dart';
 import 'package:savyminds/resources/app_images.dart';
-import 'package:savyminds/screens/categories/components/category_placeholder.dart';
-import 'package:savyminds/screens/categories/components/level_card.dart';
-import 'package:savyminds/screens/categories/select_categoiries.dart';
 import 'package:savyminds/screens/contest/contest_mode/start_contest_mode.dart';
 import 'package:savyminds/screens/game/game/components/game_text_feild.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/utils/validator.dart';
-import 'package:savyminds/widgets/custom_text.dart';
 import 'package:savyminds/widgets/page_template.dart';
 import 'package:savyminds/widgets/quest_icon_desc_card.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
 
-import '../../categories/components/category_card.dart';
-
-class CreateContest extends StatefulWidget {
-  const CreateContest({super.key, required this.quest});
+class CreateBattleTeam extends StatefulWidget {
+  const CreateBattleTeam({super.key, required this.quest});
   final QuestModel quest;
 
   @override
-  State<CreateContest> createState() => _CreateContestState();
+  State<CreateBattleTeam> createState() => _CreateBattleTeamState();
 }
 
-class _CreateContestState extends State<CreateContest> {
+class _CreateBattleTeamState extends State<CreateBattleTeam> {
   TextEditingController gameName = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -83,6 +76,7 @@ class _CreateContestState extends State<CreateContest> {
     ),
   ];
 
+  String teamImage = '';
   @override
   void initState() {
     categoryProvider = context.read<CategoryProvider>();
@@ -93,18 +87,17 @@ class _CreateContestState extends State<CreateContest> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return PageTemplate(
-      pageTitle: 'Create Contest',
+      pageTitle: 'Create Team',
       child: Padding(
         padding: EdgeInsets.all(d.pSH(16)),
         child: SingleChildScrollView(
           child: Column(children: [
             QuestIconDescCard(
-              quest: widget.quest,
-              isContest: true,
-              description:
-                  "Setup a contest and share the code with your friends. This is a fresh session and a clean sheet. Let’s go!",
-            ),
-            SizedBox(height: d.pSH(40)),
+                quest: widget.quest,
+                isContest: true,
+                description:
+                    "Create a team and share for two others to join. Other people can join with the team code. You need exactly 3 people in a team."),
+            SizedBox(height: d.pSH(30)),
             RichText(
               textAlign: TextAlign.center,
               text: TextSpan(
@@ -120,87 +113,28 @@ class _CreateContestState extends State<CreateContest> {
                         text: 'Hint:',
                         style: TextStyle(color: AppColors.kGameDarkRed)),
                     TextSpan(
-                        text:
-                            ' Be sure of the category you want to play as a group'),
+                        text: ' Team name must not be more than 15 characters'),
                   ]),
             ),
-            SizedBox(height: d.pSH(25)),
-            selectedCategory != null
-                ? SizedBox(
-                    height: 159.6,
-                    width: 187,
-                    child: CategoryCard(
-                      category: selectedCategory!,
-                      hidePlay: true,
-                    ),
-                  )
-                : Stack(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(bottom: d.pSH(5)),
-                        child: CategoryPlaceholder(
-                          height: 159,
-                          width: 187,
-                          label: 'Click here to select a category ',
-                          onTap: () async {
-                            final result = await nextScreen(
-                                context, const SelectCategory());
-                            if (result is CategoryModel) {
-                              setState(() {
-                                selectedCategory = result;
-                              });
-                            }
-                          },
-                        ),
-                      ),
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              selectedCategory =
-                                  categoryProvider.getRandomCategory();
-                            });
-                          },
-                          child: SvgPicture.asset(
-                            AppImages.randomIcon,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
             SizedBox(height: d.pSH(30)),
-            CustomText(
-              label: 'Select you the level you want to play',
-              fontSize: getFontSize(13, size),
-              fontWeight: FontWeight.w400,
+            Container(
+              height: d.pSH(160),
+              width: d.pSH(160),
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              padding: EdgeInsets.all(d.pSH(0.5)),
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: AppColors.textBlack, width: 2),
+                  shape: BoxShape.circle,
+                  image: teamImage.isNotEmpty
+                      ? DecorationImage(
+                          image: NetworkImage(teamImage), fit: BoxFit.cover)
+                      : null),
+              child: teamImage.isEmpty
+                  ? Image.asset(AppImages.groupPicBackground, fit: BoxFit.cover)
+                  : null,
             ),
-            SizedBox(height: d.pSH(15)),
-            Wrap(
-              runSpacing: d.pSH(10),
-              spacing: d.pSW(15),
-              alignment: WrapAlignment.center,
-              children: [
-                for (int i = 0; i < levelList.length; i++)
-                  InkWell(
-                    onTap: () {
-                      for (var level in levelList) {
-                        level.progress = 0;
-                      }
-                      setState(() {
-                        levelList[i].progress = 1;
-                        selectedLevel = levelList[i];
-                      });
-                    },
-                    child: LevelCard(
-                      level: levelList[i],
-                    ),
-                  )
-              ],
-            ),
-            SizedBox(height: d.pSH(20)),
-            SizedBox(height: d.pSH(30)),
+            SizedBox(height: d.pSH(50)),
             Form(
               key: _formKey,
               child: GameTextFeild(
@@ -237,7 +171,7 @@ class _CreateContestState extends State<CreateContest> {
                 }
               },
               buttonColor: AppColors.kGameGreen,
-              buttonText: 'CREATE GAME',
+              buttonText: 'CREATE TEAM',
               textColor: Colors.white,
               textWeight: FontWeight.bold,
               height: d.pSH(66),

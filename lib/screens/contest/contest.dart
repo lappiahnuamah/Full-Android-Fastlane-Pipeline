@@ -10,6 +10,7 @@ import 'package:savyminds/functions/contests/contests_functions.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/contest_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/screens/contest/battle_mode/join_battle_team.dart';
 import 'package:savyminds/screens/contest/contest_mode/join_contest.dart';
 import 'package:savyminds/screens/solo_quest/components/quest_card.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
@@ -84,6 +85,9 @@ class _ContestState extends State<Contest> {
                                   if (quest.name == "Contest Mode") {
                                     nextScreen(
                                         context, JoinContest(quest: quest));
+                                  } else if (quest.name == "Team Battle") {
+                                    nextScreen(
+                                        context, JoinBattleTeam(quest: quest));
                                   } else {
                                     Fluttertoast.showToast(
                                         msg:

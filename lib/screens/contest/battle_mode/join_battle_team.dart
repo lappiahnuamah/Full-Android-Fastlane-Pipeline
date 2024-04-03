@@ -4,10 +4,10 @@ import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/resources/app_colors.dart';
-import 'package:savyminds/resources/app_fonts.dart';
 import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/screens/categories/category_details_page.dart';
-import 'package:savyminds/screens/contest/contest_mode/create_contest.dart';
+import 'package:savyminds/screens/contest/battle_mode/compoents/battle_team_card.dart';
+import 'package:savyminds/screens/contest/battle_mode/create_battle_team.dart';
 import 'package:savyminds/screens/contest/contest_mode/start_contest_mode.dart';
 import 'package:savyminds/screens/game/game/components/game_text_feild.dart';
 import 'package:savyminds/utils/func.dart';
@@ -18,15 +18,15 @@ import 'package:savyminds/widgets/page_template.dart';
 import 'package:savyminds/widgets/quest_icon_desc_card.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
 
-class JoinContest extends StatefulWidget {
-  const JoinContest({super.key, required this.quest});
+class JoinBattleTeam extends StatefulWidget {
+  const JoinBattleTeam({super.key, required this.quest});
   final QuestModel quest;
 
   @override
-  State<JoinContest> createState() => _JoinContestState();
+  State<JoinBattleTeam> createState() => _JoinBattleTeamState();
 }
 
-class _JoinContestState extends State<JoinContest> {
+class _JoinBattleTeamState extends State<JoinBattleTeam> {
   TextEditingController gameCode = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -34,7 +34,7 @@ class _JoinContestState extends State<JoinContest> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return PageTemplate(
-      pageTitle: 'Join Contest',
+      pageTitle: 'Team',
       child: Padding(
         padding: EdgeInsets.all(d.pSH(16)),
         child: Column(children: [
@@ -42,29 +42,30 @@ class _JoinContestState extends State<JoinContest> {
             quest: widget.quest,
             isContest: true,
             description:
-                "Join a contest by entering the game code. You can also create a new game by clicking on ‘Create A New Game’.",
+                "Select any of your teams you want to play with. OR submit a team code to join the team. You can also create a new team.",
           ),
           SizedBox(height: d.pSH(40)),
-          RichText(
-            textAlign: TextAlign.center,
-            text: TextSpan(
-                style: TextStyle(
-                  color: AppColors.textBlack,
-                  fontSize: getFontSize(24, size),
-                  fontFamily: AppFonts.caveat,
-                  height: 1.7,
-                  fontStyle: FontStyle.italic,
+          Wrap(
+            runSpacing: d.pSH(10),
+            spacing: d.pSW(15),
+            alignment: WrapAlignment.spaceBetween,
+            runAlignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              ...List.generate(
+                8,
+                (index) => BattleTeamCard(
+                  teamName: index == 3
+                      ? "Great team here and there  ooooo"
+                      : 'Terateck',
+                  teamImage: '',
                 ),
-                children: const [
-                  TextSpan(
-                      text: 'Hint:',
-                      style: TextStyle(color: AppColors.kGameDarkRed)),
-                  TextSpan(
-                      text:
-                          ' Game session codes are persistent and can be played over and over again.'),
-                ]),
+              ),
+            ],
           ),
-          SizedBox(height: d.pSH(30)),
+          SizedBox(height: d.pSH(40)),
+          const CustomText(label: 'Paste or Scan Code to Join Team'),
+          SizedBox(height: d.pSH(15)),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -124,10 +125,10 @@ class _JoinContestState extends State<JoinContest> {
           Flexible(child: Container()),
           InkWell(
             onTap: () {
-              nextScreen(context, CreateContest(quest: widget.quest));
+              nextScreen(context, CreateBattleTeam(quest: widget.quest));
             },
             child: CustomText(
-              label: 'Create A New Game',
+              label: 'Create A Team',
               fontSize: getFontSize(20, size),
               fontWeight: FontWeight.w600,
               color: AppColors.kPrimaryColor,
