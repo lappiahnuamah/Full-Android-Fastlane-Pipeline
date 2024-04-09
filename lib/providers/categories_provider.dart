@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
+import 'package:savyminds/models/level_model.dart';
 
 class CategoryProvider extends ChangeNotifier {
   List<CategoryModel> _categories = [];
@@ -9,6 +10,8 @@ class CategoryProvider extends ChangeNotifier {
 
   List<CategoryModel> get categories => _categories;
   List<CategoryModel> get favoriteCategories => _favoriteCategories;
+
+  Map<int, LevelModel> _categoryLevels = {};
 
 //
   void setCategories(List<CategoryModel> categories) {
@@ -81,6 +84,28 @@ class CategoryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  //Category Levels
+  void setCategoryLevel(int categoryId, LevelModel level) {
+    _categoryLevels[categoryId] = level;
+    notifyListeners();
+  }
+
+  LevelModel getCategoryLevel(int categoryId) {
+    return _categoryLevels[categoryId]!;
+  }
+
+  void clearCategoryLevels() {
+    _categoryLevels.clear();
+    notifyListeners();
+  }
+
+  void clearCategoryLevel(int categoryId) {
+    _categoryLevels.remove(categoryId);
+    notifyListeners();
+  }
+
+//
+// /
   CategoryModel getRandomCategory() {
     final int randomIndex = Random().nextInt(_categories.length);
     if (_categories[randomIndex].isLocked) {

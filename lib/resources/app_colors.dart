@@ -43,7 +43,7 @@ class AppColors {
   ];
 
   static const kGameRed = Color(0xFFBC3F3F); //AE3A4F);
-  static const kGameBlue = Color(0xFF3A50A0);
+  static const kGameBlue = Color(0xFF1F72B3); //3A50A0);
   static const kGameLightBlue = Color(0xFF697DC1);
   static const kGameGreen = Color(0xFF37806A);
   static const kGameTextColor = Color(0xFF4f4f4f);

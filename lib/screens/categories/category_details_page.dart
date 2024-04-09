@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
+import 'package:savyminds/functions/categories/categories_functions.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/level_model.dart';
+import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/screens/categories/category_game_page.dart';
 import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/screens/categories/components/level_card.dart';
 import 'package:savyminds/utils/func.dart';
+import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/availalble_keys_widget.dart';
 import 'package:savyminds/widgets/page_template.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
@@ -19,6 +25,25 @@ class CategoryDetailsPage extends StatefulWidget {
 }
 
 class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
+  bool isLoading = false;
+  @override
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      // getCategoryLevel();
+    });
+    super.initState();
+  }
+
+  getCategoryLevel() async {
+    setState(() {
+      isLoading = true;
+    });
+    await CategoryFunctions().getCategoryLevel(context, widget.category.id);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final bright = Theme.of(context).brightness;
@@ -35,25 +60,35 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
               SizedBox(
                   height: d.pSH(150.5),
                   width: d.pSH(160.2),
-                  child: Hero(
-                    tag: "Category ${widget.category.id}",
-                    child: CategoryCard(
-                      category: widget.category,
-                      hidePlay: true,
-                    ),
+                  child: CategoryCard(
+                    category: widget.category,
+                    hidePlay: true,
                   )),
               SizedBox(height: d.pSH(40)),
-              Wrap(
-                runSpacing: d.pSH(10),
-                spacing: d.pSW(15),
-                alignment: WrapAlignment.center,
-                children: [
-                  for (int i = 0; i < levelList.length; i++)
-                    LevelCard(
-                      level: levelList[i],
+              isLoading
+                  ? SizedBox(
+                      height: d.pSH(60),
+                      width: double.infinity,
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.kPrimaryColor,
+                        ),
+                      ),
                     )
-                ],
-              ),
+                  : Consumer<CategoryProvider>(
+                      builder: (context, catProv, chils) {
+                      return Wrap(
+                        runSpacing: d.pSH(10),
+                        spacing: d.pSW(15),
+                        alignment: WrapAlignment.center,
+                        children: [
+                          for (int i = 0; i < levelList.length; i++)
+                            LevelCard(
+                              level: levelList[i],
+                            )
+                        ],
+                      );
+                    }),
               SizedBox(height: d.pSH(20)),
               RichText(
                 textAlign: TextAlign.center,
@@ -91,12 +126,16 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
                 height: d.pSH(30),
               ),
               TransformedButton(
-                onTap: () {},
+                onTap: () {
+                  nextScreen(
+                      context, CategoryGamePage(category: widget.category));
+                },
                 buttonColor: AppColors.kGameGreen,
                 buttonText: ' START ',
                 textColor: Colors.white,
                 textWeight: FontWeight.bold,
                 height: d.pSH(66),
+                width: d.pSH(240),
               ),
             ],
           ),
@@ -108,41 +147,45 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
 
 List levelList = [
   LevelModel(
-    name: 'Beginner',
-    isLocked: false,
-    progress: 1.0,
-    active: true,
-    id: 1,
-    color: const Color(0xFF85DB98),
-  ),
+      user: 1,
+      level: 'Beginner',
+      isLocked: false,
+      totalPoints: 1.0,
+      id: 1,
+      color: const Color(0xFF85DB98),
+      isActive: true),
   LevelModel(
-    name: 'Intermediate',
+    user: 1,
+    level: 'Intermediate',
     isLocked: false,
-    progress: 0.4,
-    active: true,
+    totalPoints: 0.4,
+    isActive: true,
     id: 2,
     color: const Color(0xFF85C6DB),
   ),
   LevelModel(
-      name: 'Advanced',
+      user: 1,
+      level: 'Advanced',
       isLocked: false,
-      progress: 0.0,
-      active: false,
+      totalPoints: 0.0,
+      isActive: false,
       id: 3,
       color: const Color(0xFFE8DD72)),
   LevelModel(
-    name: 'Expert',
+    user: 1,
+    level: 'Expert',
     isLocked: true,
-    progress: 0.0,
-    active: false,
+    totalPoints: 0.0,
+    isActive: false,
     id: 4,
     color: const Color(0xFF85C6DB),
   ),
   LevelModel(
-    name: 'Elite',
+    user: 1,
+    level: 'Elite',
     isLocked: true,
-    progress: 0.0,
-    active: false,
+    totalPoints: 0.0,
+    isActive: false,
     id: 5,
     color: const Color(0xFF85C6DB),
   ),

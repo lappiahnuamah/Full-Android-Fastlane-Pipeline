@@ -31,7 +31,7 @@ class _CategoriesState extends State<Categories> {
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       getCategories();
-      //  CategoryFunctions().getFavoriteCategories(context: context);
+      CategoryFunctions().getFavoriteCategories(context: context);
     });
     super.initState();
   }
@@ -98,6 +98,8 @@ class _CategoriesState extends State<Categories> {
                               builder: (context, search, child) {
                                 return SingleChildScrollView(
                                   child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       //Favorite Categories
                                       if (categoryProvider

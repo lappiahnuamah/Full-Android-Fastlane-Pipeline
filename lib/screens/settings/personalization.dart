@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
+import 'package:savyminds/functions/categories/categories_functions.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
@@ -26,7 +29,6 @@ class _PersonalizationState extends State<Personalization> {
   List<CategoryModel> interests = [];
   List<CategoryModel> selectedCategories = [];
 
-  List<CategoryModel> serverSelectedCategories = [];
   bool categoriesReady = true;
 
   TextEditingController searchController = TextEditingController();
@@ -35,12 +37,23 @@ class _PersonalizationState extends State<Personalization> {
 
   @override
   void initState() {
-    getFavoriteCategories();
     categoryProvider = context.read<CategoryProvider>();
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      getFavoriteFromApi();
+      selectedCategories = categoryProvider.favoriteCategories;
+      setState(() {});
+    });
+
     super.initState();
   }
 
-  bool savingInterests = false;
+  bool savingCategories = false;
+
+  getFavoriteFromApi() async {
+    selectedCategories =
+        await CategoryFunctions().getFavoriteCategories(context: context) ?? [];
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,14 +114,6 @@ class _PersonalizationState extends State<Personalization> {
                                           onTap: () {
                                             selectedCategories.remove(
                                                 selectedCategories[index]);
-                                            // Unnfollow on server
-                                            // if (serverSelectedCategories.contains(
-                                            //     selectedCategories[index])) {
-                                            //   // PostFunctions().unFollowTag(context,
-                                            //   //     selectedCategories[index].id ?? 0);
-                                            //   serverSelectedCategories.remove(
-                                            //       selectedCategories[index]);
-                                            // }
                                             setState(() {});
                                           },
                                           isSelected: true,
@@ -137,17 +142,6 @@ class _PersonalizationState extends State<Personalization> {
                                           selectedCategories.remove(
                                               categoryProvider
                                                   .categories[index]);
-
-                                          // remove from server
-                                          // if (serverSelectedCategories.contains(
-                                          //     selectedCategories[index])) {
-                                          //   // PostFunctions().unFollowTag(
-                                          //   //     context,
-                                          //   //     selectedCategories[index].id ??
-                                          //   //         0);
-                                          //   serverSelectedCategories.remove(
-                                          //       selectedCategories[index]);
-                                          // }
                                         } else {
                                           selectedCategories.add(
                                               categoryProvider
@@ -208,12 +202,31 @@ class _PersonalizationState extends State<Personalization> {
                         key: const Key('proceed-button'),
                         onTap: () async {
                           setState(() {
-                            savingInterests = true;
+                            savingCategories = true;
                           });
 
+                          final selectedIds =
+                              selectedCategories.map((e) => e.id).toList();
+
+                          final result = await CategoryFunctions()
+                              .favoriteCategories(context, selectedIds);
+
                           setState(() {
-                            savingInterests = false;
+                            savingCategories = false;
                           });
+
+                          if (result) {
+                            Fluttertoast.showToast(
+                                msg: 'Changes saved successfully');
+
+                            categoryProvider
+                                .setFavoriteCategories(selectedCategories);
+                            if (!mounted) return;
+                            Navigator.pop(context);
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: 'Failed to save changes');
+                          }
                         },
                         child: Text(
                           'Proceed',
@@ -236,10 +249,10 @@ class _PersonalizationState extends State<Personalization> {
       ///////////////////////////////////////////////////////////
       ///////////// CIRCULAR PROGRESS INDICATOR///////////////////
       /////////////////////////////////////////////////////////
-      savingInterests
+      savingCategories
           ? LoadIndicator(
               child: appDialog(
-                  context: context, loadingMessage: "Saving interests"))
+                  context: context, loadingMessage: "Saving Changes ..."))
           : const SizedBox()
     ]);
   }

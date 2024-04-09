@@ -24,7 +24,7 @@ class LevelCard extends StatelessWidget {
           return Stack(
             children: [
               Container(
-                width: layout.maxWidth * level.progress,
+                width: layout.maxWidth * level.totalPoints,
                 height: layout.maxHeight,
                 color: level.color,
               ),
@@ -33,7 +33,7 @@ class LevelCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: level.active
+                    color: level.isActive
                         ? AppColors.hintTextBlack
                         : AppColors.notSelectedColor,
                   ),
@@ -51,10 +51,10 @@ class LevelCard extends StatelessWidget {
                         ),
                       if (level.isLocked) SizedBox(width: d.pSW(5)),
                       CustomText(
-                        label: level.name,
+                        label: level.level,
                         fontSize: getFontSize(12, size),
                         fontWeight: FontWeight.w400,
-                        color: level.active
+                        color: level.isActive
                             ? AppColors.hintTextBlack
                             : AppColors.notSelectedColor,
                       ),

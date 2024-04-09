@@ -5,6 +5,7 @@ import 'package:savyminds/models/game_key_model.dart';
 import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/resources/app_enums.dart';
 import 'package:savyminds/screens/profile/components/key_card.dart';
 import 'package:savyminds/screens/records/components/record_rank_header.dart';
 import 'package:savyminds/screens/settings/personalization.dart';
@@ -190,6 +191,7 @@ List gameKeyList = const [
     amount: 3,
     icon: 'assets/icons/game_keys/golden_key.svg',
     isLocked: false,
+    type: GameKeyType.goldenKey,
   ),
   GameKeyModel(
     id: 1,
@@ -197,6 +199,7 @@ List gameKeyList = const [
     amount: 3,
     icon: 'assets/icons/game_keys/fifty_fifty.svg',
     isLocked: false,
+    type: GameKeyType.goldenKey,
   ),
   GameKeyModel(
     id: 1,
@@ -204,6 +207,7 @@ List gameKeyList = const [
     amount: 2,
     icon: 'assets/icons/game_keys/hint_key.svg',
     isLocked: false,
+    type: GameKeyType.goldenKey,
   ),
   GameKeyModel(
     id: 1,
@@ -211,6 +215,7 @@ List gameKeyList = const [
     amount: 3,
     icon: 'assets/icons/game_keys/freeze_time_key.svg',
     isLocked: false,
+    type: GameKeyType.goldenKey,
   ),
   GameKeyModel(
     id: 1,
@@ -218,6 +223,7 @@ List gameKeyList = const [
     amount: 3,
     icon: 'assets/icons/game_keys/retake_key.svg',
     isLocked: false,
+    type: GameKeyType.goldenKey,
   ),
   GameKeyModel(
     id: 1,
@@ -225,6 +231,7 @@ List gameKeyList = const [
     amount: 3,
     icon: 'assets/icons/game_keys/swap_key.svg',
     isLocked: true,
+    type: GameKeyType.goldenKey,
   ),
   GameKeyModel(
     id: 1,
@@ -232,6 +239,7 @@ List gameKeyList = const [
     amount: 3,
     icon: 'assets/icons/game_keys/double_points.svg',
     isLocked: true,
+    type: GameKeyType.goldenKey,
   ),
   GameKeyModel(
     id: 1,
@@ -239,5 +247,6 @@ List gameKeyList = const [
     amount: 3,
     icon: 'assets/icons/game_keys/mystery_box.svg',
     isLocked: true,
+    type: GameKeyType.goldenKey,
   ),
 ];

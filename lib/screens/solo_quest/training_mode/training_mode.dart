@@ -31,50 +31,53 @@ class TrainingMode extends StatefulWidget {
 class _TrainingModeState extends State<TrainingMode> {
   late CategoryProvider categoryProvider;
   CategoryModel? selectedCategory;
-
   List<LevelModel> levelList = [
     LevelModel(
-      name: 'Beginner',
+      user: 1,
+      level: 'Beginner',
       isLocked: false,
-      progress: 0,
-      active: true,
+      totalPoints: 0,
+      isActive: true,
       id: 1,
       color: const Color(0xFF85DB98),
     ),
     LevelModel(
-      name: 'Intermediate',
+      user: 1,
+      level: 'Intermediate',
       isLocked: false,
-      progress: 0,
-      active: true,
+      totalPoints: 0,
+      isActive: true,
       id: 2,
       color: const Color(0xFF85C6DB),
     ),
     LevelModel(
-      name: 'Advanced',
+      user: 1,
+      level: 'Advanced',
       isLocked: false,
-      progress: 0.0,
-      active: true,
+      totalPoints: 0.0,
+      isActive: true,
       id: 3,
       color: const Color(0xFFE8DD72),
     ),
     LevelModel(
-      name: 'Expert',
-      isLocked: false,
-      progress: 0.0,
-      active: true,
+      user: 1,
+      level: 'Expert',
+      isLocked: true,
+      totalPoints: 0.0,
+      isActive: false,
       id: 4,
       color: const Color(0xFF85C6DB),
     ),
     LevelModel(
-      name: 'Elite',
-      isLocked: false,
-      progress: 0.0,
-      active: true,
+      user: 1,
+      level: 'Elite',
+      isLocked: true,
+      totalPoints: 0.0,
+      isActive: false,
       id: 5,
       color: const Color(0xFF85C6DB),
     ),
   ];
-
   @override
   void initState() {
     categoryProvider = context.read<CategoryProvider>();
@@ -147,10 +150,10 @@ class _TrainingModeState extends State<TrainingMode> {
                   InkWell(
                     onTap: () {
                       for (var level in levelList) {
-                        level.progress = 0;
+                        level.totalPoints = 0;
                       }
                       setState(() {
-                        levelList[i].progress = 1;
+                        levelList[i].totalPoints = 1;
                       });
                     },
                     child: LevelCard(

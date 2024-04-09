@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:savyminds/resources/app_enums.dart';
 
 class GameKeyModel extends Equatable {
   final int id;
@@ -6,6 +7,7 @@ class GameKeyModel extends Equatable {
   final int amount;
   final String icon;
   final bool isLocked;
+  final GameKeyType type;
 
   const GameKeyModel({
     required this.id,
@@ -13,7 +15,26 @@ class GameKeyModel extends Equatable {
     required this.amount,
     required this.icon,
     required this.isLocked,
+    required this.type,
   });
+
+  copyWith({
+    int? id,
+    String? name,
+    int? amount,
+    String? icon,
+    bool? isLocked,
+    GameKeyType? type,
+  }) {
+    return GameKeyModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      amount: amount ?? this.amount,
+      icon: icon ?? this.icon,
+      isLocked: isLocked ?? this.isLocked,
+      type: type ?? this.type,
+    );
+  }
 
   factory GameKeyModel.fromJson(Map<String, dynamic> json) {
     return GameKeyModel(
@@ -22,6 +43,7 @@ class GameKeyModel extends Equatable {
       amount: json['amount'] ?? "",
       icon: json['icon'] ?? "",
       isLocked: json['is_locked'] ?? true,
+      type: GameKeyType.values[json['type'] ?? 0],
     );
   }
 

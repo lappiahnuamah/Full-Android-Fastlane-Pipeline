@@ -29,4 +29,15 @@ class AppImages {
 
   //
   static String groupPicBackground = "assets/icons/group_pic_back.png";
+  static String backGear = "assets/icons/back_gear.svg";
+
+  //Key
+  static String fiftyFiftyKey = "assets/icons/game_keys/fifty_fifty.svg";
+  static String goldenKey = "assets/icons/game_keys/golden_key.svg";
+  static String doublePoints = "assets/icons/game_keys/double_points.svg";
+  static String freezeTimeKey = "assets/icons/game_keys/freeze_time_key.svg";
+  static String hintKey = "assets/icons/game_keys/hint_key.svg";
+  static String mysteryBox = "assets/icons/game_keys/mystery_box.svg";
+  static String retakeKey = "assets/icons/game_keys/retake_key.svg";
+  static String swapKey = "assets/icons/game_keys/swap_key.svg";
 }

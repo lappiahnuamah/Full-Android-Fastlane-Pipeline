@@ -13,7 +13,7 @@ class TransformedButton extends StatelessWidget {
       this.textColor,
       this.fontSize,
       this.textWeight,
-      this.isReversed,
+      this.isReversed = false,
       this.height,
       this.keepBlue,
       this.width,
@@ -25,7 +25,7 @@ class TransformedButton extends StatelessWidget {
   final Color? textColor;
   final FontWeight? textWeight;
   final double? fontSize;
-  final bool? isReversed;
+  final bool isReversed;
   final double? height;
   final double? width;
   final bool? keepBlue;
@@ -33,8 +33,6 @@ class TransformedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final bright = Theme.of(context).brightness;
-
     return SizedBox(
         height: height,
         width: width,
@@ -43,26 +41,15 @@ class TransformedButton extends StatelessWidget {
             child: Stack(
               alignment: AlignmentDirectional.center,
               children: [
-                (buttonColor == AppColors.kGameGreen)
-                    ? SvgPicture.asset(
-                        "assets/icons/buttons/green_button.svg",
-                        height: height,
-                        width: width,
-                        fit: BoxFit.fill,
-                      )
-                    : Image.asset(
-                        buttonColor == AppColors.kGameRed ||
-                                buttonColor == AppColors.kGameDarkRed
-                            ? "assets/images/red_button.png"
-                            : bright == Brightness.dark
-                                ? keepBlue ?? false
-                                    ? "assets/images/blue_button.png"
-                                    : "assets/images/grey_button.png"
-                                : "assets/images/blue_button.png",
-                        height: height,
-                        width: width,
-                        fit: BoxFit.fill,
-                      ),
+                SvgPicture.asset(
+                    !isReversed
+                        ? "assets/icons/option1.svg"
+                        : "assets/icons/option2.svg",
+                    height: height,
+                    width: width,
+                    fit: BoxFit.fill,
+                    colorFilter: ColorFilter.mode(
+                        buttonColor ?? AppColors.kGameBlue, BlendMode.srcIn)),
                 Align(
                   child: Padding(
                     padding: EdgeInsets.symmetric(
@@ -74,7 +61,7 @@ class TransformedButton extends StatelessWidget {
                       style: TextStyle(
                           fontFamily: AppFonts.caveat,
                           color: textColor ?? Colors.white,
-                          fontSize: fontSize ?? getFontSize(22, size),
+                          fontSize: getFontSize(fontSize ?? 22, size),
                           fontWeight: textWeight,
                           letterSpacing: 1.2),
                     ),
