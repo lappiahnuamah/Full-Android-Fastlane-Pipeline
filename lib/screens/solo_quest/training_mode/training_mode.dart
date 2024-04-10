@@ -204,13 +204,16 @@ class _TrainingModeState extends State<TrainingMode> {
               height: d.pSH(30),
             ),
             if (selectedCategory != null)
-              TransformedButton(
-                onTap: () {},
-                buttonColor: AppColors.kGameGreen,
-                buttonText: ' START ',
-                textColor: Colors.white,
-                textWeight: FontWeight.bold,
-                height: d.pSH(66),
+              SizedBox(
+                width: d.pSH(240),
+                child: TransformedButton(
+                  onTap: () {},
+                  buttonColor: AppColors.kGameGreen,
+                  buttonText: ' START ',
+                  textColor: Colors.white,
+                  textWeight: FontWeight.bold,
+                  height: d.pSH(66),
+                ),
               ),
             SizedBox(height: d.pSH(16)),
           ]),

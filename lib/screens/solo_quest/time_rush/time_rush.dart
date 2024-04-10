@@ -157,13 +157,16 @@ class _TimeRushState extends State<TimeRush> {
                     SizedBox(height: d.pSH(40)),
                     const AvailalableKeysWidget(),
                     SizedBox(height: d.pSH(40)),
-                    TransformedButton(
-                      onTap: () {},
-                      buttonColor: AppColors.kGameGreen,
-                      buttonText: ' START ',
-                      textColor: Colors.white,
-                      textWeight: FontWeight.bold,
-                      height: d.pSH(66),
+                    SizedBox(
+                      width: d.pSH(240),
+                      child: TransformedButton(
+                        onTap: () {},
+                        buttonColor: AppColors.kGameGreen,
+                        buttonText: ' START ',
+                        textColor: Colors.white,
+                        textWeight: FontWeight.bold,
+                        height: d.pSH(66),
+                      ),
                     ),
                   ],
                 ),

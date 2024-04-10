@@ -93,19 +93,22 @@ class _ChallengeOfTheDayState extends State<ChallengeOfTheDay> {
             ),
             SizedBox(height: d.pSH(20)),
             Flexible(child: Container()),
-            TransformedButton(
-              onTap: () {
-                nextScreen(
-                    context,
-                    StartChallengeOfTheDay(
-                        quest: widget.quest,
-                        selectedCategories: selectedCategories));
-              },
-              buttonColor: AppColors.kGameGreen,
-              buttonText: ' GO! ',
-              textColor: Colors.white,
-              textWeight: FontWeight.bold,
-              height: d.pSH(66),
+            SizedBox(
+              width: d.pSH(240),
+              child: TransformedButton(
+                onTap: () {
+                  nextScreen(
+                      context,
+                      StartChallengeOfTheDay(
+                          quest: widget.quest,
+                          selectedCategories: selectedCategories));
+                },
+                buttonColor: AppColors.kGameGreen,
+                buttonText: ' GO! ',
+                textColor: Colors.white,
+                textWeight: FontWeight.bold,
+                height: d.pSH(66),
+              ),
             ),
             SizedBox(height: d.pSH(16)),
           ],

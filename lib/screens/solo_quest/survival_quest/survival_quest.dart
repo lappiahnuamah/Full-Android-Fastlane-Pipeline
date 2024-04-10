@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -45,133 +47,143 @@ class _SurvivalQuestState extends State<SurvivalQuest> {
       pageTitle: widget.quest.name,
       child: Padding(
         padding: EdgeInsets.all(d.pSH(16)),
-        child: SingleChildScrollView(
-          child: Column(children: [
-            QuestIconDescCard(quest: widget.quest),
-            SizedBox(height: d.pSH(40)),
-            selectedCategory != null
-                ? SizedBox(
-                    height: 159.6,
-                    width: 187,
-                    child: CategoryCard(
-                      category: selectedCategory!,
-                      hidePlay: true,
-                    ),
-                  )
-                : Stack(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(bottom: d.pSH(5)),
-                        child: CategoryPlaceholder(
-                          height: 159,
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(children: [
+                  QuestIconDescCard(quest: widget.quest),
+                  SizedBox(height: d.pSH(40)),
+                  selectedCategory != null
+                      ? SizedBox(
+                          height: 159.6,
                           width: 187,
-                          label: 'Click here to select a category ',
-                          onTap: () async {
-                            final result = await nextScreen(
-                                context, const SelectCategory());
-                            if (result is CategoryModel) {
-                              setState(() {
-                                selectedCategory = result;
-                              });
-                            }
-                          },
-                        ),
-                      ),
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              selectedCategory =
-                                  categoryProvider.getRandomCategory();
-                            });
-                          },
-                          child: SvgPicture.asset(
-                            AppImages.randomIcon,
+                          child: CategoryCard(
+                            category: selectedCategory!,
+                            hidePlay: true,
                           ),
+                        )
+                      : Stack(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(bottom: d.pSH(5)),
+                              child: CategoryPlaceholder(
+                                height: 159,
+                                width: 187,
+                                label: 'Click here to select a category ',
+                                onTap: () async {
+                                  final result = await nextScreen(
+                                      context, const SelectCategory());
+                                  if (result is CategoryModel) {
+                                    setState(() {
+                                      selectedCategory = result;
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
+                            Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    selectedCategory =
+                                        categoryProvider.getRandomCategory();
+                                  });
+                                },
+                                child: SvgPicture.asset(
+                                  AppImages.randomIcon,
+                                ),
+                              ),
+                            )
+                          ],
                         ),
-                      )
+                  SizedBox(height: d.pSH(30)),
+                  Wrap(
+                    runSpacing: d.pSH(10),
+                    spacing: d.pSW(15),
+                    alignment: WrapAlignment.center,
+                    children: [
+                      for (int i = 0; i < levelList.length; i++)
+                        LevelCard(
+                          level: levelList[i],
+                        ),
                     ],
                   ),
-            SizedBox(height: d.pSH(30)),
-            Wrap(
-              runSpacing: d.pSH(10),
-              spacing: d.pSW(15),
-              alignment: WrapAlignment.center,
-              children: [
-                for (int i = 0; i < levelList.length; i++)
-                  LevelCard(
-                    level: levelList[i],
-                  ),
-              ],
-            ),
-            SizedBox(height: d.pSH(20)),
-            RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                    style: TextStyle(
-                      color: AppColors.textBlack,
-                      fontSize: getFontSize(24, size),
-                      fontFamily: AppFonts.caveat,
-                      height: 1.5,
-                      fontStyle: FontStyle.italic,
-                    ),
-                    children: [
-                      //Category not selected
-                      if (selectedCategory == null)
-                        const TextSpan(
-                            text: 'Hint:',
-                            style: TextStyle(color: AppColors.kGameDarkRed)),
+                  SizedBox(height: d.pSH(20)),
+                  RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                          style: TextStyle(
+                            color: AppColors.textBlack,
+                            fontSize: getFontSize(24, size),
+                            fontFamily: AppFonts.caveat,
+                            height: 1.5,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          children: [
+                            //Category not selected
+                            if (selectedCategory == null)
+                              const TextSpan(
+                                  text: 'Hint:',
+                                  style:
+                                      TextStyle(color: AppColors.kGameDarkRed)),
 
-                      if (selectedCategory == null)
-                        const TextSpan(
-                            text:
-                                ' Having a recharge mystery box can be really useful if you are about to lose all your lives.'),
+                            if (selectedCategory == null)
+                              const TextSpan(
+                                  text:
+                                      ' Having a recharge mystery box can be really useful if you are about to lose all your lives.'),
 
-                      //Category selected
-                      if (selectedCategory != null)
-                        const TextSpan(
-                            text:
-                                'The goal is to not lose all your lives. However, each remaining live Fetches points.\n'),
-                      if (selectedCategory != null)
-                        const TextSpan(
-                          text: 'Once started you cannot pause the game.',
-                          style: TextStyle(color: AppColors.kGameDarkRed),
+                            //Category selected
+                            if (selectedCategory != null)
+                              const TextSpan(
+                                  text:
+                                      'The goal is to not lose all your lives. However, each remaining live Fetches points.\n'),
+                            if (selectedCategory != null)
+                              const TextSpan(
+                                text: 'Once started you cannot pause the game.',
+                                style: TextStyle(color: AppColors.kGameDarkRed),
+                              ),
+                          ])),
+                  SizedBox(height: d.pSH(20)),
+                  if (selectedCategory != null)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ...List.generate(
+                          4,
+                          (index) => Padding(
+                            padding: EdgeInsets.symmetric(horizontal: d.pSW(5)),
+                            child: SvgPicture.asset(
+                              AppImages.lifeSvg,
+                            ),
+                          ),
                         ),
-                    ])),
-            SizedBox(height: d.pSH(20)),
-            if (selectedCategory != null)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ...List.generate(
-                    4,
-                    (index) => Padding(
-                      padding: EdgeInsets.symmetric(horizontal: d.pSW(5)),
-                      child: SvgPicture.asset(
-                        AppImages.lifeSvg,
-                      ),
+                      ],
                     ),
-                  ),
-                ],
+                  SizedBox(height: d.pSH(25)),
+                  if (selectedCategory != null) const AvailalableKeysWidget(),
+                ]),
               ),
-            SizedBox(height: d.pSH(25)),
-            if (selectedCategory != null) const AvailalableKeysWidget(),
+            ),
             SizedBox(
               height: d.pSH(30),
             ),
             if (selectedCategory != null)
-              TransformedButton(
-                onTap: () {},
-                buttonColor: AppColors.kGameGreen,
-                buttonText: ' START ',
-                textColor: Colors.white,
-                textWeight: FontWeight.bold,
-                height: d.pSH(66),
+              SizedBox(
+                width: d.pSH(240),
+                child: TransformedButton(
+                  onTap: () {},
+                  buttonColor: AppColors.kGameGreen,
+                  buttonText: ' START ',
+                  textColor: Colors.white,
+                  textWeight: FontWeight.bold,
+                  height: d.pSH(66),
+                ),
               ),
-            SizedBox(height: d.pSH(16)),
-          ]),
+            if (Platform.isIOS) SizedBox(height: d.pSH(16)),
+          ],
         ),
       ),
     );

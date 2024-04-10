@@ -105,7 +105,7 @@ class _GamePageKeysListState extends State<GamePageKeysList> {
               number: gameItemsProvider
                       .userKeys[GameKeyType.freezeTimeKey]?.amount ??
                   0, onTap: () {
-            // widget.onFreezeTapped.call();
+            widget.onFreezeTapped.call();
             gameItemsProvider.reduceKeyAmount(GameKeyType.freezeTimeKey);
           }),
           keyWithAmount(size,

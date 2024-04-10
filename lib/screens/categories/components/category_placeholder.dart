@@ -36,18 +36,18 @@ class CategoryPlaceholder extends StatelessWidget {
           //
           Align(
             child: Padding(
-              padding: EdgeInsets.all(d.pSH(width * 0.12)),
+              padding: EdgeInsets.all(d.pSH(width * 0.1)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   CustomText(
                     label: '?',
                     color: AppColors.notSelectedColor,
-                    fontSize: getFontSize(width * 0.233, size),
+                    fontSize: getFontSize(width * 0.2, size),
                   ),
                   CustomText(
                     label: label ?? 'Select Category',
-                    fontSize: getFontSize(width * 0.11, size),
+                    fontSize: getFontSize(width * 0.1, size),
                     color: AppColors.notSelectedColor,
                     textAlign: TextAlign.center,
                   ),

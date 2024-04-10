@@ -16,12 +16,12 @@ import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_enums.dart';
 import 'package:savyminds/resources/app_fonts.dart';
-import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/utils/func.dart';
+import 'package:savyminds/widgets/answer_button.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 import 'package:savyminds/widgets/game_page_background.dart';
 import 'package:savyminds/widgets/game_page_keys_list.dart';
-import 'package:savyminds/widgets/trasformed_button.dart';
+import 'package:savyminds/widgets/game_top_keys_list.dart';
 
 class CategoryGamePage extends StatefulWidget {
   const CategoryGamePage({super.key, required this.category});
@@ -40,13 +40,63 @@ class _CategoryGamePageState extends State<CategoryGamePage> {
   int selectedIndex = 0;
   Timer? timer;
 
-  startTimer(int? time) {}
+  startTimer(int? time) {
+    seconds.value = time ?? 10;
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      seconds.value = seconds.value - 1;
+      if (seconds.value == 0) {
+        if (selectedIndex < questionList.length - 1) {
+          pageController.nextPage(
+              duration: const Duration(
+                milliseconds: 400,
+              ),
+              curve: Curves.easeIn);
+          // gameProvider.addSelectedAnswer(
+          //     option: selectedAnswer,
+          //     questioinId: questionList[selectedIndex].id);
+          if (selectedAnswer == null) {
+            // gameProvider.resetAnswerStreak();
+          }
+          timer.cancel();
+          FlameAudio.bgm.stop();
+        } else {
+          // gameProvider.addSelectedAnswer(
+          //     option: selectedAnswer,
+          //     questioinId: questionList[selectedIndex].id);
+          // if (selectedAnswer == null) {
+          //   gameProvider.resetAnswerStreak();
+          //}
+          timer.cancel();
+          FlameAudio.bgm.stop();
+          FlameAudio.play('outro_game_over.mp3');
+          // nextScreen(
+          //     context,
+          //     SubmitPage(
+          //       questionList: questionList,
+          //     ));
+          // pageController.jumpToPage(0);
+          selectedIndex = 0;
+          startTimer(15);
+          setState(() {});
+        }
+      }
+      if (seconds.value == 5) {
+        // shakeFiftyFiftyIcon();
+        FlameAudio.bgm.play('five_sec_more.mp3');
+      }
+      if (seconds.value == 3) {
+        // shakeGoldenBadge();
+      }
+    });
+  }
 
   late GameItemsProvider gameItemsProvider;
 
   @override
   void initState() {
     gameItemsProvider = context.read<GameItemsProvider>();
+    startTimer(questionList[selectedIndex].questionTime);
+    FlameAudio.bgm.stop();
     super.initState();
   }
 
@@ -64,8 +114,8 @@ class _CategoryGamePageState extends State<CategoryGamePage> {
           return Column(
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: d.pSH(16), vertical: d.pSH(10)),
+                padding:
+                    EdgeInsets.fromLTRB(d.pSH(16), d.pSH(10), d.pSH(16), 0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -92,6 +142,7 @@ class _CategoryGamePageState extends State<CategoryGamePage> {
                   itemCount: questionList.length,
                   physics: const NeverScrollableScrollPhysics(),
                   onPageChanged: (val) {
+                    selectedIndex = val;
                     if (questionList[selectedIndex].isGolden) {
                       FlameAudio.play('when_question_is_star.mp3');
                     } else {
@@ -105,60 +156,84 @@ class _CategoryGamePageState extends State<CategoryGamePage> {
                       children: [
                         Expanded(
                           child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: d.pSH(16), vertical: d.pSH(10)),
+                            padding:
+                                EdgeInsets.symmetric(horizontal: d.pSH(16)),
                             child: Column(
                               children: [
                                 Expanded(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      SvgPicture.asset(
-                                        'assets/icons/star.svg',
-                                        height: d.pSH(33),
-                                      ),
-                                      SizedBox(height: d.pSH(20)),
-                                      Text(question.text,
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontFamily: AppFonts.caveat,
-                                            color: AppColors.textBlack,
-                                            fontSize: getFontSize(34, size),
-                                            fontWeight: FontWeight.w600,
-                                          )),
-                                      if (question.image.isNotEmpty)
-                                        SizedBox(height: d.pSH(20)),
-                                      if (question.image.isNotEmpty)
-                                        Flexible(
-                                          child: AspectRatio(
-                                            aspectRatio: 1,
-                                            child: Transform(
-                                              alignment: Alignment.center,
-                                              transform: Matrix4.identity()
-                                                ..setEntry(3, 2,
-                                                    0.002) // Adjust the perspective by changing this value
-                                                ..rotateX(0.3)
-                                                ..rotateY(0.05),
-                                              child: Container(
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              d.pSH(10))),
-                                                  padding:
-                                                      EdgeInsets.all(d.pSH(5)),
-                                                  child: Image.network(
-                                                    question.image,
-                                                    fit: BoxFit.fill,
+                                      if (question.isGolden)
+                                        SvgPicture.asset(
+                                          'assets/icons/star.svg',
+                                          height: d.pSH(25),
+                                        ).animate()
+                                          ..shimmer(duration: 1000.ms)
+                                          ..scale(duration: 1000.ms),
+                                      SizedBox(height: d.pSH(10)),
+                                      Expanded(
+                                          child: Align(
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(question.text,
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontFamily: AppFonts.caveat,
+                                                    color: AppColors.textBlack,
+                                                    fontSize:
+                                                        getFontSize(34, size),
+                                                    fontWeight: FontWeight.w600,
                                                   )),
-                                            ),
+                                              if (question.image.isNotEmpty)
+                                                SizedBox(height: d.pSH(20)),
+                                              if (question.image.isNotEmpty)
+                                                SizedBox(
+                                                  height: d.pSH(200),
+                                                  child: AspectRatio(
+                                                    aspectRatio: 1,
+                                                    child: Transform(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      transform:
+                                                          Matrix4.identity()
+                                                            ..setEntry(3, 2,
+                                                                0.002) // Adjust the perspective by changing this value
+                                                            ..rotateX(0.3)
+                                                            ..rotateY(0.05),
+                                                      child: Container(
+                                                          decoration: BoxDecoration(
+                                                              color:
+                                                                  Colors.white,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          d.pSH(
+                                                                              20))),
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  d.pSH(5)),
+                                                          child: Image.network(
+                                                            question.image,
+                                                            fit: BoxFit.fill,
+                                                          )),
+                                                    ),
+                                                  ),
+                                                ),
+                                              if (question.image.isNotEmpty)
+                                                SizedBox(height: d.pSH(10)),
+                                            ],
                                           ),
                                         ),
-                                      if (question.image.isNotEmpty)
-                                        SizedBox(height: d.pSH(10)),
+                                      )),
                                     ],
                                   ),
                                 ),
+
+                                //Question Number and Timer
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -174,35 +249,7 @@ class _CategoryGamePageState extends State<CategoryGamePage> {
                                           fontWeight: FontWeight.w700),
                                     ),
                                     SizedBox(width: d.pSH(30)),
-                                    //Golden
-                                    if (question.isGolden)
-                                      Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            SvgPicture.asset(
-                                              AppImages.hintKey,
-                                              height: d.pSH(33),
-                                            ),
-                                            SizedBox(width: d.pSH(34)),
-                                            SvgPicture.asset(
-                                              AppImages.mysteryBox,
-                                              height: d.pSH(43),
-                                            ).animate()
-                                              ..shimmer(duration: 1000.ms)
-                                              ..scale(duration: 1000.ms),
-                                            SizedBox(width: d.pSH(30)),
-                                            SvgPicture.asset(
-                                              AppImages.doublePoints,
-                                              height: d.pSH(33),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-
+                                    const GameTopKeysList(),
                                     SizedBox(width: d.pSH(30)),
                                     ////
                                     /// Timer
@@ -225,114 +272,110 @@ class _CategoryGamePageState extends State<CategoryGamePage> {
                             ),
                           ),
                         ),
+                        SizedBox(height: d.pSH(5)),
                         const Divider(color: AppColors.blueBird, thickness: 4),
                         Expanded(
-                          child: Container(
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: Stack(
-                                    alignment: AlignmentDirectional.center,
-                                    children: [
-                                      ///// Options --- (Text)
-                                      ///
-                                      if (question.option.isNotEmpty &&
-                                          question.option[0].image.isEmpty &&
-                                          question.option[0].text != '.')
-                                        Container(
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: Stack(
+                                  alignment: AlignmentDirectional.center,
+                                  children: [
+                                    ///// Options --- (Text)
+                                    ///
+                                    if (question.option.isNotEmpty &&
+                                        question.option[0].image.isEmpty &&
+                                        question.option[0].text != '.')
+                                      Container(
+                                        padding: EdgeInsets.only(
+                                          left: d.pSW(15),
+                                          right: d.pSW(15),
+                                          top: d.pSH(5),
+                                        ),
+                                        child: ValueListenableBuilder<
+                                                List<int>>(
+                                            valueListenable: fiftyfityList,
+                                            builder: (context, list, child) {
+                                              return SingleChildScrollView(
+                                                child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      ...List.generate(
+                                                          question
+                                                              .option.length,
+                                                          (subIndex) {
+                                                        final option = question
+                                                            .option[subIndex];
+
+                                                        return list.contains(
+                                                                option.id)
+                                                            ? const SizedBox()
+                                                            : AnswerButton(
+                                                                answer: option,
+                                                                onTap: () {},
+                                                                isSelected:
+                                                                    selectedAnswer
+                                                                            ?.id ==
+                                                                        option
+                                                                            .id,
+                                                                isReversed:
+                                                                    subIndex %
+                                                                            2 ==
+                                                                        0);
+                                                      }),
+                                                      const SizedBox(height: 20)
+                                                    ]),
+                                              );
+                                            }),
+                                      ),
+
+                                    if (question.option.isNotEmpty &&
+                                            question
+                                                .option[0].image.isNotEmpty ||
+                                        question.option[0].text == '.')
+                                      Container(
+                                          width: d.getPhoneScreenWidth() * 0.75,
                                           padding: EdgeInsets.only(
-                                            left: d.pSW(15),
-                                            right: d.pSW(15),
-                                            top: d.pSH(5),
-                                          ),
+                                              top: d.pSH(20),
+                                              bottom: d.pSH(10)),
                                           child: ValueListenableBuilder<
                                                   List<int>>(
                                               valueListenable: fiftyfityList,
                                               builder: (context, list, child) {
-                                                return SingleChildScrollView(
-                                                  child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        ...List.generate(
-                                                            question
-                                                                .option.length,
-                                                            (subIndex) {
-                                                          final option =
-                                                              question.option[
-                                                                  subIndex];
-
-                                                          return list.contains(
-                                                                  option.id)
-                                                              ? const SizedBox()
-                                                              : _answerButton(
-                                                                  answer:
-                                                                      option,
-                                                                  onTap: () {},
-                                                                  isSelected:
-                                                                      selectedAnswer
-                                                                              ?.id ==
-                                                                          option
-                                                                              .id,
-                                                                  isReversed:
-                                                                      subIndex %
-                                                                              2 ==
-                                                                          0);
-                                                        }),
-                                                        const SizedBox(
-                                                            height: 20)
-                                                      ]),
-                                                );
-                                              }),
-                                        ),
-
-                                      if (question.option.isNotEmpty &&
-                                              question
-                                                  .option[0].image.isNotEmpty ||
-                                          question.option[0].text == '.')
-                                        Container(
-                                            padding: EdgeInsets.only(
-                                                left: d.pSW(28),
-                                                right: d.pSW(28),
-                                                top: d.pSH(20),
-                                                bottom: d.pSH(47)),
-                                            child: ValueListenableBuilder<
-                                                    List<int>>(
-                                                valueListenable: fiftyfityList,
-                                                builder:
-                                                    (context, list, child) {
-                                                  return imageOptionsDesign(
-                                                      question,
-                                                      context,
-                                                      index,
-                                                      list);
-                                                })),
-                                    ],
-                                  ),
+                                                return imageOptionsDesign(
+                                                    question,
+                                                    context,
+                                                    index,
+                                                    list);
+                                              })),
+                                  ],
                                 ),
-                                SizedBox(height: d.pSH(15)),
+                              ),
+                              SizedBox(height: d.pSH(15)),
 
-                                //Bottom Keys
-                                Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: d.pSH(16)),
-                                    child: GamePageKeysList(
-                                      answerStreaks: 3,
-                                      onFiftyTapped: () {
-                                        _useFiftyFiifty(question.option);
-                                      },
-                                      onRetakeTapped: () {},
-                                      onFreezeTapped: () {},
-                                      onSwapTapped: () {},
-                                      onGoldenTapped: () {
-                                        _useGoldenChance(
-                                            options: question.option,
-                                            questionID: question.id);
-                                      },
-                                    ))
-                              ],
-                            ),
+                              //Bottom Keys
+                              Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: d.pSH(16)),
+                                  child: GamePageKeysList(
+                                    answerStreaks: 3,
+                                    onFiftyTapped: () {
+                                      _useFiftyFiifty(question.option);
+                                    },
+                                    onRetakeTapped: () {},
+                                    onFreezeTapped: () {
+                                      _freezeTime(question.questionTime);
+                                    },
+                                    onSwapTapped: () {},
+                                    onGoldenTapped: () {
+                                      _useGoldenChance(
+                                          options: question.option,
+                                          questionID: question.id);
+                                    },
+                                  ))
+                            ],
                           ),
                         ),
                         if (Platform.isAndroid) SizedBox(height: d.pSH(8))
@@ -365,9 +408,9 @@ class _CategoryGamePageState extends State<CategoryGamePage> {
                       isReversed: false,
                       transform: Matrix4.identity()
                         ..setEntry(3, 2,
-                            0.002) // Adjust the perspective by changing this value
-                        ..rotateX(0.25)
-                        ..rotateY(-0.13)),
+                            0.005) // Adjust the perspective by changing this value
+                        ..rotateX(0.2)
+                        ..rotateY(-0.1)),
             ),
             SizedBox(width: d.pSH(15)),
             Expanded(
@@ -383,9 +426,9 @@ class _CategoryGamePageState extends State<CategoryGamePage> {
                           isReversed: false,
                           transform: Matrix4.identity()
                             ..setEntry(3, 2,
-                                0.002) // Adjust the perspective by changing this value
-                            ..rotateX(0.25)
-                            ..rotateY(0.13)),
+                                0.005) // Adjust the perspective by changing this value
+                            ..rotateX(0.2)
+                            ..rotateY(0.1)),
             ),
           ],
         )),
@@ -406,9 +449,9 @@ class _CategoryGamePageState extends State<CategoryGamePage> {
                           isReversed: true,
                           transform: Matrix4.identity()
                             ..setEntry(3, 2,
-                                0.002) // Adjust the perspective by changing this value
-                            ..rotateX(-0.25)
-                            ..rotateY(-0.13)),
+                                0.005) // Adjust the perspective by changing this value
+                            ..rotateX(-0.2)
+                            ..rotateY(-0.1)),
             ),
             SizedBox(width: d.pSH(15)),
             Expanded(
@@ -424,9 +467,9 @@ class _CategoryGamePageState extends State<CategoryGamePage> {
                           isReversed: true,
                           transform: Matrix4.identity()
                             ..setEntry(3, 2,
-                                0.002) // Adjust the perspective by changing this value
-                            ..rotateX(-0.25)
-                            ..rotateY(0.13)),
+                                0.005) // Adjust the perspective by changing this value
+                            ..rotateX(-0.2)
+                            ..rotateY(0.1)),
             ),
           ],
         ))
@@ -450,11 +493,11 @@ class _CategoryGamePageState extends State<CategoryGamePage> {
           child: Container(
               width: double.infinity,
               height: double.maxFinite,
-              padding: EdgeInsets.all(d.pSH(7)),
+              padding: EdgeInsets.all(d.pSH(5)),
               decoration: BoxDecoration(
                   color: isSelected
                       ? answer.isCorrect
-                          ? AppColors.kGameGreen
+                          ? AppColors.everGreen
                           : AppColors.kGameRed
                       : bright == Brightness.dark
                           ? AppColors.kGameDarkBlue
@@ -480,70 +523,17 @@ class _CategoryGamePageState extends State<CategoryGamePage> {
     );
   }
 
-  Widget _answerButton(
-      {required OptionModel answer,
-      required VoidCallback onTap,
-      required bool isSelected,
-      required bool isReversed}) {
-    return Container(
-      width: d.getPhoneScreenWidth() * 0.7,
-      constraints: BoxConstraints(minHeight: d.pSH(58)),
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      child: TransformedButton(
-        onTap: onTap,
-        buttonColor: isSelected
-            ? answer.isCorrect
-                ? AppColors.kGameGreen
-                : AppColors.kGameRed
-            : null,
-        buttonText: answer.text,
-        fontSize: 24,
-        textWeight: FontWeight.w700,
-        isReversed: !isReversed,
-      ),
-    );
-  }
-
-  List<QuestionModel> questionList = [
-    QuestionModel(
-        id: 1,
-        text:
-            'If Kofi is twice the age of Ama and Ama is dark, What is the name of their mother?',
-        option: [
-          OptionModel(
-              id: 1,
-              text: 'One of 2 options',
-              image: '',
-              question: 1,
-              isCorrect: true),
-          OptionModel(
-              id: 2,
-              text: 'One of 2 options',
-              image: '',
-              question: 1,
-              isCorrect: false),
-          OptionModel(
-              id: 3,
-              text: 'One of 2 options',
-              image: '',
-              question: 1,
-              isCorrect: false),
-          OptionModel(
-              id: 4,
-              text: 'One of 2 options',
-              image: '',
-              question: 1,
-              isCorrect: false)
-        ],
-        image: '',
-        points: 5,
-        isGolden: true,
-        questionTime: 15)
-  ];
-
   ////////////////////////////####################////////////////////////
   //////////////////////////  KEY TAPPED ACTIONS   ///////////////////////
   ////////////////////////////####################////////////////////////
+
+  _freezeTime(int questionTime) {
+    timer?.cancel();
+    setState(() {});
+    Future.delayed(Duration(seconds: questionTime), () {
+      startTimer(seconds.value);
+    });
+  }
 
   _useFiftyFiifty(List<OptionModel> options) {
     if (options.length > 2) {
@@ -572,7 +562,7 @@ class _CategoryGamePageState extends State<CategoryGamePage> {
       }
     }
     // breakTime = true;
-    timer?.cancel();
+    // timer?.cancel();
     setState(() {});
     // gameProvider.reduceGoldenChances();
     // loseStreaks = 0;
@@ -586,3 +576,97 @@ class _CategoryGamePageState extends State<CategoryGamePage> {
     });
   }
 }
+
+List<QuestionModel> questionList = [
+  QuestionModel(
+      id: 1,
+      text:
+          'If Kofi is twice the age of Ama and Ama is dark, What is the name of their mother?',
+      option: [
+        OptionModel(
+            id: 1,
+            text: 'One of 2 options',
+            image: '',
+            question: 1,
+            isCorrect: true),
+        OptionModel(
+            id: 2,
+            text: 'One of 2 options',
+            image: '',
+            question: 1,
+            isCorrect: false),
+        OptionModel(
+            id: 3,
+            text: 'One of 2 options',
+            image: '',
+            question: 1,
+            isCorrect: false),
+        OptionModel(
+            id: 4,
+            text: 'One of 2 options',
+            image: '',
+            question: 1,
+            isCorrect: false)
+      ],
+      image: '',
+      points: 5,
+      isGolden: true,
+      questionTime: 15),
+  QuestionModel(
+      id: 2,
+      text:
+          'These are some of the hardest trivial out there. You need more than memory to work these out.',
+      option: [
+        OptionModel(
+            id: 1,
+            text: '',
+            image:
+                'https://api.stage.linklounge.dev/media/game_options/Screenshot_2023-10-11_at_3.55.04PM.png',
+            question: 1,
+            isCorrect: true),
+        OptionModel(
+            id: 2,
+            text: '',
+            image:
+                'https://api.stage.linklounge.dev/media/game_options/Screenshot_2023-10-11_at_3.55.04PM.png',
+            question: 1,
+            isCorrect: false),
+        OptionModel(
+            id: 3,
+            text: '',
+            image:
+                'https://api.stage.linklounge.dev/media/game_options/Screenshot_2023-10-11_at_3.55.04PM.png',
+            question: 1,
+            isCorrect: false),
+        OptionModel(
+            id: 4,
+            text: '',
+            image:
+                'https://api.stage.linklounge.dev/media/game_options/Screenshot_2023-10-11_at_3.55.04PM.png',
+            question: 1,
+            isCorrect: false)
+      ],
+      image: '',
+      points: 5,
+      isGolden: true,
+      questionTime: 15),
+  QuestionModel(
+      id: 2,
+      text:
+          'These are some of the hardest trivial out there. You need more than memory to work these out.',
+      option: [
+        OptionModel(
+            id: 1, text: 'Dog', image: '', question: 1, isCorrect: true),
+        OptionModel(
+            id: 2, text: 'Cat', image: '', question: 1, isCorrect: false),
+        OptionModel(
+            id: 3, text: 'Snake', image: '', question: 1, isCorrect: false),
+        OptionModel(
+            id: 4, text: 'Bird', image: '', question: 1, isCorrect: false)
+      ],
+      image:
+          'https://api.stage.linklounge.dev/media/game_options/Screenshot_2023-10-11_at_3.55.04PM.png',
+      points: 5,
+      isGolden: true,
+      questionTime: 15),
+];
