@@ -8,6 +8,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
+import 'package:savyminds/data/dummy_questions.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/games/option_model.dart';
 import 'package:savyminds/models/games/question_model.dart';
@@ -16,10 +17,11 @@ import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_enums.dart';
 import 'package:savyminds/resources/app_fonts.dart';
-import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/answer_button.dart';
 import 'package:savyminds/widgets/custom_text.dart';
+import 'package:savyminds/widgets/dialogs/game_hint_dialog.dart';
+import 'package:savyminds/widgets/game_image_options.dart';
 import 'package:savyminds/widgets/game_page_background.dart';
 import 'package:savyminds/widgets/game_page_keys_list.dart';
 import 'package:savyminds/widgets/game_top_keys_list.dart';
@@ -40,6 +42,8 @@ class _CategoryGamePageState extends State<CategoryGamePage>
   ValueNotifier<int> seconds = ValueNotifier<int>(10);
   ValueNotifier<List<int>> fiftyfityList = ValueNotifier<List<int>>([]);
   OptionModel? selectedAnswer;
+  Map<int, dynamic> resultList = {};
+
 
   int selectedIndex = 0;
   Timer? timer;
@@ -65,6 +69,10 @@ class _CategoryGamePageState extends State<CategoryGamePage>
   String targetNumber = '';
   double fontSize = 45.0;
   int gamePoints = 1;
+
+int  currentGamePoints =0;
+int answerStreak = 0;
+int loseStreaks = 0;
 
   //swap
   PageController swapController = PageController(initialPage: 0);
@@ -177,7 +185,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
                             width: d.pSH(10),
                           ),
                           CustomText(
-                            label: '24',
+                            label: '$currentGamePoints',
                             color: AppColors.kPrimaryColor,
                             fontSize: getFontSize(24, size),
                             fontWeight: FontWeight.bold,
@@ -451,11 +459,14 @@ class _CategoryGamePageState extends State<CategoryGamePage>
                                                                 fiftyfityList,
                                                             builder: (context,
                                                                 list, child) {
-                                                              return imageOptionsDesign(
-                                                                  question,
-                                                                  context,
-                                                                  index,
-                                                                  list);
+                                                              return GameImageOptions(
+                                                                options: question.option,
+                                                                selectedAnswer: selectedAnswer,
+                                                                fiftyfityList: fiftyfityList.value,
+                                                                onOptionSelected: (option){
+                                                                  answerButtonPressed(option, question, context, index);
+                                                                },
+                                                                  );
                                                             })),
                                             ],
                                           ),
@@ -482,7 +493,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
                                               },
                                               onGoldenTapped: () {
                                                 _useGoldenChance(
-                                                    options: question.option,
+                                                    question: question,
                                                     questionID: question.id);
                                               },
                                             ))
@@ -545,138 +556,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
     ));
   }
 
-  Column imageOptionsDesign(QuestionModel question, BuildContext context,
-      int index, List<int> fiftyfityList) {
-    return Column(
-      children: [
-        Expanded(
-            child: Row(
-          children: [
-            Expanded(
-              child: fiftyfityList.contains(question.option[0].id)
-                  ? const SizedBox()
-                  : imageOptions(
-                      answer: question.option[0],
-                      onTap: () {},
-                      isSelected: selectedAnswer?.id == question.option[0].id,
-                      isReversed: false,
-                      transform: Matrix4.identity()
-                        ..setEntry(3, 2,
-                            0.005) // Adjust the perspective by changing this value
-                        ..rotateX(0.2)
-                        ..rotateY(-0.1)),
-            ),
-            SizedBox(width: d.pSH(15)),
-            Expanded(
-              child: question.option.length < 2
-                  ? const SizedBox()
-                  : fiftyfityList.contains(question.option[1].id)
-                      ? const SizedBox()
-                      : imageOptions(
-                          answer: question.option[1],
-                          onTap: () {},
-                          isSelected:
-                              selectedAnswer?.id == question.option[1].id,
-                          isReversed: false,
-                          transform: Matrix4.identity()
-                            ..setEntry(3, 2,
-                                0.005) // Adjust the perspective by changing this value
-                            ..rotateX(0.2)
-                            ..rotateY(0.1)),
-            ),
-          ],
-        )),
-        SizedBox(height: d.pSH(10)),
-        Expanded(
-            child: Row(
-          children: [
-            Expanded(
-              child: question.option.length < 3
-                  ? const SizedBox()
-                  : fiftyfityList.contains(question.option[2].id)
-                      ? const SizedBox()
-                      : imageOptions(
-                          answer: question.option[2],
-                          onTap: () {},
-                          isSelected:
-                              selectedAnswer?.id == question.option[2].id,
-                          isReversed: true,
-                          transform: Matrix4.identity()
-                            ..setEntry(3, 2,
-                                0.005) // Adjust the perspective by changing this value
-                            ..rotateX(-0.2)
-                            ..rotateY(-0.1)),
-            ),
-            SizedBox(width: d.pSH(15)),
-            Expanded(
-              child: question.option.length < 4
-                  ? const SizedBox()
-                  : fiftyfityList.contains(question.option[3].id)
-                      ? const SizedBox()
-                      : imageOptions(
-                          answer: question.option[3],
-                          onTap: () {},
-                          isSelected:
-                              selectedAnswer?.id == question.option[3].id,
-                          isReversed: true,
-                          transform: Matrix4.identity()
-                            ..setEntry(3, 2,
-                                0.005) // Adjust the perspective by changing this value
-                            ..rotateX(-0.2)
-                            ..rotateY(0.1)),
-            ),
-          ],
-        ))
-      ],
-    );
-  }
-
-  Widget imageOptions(
-      {required OptionModel answer,
-      required VoidCallback onTap,
-      required bool isSelected,
-      required bool isReversed,
-      required Matrix4 transform}) {
-    final bright = Theme.of(context).brightness;
-
-    return InkWell(
-      onTap: onTap,
-      child: Transform(
-          alignment: Alignment.center,
-          transform: transform, // Adjust the rotation angle if needed
-          child: Container(
-              width: double.infinity,
-              height: double.maxFinite,
-              padding: EdgeInsets.all(d.pSH(5)),
-              decoration: BoxDecoration(
-                  color: isSelected
-                      ? answer.isCorrect
-                          ? AppColors.everGreen
-                          : AppColors.kGameRed
-                      : bright == Brightness.dark
-                          ? AppColors.kGameDarkBlue
-                          : AppColors.kGameBlue,
-                  borderRadius: BorderRadius.circular(d.pSH(5))),
-              child: Container(
-                height: double.maxFinite,
-                color: AppColors.kWhite,
-                child: Image.network(
-                  answer.image,
-                  fit: BoxFit.fill,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Center(
-                      child: Icon(
-                        Icons.image_not_supported_rounded,
-                        color: AppColors.kGameBlue,
-                        size: 40,
-                      ),
-                    );
-                  },
-                ),
-              ))),
-    );
-  }
-
+ 
   void answerButtonPressed(OptionModel option, QuestionModel question,
       BuildContext context, int index) {
     selectedAnswer = option;
@@ -686,10 +566,9 @@ class _CategoryGamePageState extends State<CategoryGamePage>
     setState(() {});
     if (option.isCorrect) {
       FlameAudio.play('correct_ans.mp3');
-      _addPoints(questionPoints: question.points, isGolden: question.isGolden);
+      _addPoints(questionPoints: question.points, isGolden: question.isGolden,time:question.questionTime);
       // gameProvider.increaseAnswerStreak(
       //     context: context, hasGolden: question.isGolden && seconds.value > 6);
-      // loseStreaks = 0;
     } else {
       FlameAudio.play('wong_ans.mp3');
       if ((gameItemsProvider.userKeys[GameKeyType.retakeKey]?.amount ?? 0) >
@@ -698,8 +577,8 @@ class _CategoryGamePageState extends State<CategoryGamePage>
           showRetake = true;
         });
       }
-      // gameProvider.resetAnswerStreak();
-      //  loseStreaks++;
+      answerStreak=0;
+       loseStreaks++;
     }
 
     // GameComments().showGameCommentToast(
@@ -720,12 +599,11 @@ class _CategoryGamePageState extends State<CategoryGamePage>
         setState(() {});
       }
 
-      // moveToNextScreen(index: index, questionId: question.id);
+      moveToNextScreen(index: index, questionId: question.id);
     });
   }
 
-  _addPoints({required int questionPoints, required bool isGolden}) {
-    final int time = questionList[selectedIndex].questionTime;
+  _addPoints({required int questionPoints, required bool isGolden,required int time}) {
     if (seconds.value <= time * 0.4) {
       gamePoints = questionPoints;
     } else if (seconds.value <= time * 0.7) {
@@ -733,7 +611,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
     } else {
       gamePoints = questionPoints * 3;
       if (isGolden) {
-        // gameProvider.addGoldenChances(context);
+        gameItemsProvider.increaseKeyAmount(GameKeyType.goldenKey);
       }
     }
     if (timesTwoActivated) {
@@ -793,53 +671,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
     await showDialog(
         context: context,
         builder: ((context) => AlertDialog(
-              content: Column(mainAxisSize: MainAxisSize.min, children: [
-                const CustomText(
-                  label: 'Hint To Question',
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: AppFonts.caveat,
-                ),
-                SizedBox(height: d.pSH(20)),
-                SvgPicture.asset(
-                  AppImages.hintKey,
-                  height: d.pSH(33),
-                ).animate()
-                  ..shimmer(duration: 1000.ms)
-                  ..scale(duration: 1000.ms),
-                SizedBox(height: d.pSH(20)),
-                const CustomText(
-                  label: 'Hint:',
-                  fontFamily: AppFonts.caveat,
-                  color: AppColors.borderAccent,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-                SizedBox(height: d.pSH(10)),
-                CustomText(
-                  label: questionList[selectedIndex].hint,
-                  fontSize: 20,
-                  color: AppColors.textBlack,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: AppFonts.caveat,
-                  letterSpacing: 1.2,
-                ),
-                SizedBox(height: d.pSH(10)),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.everGreen,
-                        foregroundColor: Colors.white),
-                    child: const CustomText(
-                        label: 'Okay',
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: AppFonts.caveat,
-                        color: Colors.white))
-              ]),
-            )));
+              content: GameHintDialog(hint: questionList[selectedIndex].hint))),);
     startTimer(seconds.value);
 
     setState(() {});
@@ -880,26 +712,25 @@ class _CategoryGamePageState extends State<CategoryGamePage>
   }
 
   _useGoldenChance(
-      {required List<OptionModel> options, required int questionID}) {
-    for (var element in options) {
+      {required QuestionModel question, required int questionID}) {
+    for (var element in question.option) {
       if (element.isCorrect) {
         FlameAudio.play('correct_ans.mp3');
         selectedAnswer = element;
         break;
       }
     }
-    // breakTime = true;
-    // timer?.cancel();
+    breakTime = true;
+    timer?.cancel();
     setState(() {});
-    // gameProvider.reduceGoldenChances();
-    // loseStreaks = 0;
-    // _addPoints(
-    //     questionPoints: questionList[selectedIndex].points, isGolden: false);
+     loseStreaks = 0;
+    _addPoints(
+         questionPoints: question.points, isGolden: false,time: question.questionTime);
     Future.delayed(const Duration(seconds: 3), () {
       setState(() {
-        //breakTime = false;
+        breakTime = false;
       });
-      //moveToNextScreen(index: selectedIndex, questionId: questionID);
+      moveToNextScreen(index: selectedIndex, questionId: questionID);
     });
   }
 
@@ -915,6 +746,50 @@ class _CategoryGamePageState extends State<CategoryGamePage>
     }
   }
 
+ moveToNextScreen({required int index, required int questionId}) {
+    timer?.cancel();
+    FlameAudio.bgm.stop();
+    if (index < questionList.length - 1) {
+      pageController.nextPage(
+          duration: const Duration(
+            milliseconds: 400,
+          ),
+          curve: Curves.easeIn);
+      addSelectedAnswer(
+          option: selectedAnswer, questioinId: questionList[index].id);
+    } else {
+      addSelectedAnswer(
+          option: selectedAnswer, questioinId: questionList[index].id);
+      // nextScreen(
+      //     context,
+      //     SubmitPage(
+      //       questionList: questionList,
+      //     ));
+    }
+  ///  GameLocalDatabase.deleteQuestion(questionId);
+  }
+
+
+  void addSelectedAnswer(
+      {required int questioinId, required OptionModel? option}) {
+    if (option == null) {
+      resultList.addAll({
+        questioinId: {
+          'question': questioinId,
+          'option': null,
+          'marks': 0,
+        }
+      });
+    } else {
+      resultList.addAll({
+        option.question: {
+          'question': option.question,
+          'option': option.id,
+          'marks': option.isCorrect ? 1 : 0,
+        }
+      });
+    }
+  }
   @override
   void dispose() {
     controller.dispose();
@@ -929,215 +804,3 @@ class _CategoryGamePageState extends State<CategoryGamePage>
   }
 }
 
-List<QuestionModel> questionList = [
-  QuestionModel(
-      id: 1,
-      hint:
-          'Although the question is a riddle, the answer is a name. The answer is the name of the mother of Kofi and Ama.',
-      hasMysteryBox: false,
-      hasTimesTwoPoints: false,
-      text:
-          'If Kofi is twice the age of Ama and Ama is dark, What is the name of their mother?',
-      option: [
-        OptionModel(
-            id: 1,
-            text: 'One of 2 options',
-            image: '',
-            question: 1,
-            isCorrect: true),
-        OptionModel(
-            id: 2,
-            text: 'One of 2 options',
-            image: '',
-            question: 1,
-            isCorrect: false),
-        OptionModel(
-            id: 3,
-            text: 'One of 2 options',
-            image: '',
-            question: 1,
-            isCorrect: false),
-        OptionModel(
-            id: 4,
-            text: 'One of 2 options',
-            image: '',
-            question: 1,
-            isCorrect: false)
-      ],
-      image: '',
-      points: 5,
-      isGolden: true,
-      hasHint: false,
-      questionTime: 15),
-  QuestionModel(
-      id: 2,
-      hint: '',
-      hasMysteryBox: true,
-      hasTimesTwoPoints: false,
-      hasHint: false,
-      text:
-          'These are some of the hardest trivial out there. You need more than memory to work these out.',
-      option: [
-        OptionModel(
-            id: 1,
-            text: '',
-            image:
-                'https://api.stage.linklounge.dev/media/game_options/Screenshot_2023-10-11_at_3.55.04PM.png',
-            question: 1,
-            isCorrect: true),
-        OptionModel(
-            id: 2,
-            text: '',
-            image:
-                'https://api.stage.linklounge.dev/media/game_options/Screenshot_2023-10-11_at_3.55.04PM.png',
-            question: 1,
-            isCorrect: false),
-        OptionModel(
-            id: 3,
-            text: '',
-            image:
-                'https://api.stage.linklounge.dev/media/game_options/Screenshot_2023-10-11_at_3.55.04PM.png',
-            question: 1,
-            isCorrect: false),
-        OptionModel(
-            id: 4,
-            text: '',
-            image:
-                'https://api.stage.linklounge.dev/media/game_options/Screenshot_2023-10-11_at_3.55.04PM.png',
-            question: 1,
-            isCorrect: false)
-      ],
-      image: '',
-      points: 5,
-      isGolden: true,
-      questionTime: 15),
-  QuestionModel(
-      id: 2,
-      hint: '',
-      hasMysteryBox: false,
-      hasTimesTwoPoints: true,
-      hasHint: false,
-      text:
-          'These are some of the hardest trivial out there. You need more than memory to work these out.',
-      option: [
-        OptionModel(
-            id: 1, text: 'Dog', image: '', question: 1, isCorrect: true),
-        OptionModel(
-            id: 2, text: 'Cat', image: '', question: 1, isCorrect: false),
-        OptionModel(
-            id: 3, text: 'Snake', image: '', question: 1, isCorrect: false),
-        OptionModel(
-            id: 4, text: 'Bird', image: '', question: 1, isCorrect: false)
-      ],
-      image:
-          'https://api.stage.linklounge.dev/media/game_options/Screenshot_2023-10-11_at_3.55.04PM.png',
-      points: 5,
-      isGolden: true,
-      questionTime: 15),
-];
-
-List<QuestionModel> swapQuestionList = [
-  QuestionModel(
-      id: 1,
-      hint: '',
-      hasMysteryBox: false,
-      hasTimesTwoPoints: false,
-      text:
-          'Swap Question: If Kofi is twice the age of Ama and Ama is dark, What is the name of their mother?',
-      option: [
-        OptionModel(
-            id: 1,
-            text: 'One of 2 options',
-            image: '',
-            question: 1,
-            isCorrect: true),
-        OptionModel(
-            id: 2,
-            text: 'One of 2 options',
-            image: '',
-            question: 1,
-            isCorrect: false),
-        OptionModel(
-            id: 3,
-            text: 'One of 2 options',
-            image: '',
-            question: 1,
-            isCorrect: false),
-        OptionModel(
-            id: 4,
-            text: 'One of 2 options',
-            image: '',
-            question: 1,
-            isCorrect: false)
-      ],
-      image: '',
-      points: 5,
-      isGolden: true,
-      hasHint: false,
-      questionTime: 15),
-  QuestionModel(
-      id: 2,
-      hint: '',
-      hasMysteryBox: false,
-      hasTimesTwoPoints: false,
-      hasHint: false,
-      text:
-          'Swap Question: These are some of the hardest trivial out there. You need more than memory to work these out.',
-      option: [
-        OptionModel(
-            id: 1,
-            text: '',
-            image:
-                'https://api.stage.linklounge.dev/media/game_options/Screenshot_2023-10-11_at_3.55.04PM.png',
-            question: 1,
-            isCorrect: true),
-        OptionModel(
-            id: 2,
-            text: '',
-            image:
-                'https://api.stage.linklounge.dev/media/game_options/Screenshot_2023-10-11_at_3.55.04PM.png',
-            question: 1,
-            isCorrect: false),
-        OptionModel(
-            id: 3,
-            text: '',
-            image:
-                'https://api.stage.linklounge.dev/media/game_options/Screenshot_2023-10-11_at_3.55.04PM.png',
-            question: 1,
-            isCorrect: false),
-        OptionModel(
-            id: 4,
-            text: '',
-            image:
-                'https://api.stage.linklounge.dev/media/game_options/Screenshot_2023-10-11_at_3.55.04PM.png',
-            question: 1,
-            isCorrect: false)
-      ],
-      image: '',
-      points: 5,
-      isGolden: true,
-      questionTime: 15),
-  QuestionModel(
-      id: 2,
-      hint: '',
-      hasMysteryBox: false,
-      hasTimesTwoPoints: false,
-      hasHint: false,
-      text:
-          'Swap Question: These are some of the hardest trivial out there. You need more than memory to work these out.',
-      option: [
-        OptionModel(
-            id: 1, text: 'Dog', image: '', question: 1, isCorrect: true),
-        OptionModel(
-            id: 2, text: 'Cat', image: '', question: 1, isCorrect: false),
-        OptionModel(
-            id: 3, text: 'Snake', image: '', question: 1, isCorrect: false),
-        OptionModel(
-            id: 4, text: 'Bird', image: '', question: 1, isCorrect: false)
-      ],
-      image:
-          'https://api.stage.linklounge.dev/media/game_options/Screenshot_2023-10-11_at_3.55.04PM.png',
-      points: 5,
-      isGolden: true,
-      questionTime: 15),
-];

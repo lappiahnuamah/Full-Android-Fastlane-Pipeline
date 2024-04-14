@@ -140,4 +140,14 @@ class CategoryProvider extends ChangeNotifier {
 
     return randomCategories;
   }
+
+
+  /////////// ///// Category Game play /////////
+  int totalPoints = 0;
+
+  setTotalPoints(int points){
+    totalPoints = points;
+    notifyListeners();
+  }
+
 }
