@@ -14,13 +14,13 @@ class GamePageKeysList extends StatefulWidget {
       {super.key,
       required this.answerStreaks,
       required this.onFiftyTapped,
-      required this.onRetakeTapped,
+      // required this.onRetakeTapped,
       required this.onFreezeTapped,
       required this.onSwapTapped,
       required this.onGoldenTapped});
   final int answerStreaks;
   final Function() onFiftyTapped;
-  final Function() onRetakeTapped;
+  //final Function() onRetakeTapped;
   final Function() onFreezeTapped;
   final Function() onSwapTapped;
   final Function() onGoldenTapped;
@@ -90,16 +90,16 @@ class _GamePageKeysListState extends State<GamePageKeysList> {
               ),
             ],
           ),
-          keyWithAmount(
-            size,
-            icon: AppImages.retakeKey,
-            number:
-                gameItemsProvider.userKeys[GameKeyType.retakeKey]?.amount ?? 0,
-            onTap: () {
-              widget.onRetakeTapped.call();
-              gameItemsProvider.reduceKeyAmount(GameKeyType.retakeKey);
-            },
-          ),
+          // keyWithAmount(
+          //   size,
+          //   icon: AppImages.retakeKey,
+          //   number:
+          //       gameItemsProvider.userKeys[GameKeyType.retakeKey]?.amount ?? 0,
+          //   onTap: () {
+          //     widget.onRetakeTapped.call();
+          //     gameItemsProvider.reduceKeyAmount(GameKeyType.retakeKey);
+          //   },
+          // ),
           keyWithAmount(size,
               icon: AppImages.freezeTimeKey,
               number: gameItemsProvider

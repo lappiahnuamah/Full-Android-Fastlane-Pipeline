@@ -11,16 +11,23 @@ class QuestionModel {
   bool isGolden;
   List<OptionModel> option;
   int questionTime;
+  String hint;
+  bool hasMysteryBox;
+  bool hasTimesTwoPoints;
+  bool hasHint;
 
-  QuestionModel({
-    required this.id,
-    required this.text,
-    required this.option,
-    required this.image,
-    required this.points,
-    required this.isGolden,
-    required this.questionTime,
-  });
+  QuestionModel(
+      {required this.id,
+      required this.text,
+      required this.option,
+      required this.image,
+      required this.points,
+      required this.isGolden,
+      required this.questionTime,
+      required this.hasMysteryBox,
+      required this.hasTimesTwoPoints,
+      required this.hint,
+      required this.hasHint});
 
   factory QuestionModel.fromJson(Map<String, dynamic> json) {
     return QuestionModel(
@@ -30,9 +37,13 @@ class QuestionModel {
       points: json['points'] ?? 1,
       isGolden: json['is_golden'] ?? false,
       questionTime: json['question_time'] ?? 10,
+      hasHint: json['has_hint'] ?? false,
+      hasMysteryBox: json['has_mystery_box'] ?? false,
+      hasTimesTwoPoints: json['has_times_two'] ?? false,
       option: ((json['options'] ?? []) as List)
           .map((e) => OptionModel.fromJson(e))
           .toList(),
+      hint: json['hint'] ?? '',
     );
   }
 
@@ -68,6 +79,10 @@ class QuestionModel {
       points: json['points'] ?? 1,
       isGolden: json['isGolden'] == 1,
       questionTime: json['questionTime'] ?? 10,
+      hasMysteryBox: json['has_mystery_box'] == 1,
+      hasTimesTwoPoints: json['has_times_two'] == 1,
+      hasHint: json['has_hint'] == 1,
+      hint: json['hint'] ?? '',
       option: ((jsonDecode(json['options']) ?? []) as List)
           .map((e) => OptionModel.fromJson(e))
           .toList(),

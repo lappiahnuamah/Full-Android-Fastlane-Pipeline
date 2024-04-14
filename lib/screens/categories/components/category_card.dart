@@ -48,22 +48,23 @@ class CategoryCard extends StatelessWidget {
                 width: double.infinity,
                 height: double.maxFinite,
               ),
-              Positioned(
-                left: -d.pSH(50),
-                top: d.pSH(20),
-                child: RotationTransition(
-                  turns: const AlwaysStoppedAnimation(40 / 360),
-                  child: SvgPicture.network(
-                    category.icon,
-                    fit: BoxFit.cover,
-                    height: d.pSH(130),
-                    colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.1),
-                      BlendMode.srcIn,
+              if (category.icon.isNotEmpty)
+                Positioned(
+                  left: -d.pSH(50),
+                  top: d.pSH(20),
+                  child: RotationTransition(
+                    turns: const AlwaysStoppedAnimation(40 / 360),
+                    child: SvgPicture.network(
+                      category.icon,
+                      fit: BoxFit.cover,
+                      height: d.pSH(130),
+                      colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.1),
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                 ),
-              ),
 
               //Align
               Align(
@@ -76,11 +77,12 @@ class CategoryCard extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SvgPicture.network(
-                              category.icon,
-                              fit: BoxFit.cover,
-                              height: iconSize,
-                            ),
+                            if (category.icon.isNotEmpty)
+                              SvgPicture.network(
+                                category.icon,
+                                fit: BoxFit.cover,
+                                height: iconSize,
+                              ),
                             SizedBox(height: d.pSH(5)),
                             CustomText(
                               label: category.name,
