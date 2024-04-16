@@ -1,45 +1,32 @@
 import 'package:flutter/material.dart';
 
 class LevelModel {
-  int id;
-  int user;
-  String level;
-  double totalPoints;
   bool isLocked;
   Color color;
-  bool isActive;
-//optional
-  String? category;
-  String? categoryName;
-  String? gameType;
-  String? gameTypeName;
+  String name;
+  bool isCurrentLevel;
 
   LevelModel({
-    required this.id,
-    required this.level,
-    required this.totalPoints,
+    required this.isCurrentLevel,
     required this.isLocked,
     required this.color,
-    required this.user,
-    required this.isActive,
-    this.category,
-    this.categoryName,
-    this.gameType,
-    this.gameTypeName,
+    required this.name,
   });
 
   factory LevelModel.fromJson(Map<String, dynamic> json) {
     return LevelModel(
-        id: json['id'] ?? 0,
-        level: json['level'] ?? "",
-        totalPoints: json['total_points'] ?? "",
-        isLocked: json['is_locked'] ?? true,
-        color: json['color'],
-        user: json['user'],
-        category: json['category'],
-        categoryName: json['category_name'],
-        gameType: json['game_type'],
-        gameTypeName: json['game_type_name'],
-        isActive: json['level'] == 'Beginner');
+      isLocked: json['is_locked'] ?? true,
+      color: getColorFromString(json['color'] ?? ''),
+      name: json['name'] ?? '',
+      isCurrentLevel: json['is_current_level'] ?? false,
+    );
+  }
+
+  static Color getColorFromString(String text) {
+    if (text.isEmpty) return Colors.transparent;
+    final buffer = StringBuffer();
+    if (text.length == 6 || text.length == 7) buffer.write('ff');
+    buffer.write(text.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
   }
 }

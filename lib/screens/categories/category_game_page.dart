@@ -44,7 +44,6 @@ class _CategoryGamePageState extends State<CategoryGamePage>
   OptionModel? selectedAnswer;
   Map<int, dynamic> resultList = {};
 
-
   int selectedIndex = 0;
   Timer? timer;
 
@@ -70,9 +69,9 @@ class _CategoryGamePageState extends State<CategoryGamePage>
   double fontSize = 45.0;
   int gamePoints = 1;
 
-int  currentGamePoints =0;
-int answerStreak = 0;
-int loseStreaks = 0;
+  int currentGamePoints = 0;
+  int answerStreak = 0;
+  int loseStreaks = 0;
 
   //swap
   PageController swapController = PageController(initialPage: 0);
@@ -103,7 +102,7 @@ int loseStreaks = 0;
           // if (selectedAnswer == null) {
           //   gameProvider.resetAnswerStreak();
           //}
-          timer.cancel();
+          timer.cancel(); 
           FlameAudio.bgm.stop();
           FlameAudio.play('outro_game_over.mp3');
           // nextScreen(
@@ -460,13 +459,23 @@ int loseStreaks = 0;
                                                             builder: (context,
                                                                 list, child) {
                                                               return GameImageOptions(
-                                                                options: question.option,
-                                                                selectedAnswer: selectedAnswer,
-                                                                fiftyfityList: fiftyfityList.value,
-                                                                onOptionSelected: (option){
-                                                                  answerButtonPressed(option, question, context, index);
+                                                                options:
+                                                                    question
+                                                                        .option,
+                                                                selectedAnswer:
+                                                                    selectedAnswer,
+                                                                fiftyfityList:
+                                                                    fiftyfityList
+                                                                        .value,
+                                                                onOptionSelected:
+                                                                    (option) {
+                                                                  answerButtonPressed(
+                                                                      option,
+                                                                      question,
+                                                                      context,
+                                                                      index);
                                                                 },
-                                                                  );
+                                                              );
                                                             })),
                                             ],
                                           ),
@@ -556,7 +565,6 @@ int loseStreaks = 0;
     ));
   }
 
- 
   void answerButtonPressed(OptionModel option, QuestionModel question,
       BuildContext context, int index) {
     selectedAnswer = option;
@@ -566,7 +574,10 @@ int loseStreaks = 0;
     setState(() {});
     if (option.isCorrect) {
       FlameAudio.play('correct_ans.mp3');
-      _addPoints(questionPoints: question.points, isGolden: question.isGolden,time:question.questionTime);
+      _addPoints(
+          questionPoints: question.points,
+          isGolden: question.isGolden,
+          time: question.questionTime);
       // gameProvider.increaseAnswerStreak(
       //     context: context, hasGolden: question.isGolden && seconds.value > 6);
     } else {
@@ -577,8 +588,8 @@ int loseStreaks = 0;
           showRetake = true;
         });
       }
-      answerStreak=0;
-       loseStreaks++;
+      answerStreak = 0;
+      loseStreaks++;
     }
 
     // GameComments().showGameCommentToast(
@@ -603,7 +614,10 @@ int loseStreaks = 0;
     });
   }
 
-  _addPoints({required int questionPoints, required bool isGolden,required int time}) {
+  _addPoints(
+      {required int questionPoints,
+      required bool isGolden,
+      required int time}) {
     if (seconds.value <= time * 0.4) {
       gamePoints = questionPoints;
     } else if (seconds.value <= time * 0.7) {
@@ -622,7 +636,8 @@ int loseStreaks = 0;
     }
     startScoreAnimation();
     Future.delayed(const Duration(seconds: 2), () {
-      // gameProvider.addGamePoints(gamePoints);
+      currentGamePoints = gamePoints;
+      if (mounted) currentGamePoints;
     });
   }
 
@@ -669,9 +684,10 @@ int loseStreaks = 0;
   _showHintDialog() async {
     timer?.cancel();
     await showDialog(
-        context: context,
-        builder: ((context) => AlertDialog(
-              content: GameHintDialog(hint: questionList[selectedIndex].hint))),);
+      context: context,
+      builder: ((context) => AlertDialog(
+          content: GameHintDialog(hint: questionList[selectedIndex].hint))),
+    );
     startTimer(seconds.value);
 
     setState(() {});
@@ -711,8 +727,7 @@ int loseStreaks = 0;
     }
   }
 
-  _useGoldenChance(
-      {required QuestionModel question, required int questionID}) {
+  _useGoldenChance({required QuestionModel question, required int questionID}) {
     for (var element in question.option) {
       if (element.isCorrect) {
         FlameAudio.play('correct_ans.mp3');
@@ -723,9 +738,11 @@ int loseStreaks = 0;
     breakTime = true;
     timer?.cancel();
     setState(() {});
-     loseStreaks = 0;
+    loseStreaks = 0;
     _addPoints(
-         questionPoints: question.points, isGolden: false,time: question.questionTime);
+        questionPoints: question.points,
+        isGolden: false,
+        time: question.questionTime);
     Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         breakTime = false;
@@ -746,7 +763,7 @@ int loseStreaks = 0;
     }
   }
 
- moveToNextScreen({required int index, required int questionId}) {
+  moveToNextScreen({required int index, required int questionId}) {
     timer?.cancel();
     FlameAudio.bgm.stop();
     if (index < questionList.length - 1) {
@@ -766,9 +783,9 @@ int loseStreaks = 0;
       //       questionList: questionList,
       //     ));
     }
-  ///  GameLocalDatabase.deleteQuestion(questionId);
-  }
 
+    ///  GameLocalDatabase.deleteQuestion(questionId);
+  }
 
   void addSelectedAnswer(
       {required int questioinId, required OptionModel? option}) {
@@ -790,6 +807,7 @@ int loseStreaks = 0;
       });
     }
   }
+
   @override
   void dispose() {
     controller.dispose();
@@ -803,4 +821,3 @@ int loseStreaks = 0;
     super.dispose();
   }
 }
-

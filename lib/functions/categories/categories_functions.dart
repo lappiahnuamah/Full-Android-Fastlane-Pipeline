@@ -2,16 +2,20 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/api_urls/category_url.dart';
+import 'package:savyminds/api_urls/game_url.dart';
 import 'package:savyminds/data/shared_preference_values.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:savyminds/models/categories/category_level_model.dart';
+import 'package:savyminds/models/error_response.dart';
 import 'package:savyminds/models/http_response_model.dart';
-import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
+import 'package:savyminds/utils/connection_check.dart';
 
 class CategoryFunctions {
   //Get all categories
@@ -157,15 +161,55 @@ class CategoryFunctions {
           "Authorization": " Bearer $accessToken"
         },
       );
-      log('level:${response.body}');
       if (response.statusCode == 200) {
-        final level = LevelModel.fromJson(jsonDecode(response.body));
+        final level = CategoryLevelModel.fromJson(jsonDecode(response.body));
         categoryProvider.setCategoryLevel(id, level);
         return level;
       } else {
         return null;
       }
     } catch (e) {
+      log('$e');
+      return null;
+    }
+  }
+
+  Future fetchCategoryQuestions(
+      {required BuildContext context,
+      required String nextUrl,
+      required List<int> categories,
+      required String level}) async {
+    final hasConnection = await ConnectionCheck().hasConnection();
+    if (hasConnection) {
+      if (context.mounted) {
+        final String accessToken =
+            Provider.of<UserDetailsProvider>(context, listen: false)
+                .getAccessToken();
+
+        final response = await http.get(
+          Uri.parse(nextUrl.isNotEmpty
+              ? nextUrl
+              : '${GameUrl.questions}?categories=$categories,level=$level'),
+          headers: {
+            "content-type": "application/json",
+            "accept": "application/json",
+            "Authorization": "Bearer $accessToken"
+          },
+        );
+        if (response.statusCode == 200) {
+          // print("Response ${response.body}");
+          return HttpResponseModel.fromJson(jsonDecode(response.body));
+        } else {
+          //print("Error ${response.body}");
+
+          return ErrorResponse.fromJson(jsonDecode(response.body));
+        }
+      }
+    } else {
+      //print('error');
+      if (context.mounted) {
+        Fluttertoast.showToast(msg: 'No internet connection');
+      }
       return null;
     }
   }

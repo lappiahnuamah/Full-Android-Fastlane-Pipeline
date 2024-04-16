@@ -33,53 +33,7 @@ class _CreateBattleTeamState extends State<CreateBattleTeam> {
   CategoryModel? selectedCategory;
   LevelModel? selectedLevel;
 
-  List<LevelModel> levelList = [
-    LevelModel(
-      user: 1,
-      level: 'Beginner',
-      isLocked: false,
-      totalPoints: 0,
-      isActive: true,
-      id: 1,
-      color: const Color(0xFF85DB98),
-    ),
-    LevelModel(
-      user: 1,
-      level: 'Intermediate',
-      isLocked: false,
-      totalPoints: 0,
-      isActive: true,
-      id: 2,
-      color: const Color(0xFF85C6DB),
-    ),
-    LevelModel(
-      user: 1,
-      level: 'Advanced',
-      isLocked: false,
-      totalPoints: 0.0,
-      isActive: true,
-      id: 3,
-      color: const Color(0xFFE8DD72),
-    ),
-    LevelModel(
-      user: 1,
-      level: 'Expert',
-      isLocked: true,
-      totalPoints: 0.0,
-      isActive: false,
-      id: 4,
-      color: const Color(0xFF85C6DB),
-    ),
-    LevelModel(
-      user: 1,
-      level: 'Elite',
-      isLocked: true,
-      totalPoints: 0.0,
-      isActive: false,
-      id: 5,
-      color: const Color(0xFF85C6DB),
-    ),
-  ];
+  List levelList = [];
 
   String teamImage = '';
   @override

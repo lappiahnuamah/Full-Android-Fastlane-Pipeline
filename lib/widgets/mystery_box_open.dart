@@ -68,7 +68,7 @@ class _MysteryBoxOpenState extends State<MysteryBoxOpen> {
                 children: [
                   CustomText(
                     label:
-                        'You got a ${gameItemsProvider.userKeys[key!]!.name}',
+                        'You got a ${gameItemsProvider.userKeys[key!]?.name ?? 'key'}',
                     fontSize: getFontSize(30, size),
                     fontWeight: FontWeight.bold,
                     fontFamily: AppFonts.caveat,

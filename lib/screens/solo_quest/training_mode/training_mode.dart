@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
-import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
@@ -31,53 +30,8 @@ class TrainingMode extends StatefulWidget {
 class _TrainingModeState extends State<TrainingMode> {
   late CategoryProvider categoryProvider;
   CategoryModel? selectedCategory;
-  List<LevelModel> levelList = [
-    LevelModel(
-      user: 1,
-      level: 'Beginner',
-      isLocked: false,
-      totalPoints: 0,
-      isActive: true,
-      id: 1,
-      color: const Color(0xFF85DB98),
-    ),
-    LevelModel(
-      user: 1,
-      level: 'Intermediate',
-      isLocked: false,
-      totalPoints: 0,
-      isActive: true,
-      id: 2,
-      color: const Color(0xFF85C6DB),
-    ),
-    LevelModel(
-      user: 1,
-      level: 'Advanced',
-      isLocked: false,
-      totalPoints: 0.0,
-      isActive: true,
-      id: 3,
-      color: const Color(0xFFE8DD72),
-    ),
-    LevelModel(
-      user: 1,
-      level: 'Expert',
-      isLocked: true,
-      totalPoints: 0.0,
-      isActive: false,
-      id: 4,
-      color: const Color(0xFF85C6DB),
-    ),
-    LevelModel(
-      user: 1,
-      level: 'Elite',
-      isLocked: true,
-      totalPoints: 0.0,
-      isActive: false,
-      id: 5,
-      color: const Color(0xFF85C6DB),
-    ),
-  ];
+  List levelList = [];
+
   @override
   void initState() {
     categoryProvider = context.read<CategoryProvider>();

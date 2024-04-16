@@ -1,10 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/categories/categories_functions.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
-import 'package:savyminds/models/level_model.dart';
+import 'package:savyminds/models/categories/category_level_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/categories/category_game_page.dart';
@@ -29,7 +30,7 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      // getCategoryLevel();
+      getCategoryLevel();
     });
     super.initState();
   }
@@ -38,7 +39,12 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
     setState(() {
       isLoading = true;
     });
-    await CategoryFunctions().getCategoryLevel(context, widget.category.id);
+    final result =
+        await CategoryFunctions().getCategoryLevel(context, widget.category.id);
+    if (result is CategoryLevelModel) {
+      
+
+    }
     setState(() {
       isLoading = false;
     });
@@ -77,17 +83,21 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
                     )
                   : Consumer<CategoryProvider>(
                       builder: (context, catProv, chils) {
-                      return Wrap(
-                        runSpacing: d.pSH(10),
-                        spacing: d.pSW(15),
-                        alignment: WrapAlignment.center,
-                        children: [
-                          for (int i = 0; i < levelList.length; i++)
-                            LevelCard(
-                              level: levelList[i],
+                      final CategoryLevelModel? catLevel =
+                          catProv.getCategoryLevel(widget.category.id);
+                      return catLevel != null
+                          ? Wrap(
+                              runSpacing: d.pSH(10),
+                              spacing: d.pSW(15),
+                              alignment: WrapAlignment.center,
+                              children: [
+                                for (int i = 0; i < catLevel.levels.length; i++)
+                                  LevelCard(
+                                    level: catLevel.levels[i],
+                                  )
+                              ],
                             )
-                        ],
-                      );
+                          : const SizedBox();
                     }),
               SizedBox(height: d.pSH(20)),
               RichText(
@@ -145,48 +155,4 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
   }
 }
 
-List levelList = [
-  LevelModel(
-      user: 1,
-      level: 'Beginner',
-      isLocked: false,
-      totalPoints: 1.0,
-      id: 1,
-      color: const Color(0xFF85DB98),
-      isActive: true),
-  LevelModel(
-    user: 1,
-    level: 'Intermediate',
-    isLocked: false,
-    totalPoints: 0.4,
-    isActive: true,
-    id: 2,
-    color: const Color(0xFF85C6DB),
-  ),
-  LevelModel(
-      user: 1,
-      level: 'Advanced',
-      isLocked: false,
-      totalPoints: 0.0,
-      isActive: false,
-      id: 3,
-      color: const Color(0xFFE8DD72)),
-  LevelModel(
-    user: 1,
-    level: 'Expert',
-    isLocked: true,
-    totalPoints: 0.0,
-    isActive: false,
-    id: 4,
-    color: const Color(0xFF85C6DB),
-  ),
-  LevelModel(
-    user: 1,
-    level: 'Elite',
-    isLocked: true,
-    totalPoints: 0.0,
-    isActive: false,
-    id: 5,
-    color: const Color(0xFF85C6DB),
-  ),
-];
+List levelList = [];
