@@ -55,7 +55,11 @@ class GameProvider extends ChangeNotifier {
       rank: 0,
       multiPlayerRank: 0,
       multiTotalPoints: 0,
-      overallGamePoints: 0);
+      overallGamePoints: 0,
+      swapQuestion: 0,
+      freezeTime: 0,
+      retakeQuestion: 0
+      );
 
   setUserStreaks(GameStreakModel streak) {
     gameStreaks = streak;

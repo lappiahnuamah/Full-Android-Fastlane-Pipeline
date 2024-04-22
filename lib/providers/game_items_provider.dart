@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:savyminds/models/game_key_model.dart';
+import 'package:savyminds/models/games/game_streak_model.dart';
 import 'package:savyminds/resources/app_enums.dart';
 
 class GameItemsProvider extends ChangeNotifier {
@@ -15,7 +18,7 @@ class GameItemsProvider extends ChangeNotifier {
     GameKeyType.goldenKey: const GameKeyModel(
       id: 1,
       name: 'Golden Key',
-      amount: 2,
+      amount: 0,
       icon: 'assets/icons/game_keys/golden_key.svg',
       isLocked: false,
       type: GameKeyType.goldenKey,
@@ -23,7 +26,7 @@ class GameItemsProvider extends ChangeNotifier {
     GameKeyType.fiftyFifty: const GameKeyModel(
       id: 1,
       name: 'Fifty fity Key',
-      amount: 2,
+      amount: 0,
       icon: 'assets/icons/game_keys/fifty_fifty.svg',
       isLocked: false,
       type: GameKeyType.fiftyFifty,
@@ -31,7 +34,7 @@ class GameItemsProvider extends ChangeNotifier {
     GameKeyType.swapKey: const GameKeyModel(
       id: 1,
       name: 'Swap Key',
-      amount: 5,
+      amount: 0,
       icon: 'assets/icons/game_keys/swap_key.svg',
       isLocked: false,
       type: GameKeyType.swapKey,
@@ -39,7 +42,7 @@ class GameItemsProvider extends ChangeNotifier {
     GameKeyType.freezeTimeKey: const GameKeyModel(
       id: 1,
       name: 'Freeze Time Key',
-      amount: 2,
+      amount: 0,
       icon: 'assets/icons/game_keys/freeze_time_key.svg',
       isLocked: false,
       type: GameKeyType.freezeTimeKey,
@@ -47,7 +50,7 @@ class GameItemsProvider extends ChangeNotifier {
     GameKeyType.retakeKey: const GameKeyModel(
       id: 1,
       name: 'Retake Key',
-      amount: 2,
+      amount: 0,
       icon: 'assets/icons/game_keys/retake_key.svg',
       isLocked: false,
       type: GameKeyType.retakeKey,
@@ -86,4 +89,25 @@ class GameItemsProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  setKeyAmount(GameKeyType keyType, int amount) {
+    final key = userKeys[keyType];
+    if (key != null) {
+      final updatedKey = key.copyWith(amount: amount);
+      userKeys[keyType] = updatedKey;
+    }
+    notifyListeners();
+  }
+
+  ////Set Key Items
+   setKeyItems(GameStreakModel keys) {
+    log('5050 keys: ${keys.fiftyFifty}');
+    setKeyAmount(GameKeyType.fiftyFifty, keys
+    .fiftyFifty);
+    setKeyAmount(GameKeyType.goldenKey, keys.goldenBadges);
+    setKeyAmount(GameKeyType.swapKey, keys.swapQuestion);
+    setKeyAmount(GameKeyType.freezeTimeKey, keys.freezeTime);
+    setKeyAmount(GameKeyType.retakeKey, keys.retakeQuestion);
+    notifyListeners();
+   }
 }

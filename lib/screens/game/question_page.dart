@@ -844,7 +844,7 @@ class _QuestionPageState extends State<QuestionPage>
       gameProvider.addSelectedAnswer(
           option: selectedAnswer, questioinId: questionList[index].id);
       nextScreen(
-          context,
+          context, 
           SubmitPage(
             questionList: questionList,
           ));

@@ -8,7 +8,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
-import 'package:savyminds/data/dummy_questions.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/games/option_model.dart';
 import 'package:savyminds/models/games/question_model.dart';
@@ -17,7 +16,9 @@ import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_enums.dart';
 import 'package:savyminds/resources/app_fonts.dart';
+import 'package:savyminds/screens/categories/categories_submit_page.dart';
 import 'package:savyminds/utils/func.dart';
+import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/answer_button.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 import 'package:savyminds/widgets/dialogs/game_hint_dialog.dart';
@@ -29,8 +30,10 @@ import 'package:savyminds/widgets/mystery_box_open.dart';
 import 'package:savyminds/widgets/retake_key_display.dart';
 
 class CategoryGamePage extends StatefulWidget {
-  const CategoryGamePage({super.key, required this.category});
+  const CategoryGamePage({super.key, required this.category,required this.questionList,required this.swapQuestionList});
   final CategoryModel category;
+ final List<QuestionModel> questionList;
+ final List<QuestionModel> swapQuestionList;
 
   @override
   State<CategoryGamePage> createState() => _CategoryGamePageState();
@@ -70,8 +73,14 @@ class _CategoryGamePageState extends State<CategoryGamePage>
   int gamePoints = 1;
 
   int currentGamePoints = 0;
+  int totalPoints = 0;
+
   int answerStreak = 0;
   int loseStreaks = 0;
+
+  //hide keys
+  bool hideDoublePointsKey = false;
+  bool hideMysteryBoxKey =false;
 
   //swap
   PageController swapController = PageController(initialPage: 0);
@@ -81,7 +90,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       seconds.value = seconds.value - 1;
       if (seconds.value == 0) {
-        if (selectedIndex < questionList.length - 1) {
+        if (selectedIndex <widget.questionList.length - 1) {
           pageController.nextPage(
               duration: const Duration(
                 milliseconds: 400,
@@ -91,7 +100,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
           //     option: selectedAnswer,
           //     questioinId: questionList[selectedIndex].id);
           if (selectedAnswer == null) {
-            // gameProvider.resetAnswerStreak();
+            answerStreak=0;
           }
           timer.cancel();
           FlameAudio.bgm.stop();
@@ -99,17 +108,19 @@ class _CategoryGamePageState extends State<CategoryGamePage>
           // gameProvider.addSelectedAnswer(
           //     option: selectedAnswer,
           //     questioinId: questionList[selectedIndex].id);
-          // if (selectedAnswer == null) {
-          //   gameProvider.resetAnswerStreak();
-          //}
+          if (selectedAnswer == null) {
+            answerStreak=0;
+          }
           timer.cancel(); 
           FlameAudio.bgm.stop();
           FlameAudio.play('outro_game_over.mp3');
-          // nextScreen(
-          //     context,
-          //     SubmitPage(
-          //       questionList: questionList,
-          //     ));
+          nextScreen(
+              context,
+              CategorySubmitPage(
+                questionList: widget.questionList,
+                totalPoints: totalPoints,
+                resultList: resultList,
+              ));
           // pageController.jumpToPage(0);
           selectedIndex = 0;
           startTimer(15);
@@ -131,7 +142,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
   @override
   void initState() {
     gameItemsProvider = context.read<GameItemsProvider>();
-    startTimer(questionList[selectedIndex].questionTime);
+    startTimer(widget.questionList[selectedIndex].questionTime);
     FlameAudio.bgm.stop();
     controller = AnimationController(
       duration: const Duration(seconds: 2),
@@ -184,7 +195,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
                             width: d.pSH(10),
                           ),
                           CustomText(
-                            label: '$currentGamePoints',
+                            label: '$totalPoints',
                             color: AppColors.kPrimaryColor,
                             fontSize: getFontSize(24, size),
                             fontWeight: FontWeight.bold,
@@ -197,16 +208,18 @@ class _CategoryGamePageState extends State<CategoryGamePage>
                 Expanded(
                     child: PageView.builder(
                         controller: pageController,
-                        itemCount: questionList.length,
+                        itemCount: widget.questionList.length,
                         physics: const NeverScrollableScrollPhysics(),
                         onPageChanged: (val) {
                           selectedIndex = val;
-                          if (questionList[selectedIndex].isGolden) {
+                          hideDoublePointsKey = false;
+                          hideMysteryBoxKey = false;
+                          if (widget.questionList[selectedIndex].isGolden) {
                             FlameAudio.play('when_question_is_star.mp3');
                           } else {
                             FlameAudio.play('new_question.mp3');
                           }
-                          startTimer(questionList[selectedIndex].questionTime);
+                          startTimer(widget.questionList[selectedIndex].questionTime);
                         },
                         itemBuilder: (context, index) {
                           //swap page builder
@@ -216,18 +229,20 @@ class _CategoryGamePageState extends State<CategoryGamePage>
                             physics: const NeverScrollableScrollPhysics(),
                             scrollDirection: Axis.vertical,
                             onPageChanged: (val) {
-                              if (swapQuestionList[selectedIndex].isGolden) {
+                               hideDoublePointsKey = false;
+                          hideMysteryBoxKey = false;
+                              if (widget.swapQuestionList[selectedIndex].isGolden) {
                                 FlameAudio.play('when_question_is_star.mp3');
                               } else {
                                 FlameAudio.play('new_question.mp3');
                               }
                               startTimer(
-                                  swapQuestionList[selectedIndex].questionTime);
+                                  widget.swapQuestionList[selectedIndex].questionTime);
                             },
                             itemBuilder: (context, swapIndex) {
-                              QuestionModel question = questionList[index];
+                              QuestionModel question = widget.questionList[index];
                               if (swapIndex != 0) {
-                                question = swapQuestionList[index];
+                                question = widget.swapQuestionList[index];
                               }
                               return Column(
                                 children: [
@@ -311,7 +326,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
                                               ///
                                               ///Question number
                                               Text(
-                                                "${index + 1}/${questionList.length}",
+                                                "${index + 1}/${widget.questionList.length}",
                                                 style: TextStyle(
                                                     color:
                                                         AppColors.hintTextBlack,
@@ -325,18 +340,19 @@ class _CategoryGamePageState extends State<CategoryGamePage>
                                                 showHint:
                                                     question.hint.isNotEmpty,
                                                 showMysteryBox:
-                                                    question.hasMysteryBox,
+                                                    question.hasMysteryBox && !hideMysteryBoxKey,
                                                 showTimesTwo:
-                                                    question.hasTimesTwoPoints,
+                                                    question.hasTimesTwoPoints && !hideDoublePointsKey,
                                                 onMysteryBoxPressed: () {
                                                   _showMysteryBox();
                                                 },
                                                 onHintPressed: () {
-                                                  _showHintDialog();
+                                                  _showHintDialog(question.hint);
                                                 },
                                                 onTimesTwoPressed: () {
                                                   setState(() {
                                                     timesTwoActivated = true;
+                                                    hideDoublePointsKey = true;
                                                   });
                                                 },
                                               ),
@@ -487,7 +503,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
                                             padding: EdgeInsets.symmetric(
                                                 horizontal: d.pSH(16)),
                                             child: GamePageKeysList(
-                                              answerStreaks: 3,
+                                              answerStreaks: answerStreak,
                                               onFiftyTapped: () {
                                                 _useFiftyFiifty(
                                                     question.option);
@@ -578,6 +594,11 @@ class _CategoryGamePageState extends State<CategoryGamePage>
           questionPoints: question.points,
           isGolden: question.isGolden,
           time: question.questionTime);
+        answerStreak++;
+        if(answerStreak==5){
+          gameItemsProvider.increaseKeyAmount(GameKeyType.fiftyFifty);
+          answerStreak=0;
+        }
       // gameProvider.increaseAnswerStreak(
       //     context: context, hasGolden: question.isGolden && seconds.value > 6);
     } else {
@@ -637,6 +658,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
     startScoreAnimation();
     Future.delayed(const Duration(seconds: 2), () {
       currentGamePoints = gamePoints;
+      totalPoints+=currentGamePoints;
       if (mounted) currentGamePoints;
     });
   }
@@ -681,12 +703,12 @@ class _CategoryGamePageState extends State<CategoryGamePage>
   ////////////////////////////####################////////////////////////
   //////////////////////////  KEY TAPPED ACTIONS   ///////////////////////
   ////////////////////////////####################////////////////////////
-  _showHintDialog() async {
+  _showHintDialog(String hint) async {
     timer?.cancel();
     await showDialog(
       context: context,
       builder: ((context) => AlertDialog(
-          content: GameHintDialog(hint: questionList[selectedIndex].hint))),
+          content: GameHintDialog(hint: hint))),
     );
     startTimer(seconds.value);
 
@@ -695,6 +717,8 @@ class _CategoryGamePageState extends State<CategoryGamePage>
 
   _showMysteryBox() async {
     timer?.cancel();
+    hideMysteryBoxKey = true;
+    setState(() { });
     await showDialog(
       context: context,
       builder: ((context) => const MysteryBoxOpen()),
@@ -752,7 +776,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
   }
 
   _swapQuestion() {
-    if (swapQuestionList.isNotEmpty) {
+    if (widget.swapQuestionList.isNotEmpty) {
       timer?.cancel();
 
       swapController.nextPage(
@@ -766,22 +790,24 @@ class _CategoryGamePageState extends State<CategoryGamePage>
   moveToNextScreen({required int index, required int questionId}) {
     timer?.cancel();
     FlameAudio.bgm.stop();
-    if (index < questionList.length - 1) {
+    if (index < widget.questionList.length - 1) {
       pageController.nextPage(
           duration: const Duration(
             milliseconds: 400,
           ),
           curve: Curves.easeIn);
       addSelectedAnswer(
-          option: selectedAnswer, questioinId: questionList[index].id);
+          option: selectedAnswer, questioinId:widget. questionList[index].id);
     } else {
       addSelectedAnswer(
-          option: selectedAnswer, questioinId: questionList[index].id);
-      // nextScreen(
-      //     context,
-      //     SubmitPage(
-      //       questionList: questionList,
-      //     ));
+          option: selectedAnswer, questioinId: widget.questionList[index].id);
+      nextScreen(
+          context,
+          CategorySubmitPage(
+            questionList: widget.questionList,
+            totalPoints: totalPoints,
+            resultList: resultList,
+          ));
     }
 
     ///  GameLocalDatabase.deleteQuestion(questionId);

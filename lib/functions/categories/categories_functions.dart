@@ -10,7 +10,7 @@ import 'package:savyminds/data/shared_preference_values.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:savyminds/models/categories/category_level_model.dart';
-import 'package:savyminds/models/error_response.dart';
+import 'package:savyminds/models/games/question_model.dart';
 import 'package:savyminds/models/http_response_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
@@ -36,7 +36,7 @@ class CategoryFunctions {
           "Authorization": "Bearer $accessToken"
         },
       );
-      log('categories:${response.body}');
+     // log('categories:${response.body}');
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final responseModel = HttpResponseModel.fromJson(data);
@@ -77,7 +77,7 @@ class CategoryFunctions {
           "Authorization": "Bearer $accessToken"
         },
       );
-      log('fav categories:${response.body}');
+     // log('fav categories:${response.body}');
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         for (var item in data) {
@@ -174,22 +174,23 @@ class CategoryFunctions {
     }
   }
 
-  Future fetchCategoryQuestions(
+  Future<List<QuestionModel>> fetchCategoryQuestions(
       {required BuildContext context,
       required String nextUrl,
       required List<int> categories,
       required String level}) async {
     final hasConnection = await ConnectionCheck().hasConnection();
+    try{
     if (hasConnection) {
       if (context.mounted) {
         final String accessToken =
             Provider.of<UserDetailsProvider>(context, listen: false)
                 .getAccessToken();
-
+      log('cat: ${categories.toString()}');
         final response = await http.get(
           Uri.parse(nextUrl.isNotEmpty
               ? nextUrl
-              : '${GameUrl.questions}?categories=$categories,level=$level'),
+              : '${GameUrl.questions}?categories=${listToString(categories)}&level=$level'),
           headers: {
             "content-type": "application/json",
             "accept": "application/json",
@@ -197,20 +198,38 @@ class CategoryFunctions {
           },
         );
         if (response.statusCode == 200) {
-          // print("Response ${response.body}");
-          return HttpResponseModel.fromJson(jsonDecode(response.body));
+         final  result=   HttpResponseModel.fromJson(jsonDecode(response.body));
+           return  (result.results ?? []).map((e) => QuestionModel.fromJson(e)).toList();
         } else {
           //print("Error ${response.body}");
 
-          return ErrorResponse.fromJson(jsonDecode(response.body));
+          return [];
         }
+        
       }
+      return [];
+
     } else {
       //print('error');
       if (context.mounted) {
         Fluttertoast.showToast(msg: 'No internet connection');
       }
-      return null;
+      return [];
     }
+    }catch(e){
+      log('e: $e');
+      return [];
+    }
+  }
+
+static  String listToString(List<int> list) {
+    String str = '';
+    for (int i = 0; i < list.length; i++) {
+      str += list[i].toString();
+      if (i != list.length - 1) {
+        str += ',';
+      }
+    }
+    return str;
   }
 }

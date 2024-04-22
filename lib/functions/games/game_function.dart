@@ -16,6 +16,7 @@ import 'package:savyminds/models/games/game_streak_model.dart';
 import 'package:savyminds/models/games/option_model.dart';
 import 'package:savyminds/models/games/start_game.dart';
 import 'package:savyminds/models/http_response_model.dart';
+import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/utils/connection_check.dart';
@@ -113,7 +114,9 @@ class GameFunction {
   Future getGameStreaks({
     required BuildContext context,
   }) async {
+    final gameItemsProvider = context.read<GameItemsProvider>();
     final hasConnection = await ConnectionCheck().hasConnection();
+    try{
 
     if (hasConnection) {
       if (context.mounted) {
@@ -137,8 +140,7 @@ class GameFunction {
         if (response.statusCode == 200) {
           final streaks = GameStreakModel.fromJson(jsonDecode(response.body));
           gameProvider.setUserStreaks(streaks);
-          gameProvider.setFiftyfifty(streaks.fiftyFifty);
-          gameProvider.setGoldenChances(streaks.goldenBadges);
+          gameItemsProvider.setKeyItems(streaks);
 
           return true;
         } else {
@@ -147,6 +149,9 @@ class GameFunction {
       }
     } else {
       return ErrorResponse(errorMsg: 'No internet connection');
+    }
+    }catch(e){
+      log('streaks error: $e');
     }
   }
 
