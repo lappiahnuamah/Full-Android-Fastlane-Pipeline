@@ -2,10 +2,13 @@
 
 //App name
 import 'package:savyminds/utils/dimensions.dart';
+import 'dart:developer' as dev;
 
 const kAppName = "SavyMinds";
 
 Dimensions d = Dimensions();
+
+lg(dynamic msg) => dev.log("$msg");
 
 //
 const kIsLoggedInKey = "IsLoggedIn";

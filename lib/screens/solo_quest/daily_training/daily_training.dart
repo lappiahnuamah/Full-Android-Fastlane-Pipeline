@@ -89,7 +89,7 @@ class _DailyTrainingState extends State<DailyTraining> {
                           ? 3
                           : categoryProvider.categories.length, (index) {
                     return Container(
-                      height: d.pSH(150.5),
+                      height: d.pSH(156.5),
                       width: d.pSW(160.2),
                       margin: EdgeInsets.only(bottom: d.pSH(8)),
                       child: CategoryCard(

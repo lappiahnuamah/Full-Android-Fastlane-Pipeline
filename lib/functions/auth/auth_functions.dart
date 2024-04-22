@@ -257,6 +257,7 @@ class Authentications {
             "password": password,
           }),
         );
+
         if (response.statusCode == 200) {
           AppUser user0 = AppUser.fromJson(jsonDecode(response.body));
           if (user0.isBlocked ?? false) {
@@ -290,6 +291,7 @@ class Authentications {
         return 900;
       }
     } catch (e) {
+      lg("$e");
       Fluttertoast.showToast(msg: 'Unexpected  error, try again');
       return 700;
     }

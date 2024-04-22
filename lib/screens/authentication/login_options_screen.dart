@@ -232,7 +232,7 @@ class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
               )
             ],
           ),
-        ));
+        )); 
   }
 
   //////////  Create line horizontal

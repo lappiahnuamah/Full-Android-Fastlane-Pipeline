@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
+import 'package:savyminds/data/dummy_questions.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
@@ -13,6 +14,7 @@ import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/screens/categories/components/category_placeholder.dart';
 import 'package:savyminds/screens/categories/components/level_card.dart';
 import 'package:savyminds/screens/solo_quest/time_rush/select_three_categories.dart';
+import 'package:savyminds/screens/solo_quest/time_rush/time_rush_game_page.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/availalble_keys_widget.dart';
@@ -160,7 +162,9 @@ class _TimeRushState extends State<TimeRush> {
                     SizedBox(
                       width: d.pSH(240),
                       child: TransformedButton(
-                        onTap: () {},
+                        onTap: () {
+           nextScreen(context, TimeRushGamePage(questModel: widget.quest,questionList: questionList,swapQuestionList: swapQuestionList,),);
+                        },
                         buttonColor: AppColors.kGameGreen,
                         buttonText: ' START ',
                         textColor: Colors.white,
