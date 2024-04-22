@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -50,10 +48,7 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
     });
     final result =
         await CategoryFunctions().getCategoryLevel(context, widget.category.id);
-    if (result is CategoryLevelModel) {
-      
-
-    }
+    if (result is CategoryLevelModel) {}
     setState(() {
       isLoading = false;
     });
@@ -69,8 +64,8 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
       child: Stack(
         children: [
           Padding(
-            padding:
-                EdgeInsets.symmetric(vertical: d.pSH(16), horizontal: d.pSW(30)),
+            padding: EdgeInsets.symmetric(
+                vertical: d.pSH(16), horizontal: d.pSW(30)),
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -102,16 +97,18 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
                                   spacing: d.pSW(15),
                                   alignment: WrapAlignment.center,
                                   children: [
-          
-                                    ...List.generate(catLevel.levels.length, (index) {
-                                      final _level = catLevel.levels[index];
-                                      if(_level.isCurrentLevel){
-                                        level = _level.name;
-                                      }
-                                    return  LevelCard(
-                                        level:_level,
-                                      );
-                                      },)
+                                    ...List.generate(
+                                      catLevel.levels.length,
+                                      (index) {
+                                        final _level = catLevel.levels[index];
+                                        if (_level.isCurrentLevel) {
+                                          level = _level.name;
+                                        }
+                                        return LevelCard(
+                                          level: _level,
+                                        );
+                                      },
+                                    )
                                   ],
                                 )
                               : const SizedBox();
@@ -153,7 +150,7 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
                     height: d.pSH(30),
                   ),
                   TransformedButton(
-                    onTap: () async{
+                    onTap: () async {
                       getQuestions();
                     },
                     buttonColor: AppColors.kGameGreen,
@@ -168,13 +165,13 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
             ),
           ),
 
-            /////////////////////////////////////////////////////////
+          /////////////////////////////////////////////////////////
           /////////// CIRCULAR PROGRESS INDICATOR///////////////////
-        fectchingGames
-                ? LoadIndicator(
-                    child: appDialog(
-                        context: context, loadingMessage: "Fetching game..."))
-                : const SizedBox()
+          fectchingGames
+              ? LoadIndicator(
+                  child: appDialog(
+                      context: context, loadingMessage: "Fetching game..."))
+              : const SizedBox()
         ],
       ),
     );
@@ -191,18 +188,15 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
         level: level,
         nextUrl: '');
     if (result.isNotEmpty && mounted) {
-      spiltresultTotwoList(result).then((value) {
-
-      });
-    }else{
-      Fluttertoast.showToast(msg: 'Sorry, no questions found for this category. Please try again later.');
+      spiltresultTotwoList(result).then((value) {});
+    } else {
+      Fluttertoast.showToast(
+          msg:
+              'Sorry, no questions found for this category. Please try again later.');
     }
-    fectchingGames =false;
-    setState(() {
-      
-    });
+    fectchingGames = false;
+    setState(() {});
   }
-  
 
   spiltresultTotwoList(List<QuestionModel> result) {
     for (int i = 0; i < result.length; i++) {
@@ -212,8 +206,14 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
         swapQuestionList.add(result[i]);
       }
     }
-           nextScreen(context, CategoryGamePage(category: widget.category,questionList: questionList,swapQuestionList: swapQuestionList,),);
-
+    nextScreen(
+      context,
+      CategoryGamePage(
+        category: widget.category,
+        questionList: questionList,
+        swapQuestionList: swapQuestionList,
+      ),
+    );
   }
 }
 

@@ -14,16 +14,17 @@ class GamePageKeysList extends StatefulWidget {
       {super.key,
       required this.answerStreaks,
       required this.onFiftyTapped,
-      // required this.onRetakeTapped,
       required this.onFreezeTapped,
       required this.onSwapTapped,
-      required this.onGoldenTapped});
+      required this.onGoldenTapped,
+      this.hideSwap =false,
+      });
   final int answerStreaks;
   final Function() onFiftyTapped;
-  //final Function() onRetakeTapped;
   final Function() onFreezeTapped;
   final Function() onSwapTapped;
   final Function() onGoldenTapped;
+  final bool hideSwap;
 
   @override
   State<GamePageKeysList> createState() => _GamePageKeysListState();
@@ -108,6 +109,8 @@ class _GamePageKeysListState extends State<GamePageKeysList> {
             widget.onFreezeTapped.call();
             gameItemsProvider.reduceKeyAmount(GameKeyType.freezeTimeKey);
           }),
+
+          if(!widget.hideSwap)
           keyWithAmount(size,
               icon: AppImages.swapKey,
               number: gameItemsProvider.userKeys[GameKeyType.swapKey]?.amount ??
