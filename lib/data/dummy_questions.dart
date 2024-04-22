@@ -87,7 +87,7 @@ List<QuestionModel> questionList = [
       id: 2,
       hint: '',
       hasMysteryBox: false,
-      hasTimesTwoPoints: true,
+      hasTimesTwoPoints: false,
       hasHint: false,
       text:
           'These are some of the hardest trivial out there. You need more than memory to work these out.',

@@ -6,6 +6,7 @@ import 'package:savyminds/functions/games/game_function.dart';
 import 'package:savyminds/models/games/question_model.dart';
 import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
 import 'package:savyminds/screens/game/game/components/game_header.dart';
 import 'package:savyminds/screens/game/ranking/game_ranking.dart';
 import 'package:savyminds/utils/enums/game_enums.dart';
@@ -178,8 +179,8 @@ class _CategorySubmitPageState extends State<CategorySubmitPage> {
                       ),
                       TransformedButton(
                         onTap: () {
-                          // gameProvider.resetGames();
-                          // nextScreen(context, const PlayersSelect());
+                          
+                          nextScreen(context, const CustomBottomNav());
                         },
                         buttonText: 'Return Home',
                         fontSize: getFontSize(22, size),
