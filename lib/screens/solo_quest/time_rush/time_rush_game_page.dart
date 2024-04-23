@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -31,10 +30,14 @@ import 'package:savyminds/widgets/mystery_box_open.dart';
 import 'package:savyminds/widgets/retake_key_display.dart';
 
 class TimeRushGamePage extends StatefulWidget {
-  const TimeRushGamePage({super.key, required this.questModel,required this.questionList,required this.swapQuestionList});
+  const TimeRushGamePage(
+      {super.key,
+      required this.questModel,
+      required this.questionList,
+      required this.swapQuestionList});
   final QuestModel questModel;
- final List<QuestionModel> questionList;
- final List<QuestionModel> swapQuestionList;
+  final List<QuestionModel> questionList;
+  final List<QuestionModel> swapQuestionList;
 
   @override
   State<TimeRushGamePage> createState() => _TimeRushGamePageState();
@@ -81,7 +84,7 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
 
   //hide keys
   bool hideDoublePointsKey = false;
-  bool hideMysteryBoxKey =false;
+  bool hideMysteryBoxKey = false;
 
   //swap
   PageController swapController = PageController(initialPage: 0);
@@ -91,7 +94,7 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       seconds.value = seconds.value - 1;
       if (seconds.value == 0) {
-        if (selectedIndex <widget.questionList.length - 1) {
+        if (selectedIndex < widget.questionList.length - 1) {
           pageController.nextPage(
               duration: const Duration(
                 milliseconds: 400,
@@ -101,7 +104,7 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
           //     option: selectedAnswer,
           //     questioinId: questionList[selectedIndex].id);
           if (selectedAnswer == null) {
-            answerStreak=0;
+            answerStreak = 0;
           }
           timer.cancel();
           FlameAudio.bgm.stop();
@@ -110,9 +113,9 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
           //     option: selectedAnswer,
           //     questioinId: questionList[selectedIndex].id);
           if (selectedAnswer == null) {
-            answerStreak=0;
+            answerStreak = 0;
           }
-          timer.cancel(); 
+          timer.cancel();
           FlameAudio.bgm.stop();
           FlameAudio.play('outro_game_over.mp3');
           nextScreen(
@@ -159,7 +162,7 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
     return Scaffold(
         body: Stack(
       children: [
-        GamePageBackground(icon: widget.category.icon),
+        GamePageBackground(icon: widget.questModel.icon),
 
         //Actual Game
         SafeArea(
@@ -177,7 +180,20 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
                         onTap: () {
                           Navigator.pop(context);
                         },
-                        child: SvgPicture.asset('assets/icons/log-out.svg'),
+                        child: SvgPicture.asset('assets/icons/time_elapse.svg'),
+                      ),
+
+                      //TODO:
+                      Container(
+                        padding: EdgeInsets.all(d.pSH(5)),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(d.pSH(3)),
+                            color: const Color(0xFF070707).withOpacity(0.75)),
+                        child: const CustomText(
+                          label: "1:20",
+                          color: Colors.white,
+                          fontFamily: 'Digital Numbers',
+                        ),
                       ),
 
                       //Score
@@ -220,7 +236,8 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
                           } else {
                             FlameAudio.play('new_question.mp3');
                           }
-                          startTimer(widget.questionList[selectedIndex].questionTime);
+                          startTimer(
+                              widget.questionList[selectedIndex].questionTime);
                         },
                         itemBuilder: (context, index) {
                           //swap page builder
@@ -230,18 +247,20 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
                             physics: const NeverScrollableScrollPhysics(),
                             scrollDirection: Axis.vertical,
                             onPageChanged: (val) {
-                               hideDoublePointsKey = false;
-                          hideMysteryBoxKey = false;
-                              if (widget.swapQuestionList[selectedIndex].isGolden) {
+                              hideDoublePointsKey = false;
+                              hideMysteryBoxKey = false;
+                              if (widget
+                                  .swapQuestionList[selectedIndex].isGolden) {
                                 FlameAudio.play('when_question_is_star.mp3');
                               } else {
                                 FlameAudio.play('new_question.mp3');
                               }
-                              startTimer(
-                                  widget.swapQuestionList[selectedIndex].questionTime);
+                              startTimer(widget.swapQuestionList[selectedIndex]
+                                  .questionTime);
                             },
                             itemBuilder: (context, swapIndex) {
-                              QuestionModel question = widget.questionList[index];
+                              QuestionModel question =
+                                  widget.questionList[index];
                               if (swapIndex != 0) {
                                 question = widget.swapQuestionList[index];
                               }
@@ -253,14 +272,14 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
                                           horizontal: d.pSH(16)),
                                       child: Column(
                                         children: [
-                                          if (question.isGolden)
-                                            SvgPicture.asset(
-                                              'assets/icons/star.svg',
-                                              height: d.pSH(25),
-                                            ).animate()
-                                              ..shimmer(duration: 1000.ms)
-                                              ..scale(duration: 1000.ms),
-                                          SizedBox(height: d.pSH(10)),
+                                          // if (question.isGolden)
+                                          //   SvgPicture.asset(
+                                          //     'assets/icons/star.svg',
+                                          //     height: d.pSH(25),
+                                          //   ).animate()
+                                          //     ..shimmer(duration: 1000.ms)
+                                          //     ..scale(duration: 1000.ms),
+                                          // SizedBox(height: d.pSH(10)),
                                           Expanded(
                                               child: Column(
                                             mainAxisAlignment:
@@ -317,6 +336,21 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
                                             ],
                                           )),
 
+                                          Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  //TODO: Retake function
+                                                },
+                                                child: SvgPicture.asset(
+                                                    'assets/icons/retake_icon.svg'),
+                                              ),
+                                            ],
+                                          ),
+
                                           //Question Number and Timer
                                           Row(
                                             mainAxisAlignment:
@@ -326,29 +360,37 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
                                             children: [
                                               ///
                                               ///Question number
-                                              Text(
-                                                "${index + 1}/${widget.questionList.length}",
-                                                style: TextStyle(
-                                                    color:
-                                                        AppColors.hintTextBlack,
-                                                    fontSize:
-                                                        getFontSize(20, size),
-                                                    fontWeight:
-                                                        FontWeight.w700),
+                                              //TODO:
+                                              Expanded(
+                                                flex: 2,
+                                                child: Text(
+                                                  "${index + 1}",
+                                                  style: TextStyle(
+                                                      color:
+                                                          AppColors.hintTextBlack,
+                                                      fontSize:
+                                                          getFontSize(20, size),
+                                                      fontWeight:
+                                                          FontWeight.w700),
+                                                ),
                                               ),
                                               SizedBox(width: d.pSH(30)),
                                               GameTopKeysList(
+
                                                 showHint:
                                                     question.hint.isNotEmpty,
                                                 showMysteryBox:
-                                                    question.hasMysteryBox && !hideMysteryBoxKey,
-                                                showTimesTwo:
-                                                    question.hasTimesTwoPoints && !hideDoublePointsKey,
+                                                    question.hasMysteryBox &&
+                                                        !hideMysteryBoxKey,
+                                                showTimesTwo: question
+                                                        .hasTimesTwoPoints &&
+                                                    !hideDoublePointsKey,
                                                 onMysteryBoxPressed: () {
                                                   _showMysteryBox();
                                                 },
                                                 onHintPressed: () {
-                                                  _showHintDialog(question.hint);
+                                                  _showHintDialog(
+                                                      question.hint);
                                                 },
                                                 onTimesTwoPressed: () {
                                                   setState(() {
@@ -357,31 +399,36 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
                                                   });
                                                 },
                                               ),
-                                              SizedBox(width: d.pSH(30)),
+                                              SizedBox(width: d.pSH(20)),
                                               ////
                                               /// Timer
                                               ValueListenableBuilder<int>(
                                                   valueListenable: seconds,
                                                   builder:
                                                       (context, time, child) {
-                                                    return SizedBox(
-                                                      width: d.pSH(25),
-                                                      child: Text(
-                                                        '$time',
-                                                        textAlign:
-                                                            TextAlign.end,
-                                                        style: TextStyle(
-                                                            fontSize:
-                                                                getFontSize(
-                                                                    20, size),
-                                                            color: time < 6
-                                                                ? AppColors
-                                                                    .kGameRed
-                                                                : AppColors
-                                                                    .kGameGreen,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w700),
+                                                    return Expanded(
+                                                      flex: 2,
+                                                      child: Container(
+                                                        padding: EdgeInsets.only(
+                                                            right: d.pSW(25)),
+                                                        width: d.pSH(25),
+                                                        child: Text(
+                                                          '$time s',
+                                                          textAlign:
+                                                              TextAlign.end,
+                                                          style: TextStyle(
+                                                              fontSize:
+                                                                  getFontSize(
+                                                                      20, size),
+                                                              color: time < 6
+                                                                  ? AppColors
+                                                                      .kGameRed
+                                                                  : AppColors
+                                                                      .kGameGreen,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w700),
+                                                        ),
                                                       ),
                                                     );
                                                   }),
@@ -514,9 +561,7 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
                                                 _freezeTime(
                                                     question.questionTime);
                                               },
-                                              onSwapTapped: () {
-                                                _swapQuestion();
-                                              },
+                                              onSwapTapped: null, 
                                               onGoldenTapped: () {
                                                 _useGoldenChance(
                                                     question: question,
@@ -595,11 +640,11 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
           questionPoints: question.points,
           isGolden: question.isGolden,
           time: question.questionTime);
-        answerStreak++;
-        if(answerStreak==5){
-          gameItemsProvider.increaseKeyAmount(GameKeyType.fiftyFifty);
-          answerStreak=0;
-        }
+      answerStreak++;
+      if (answerStreak == 5) {
+        gameItemsProvider.increaseKeyAmount(GameKeyType.fiftyFifty);
+        answerStreak = 0;
+      }
       // gameProvider.increaseAnswerStreak(
       //     context: context, hasGolden: question.isGolden && seconds.value > 6);
     } else {
@@ -659,7 +704,7 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
     startScoreAnimation();
     Future.delayed(const Duration(seconds: 2), () {
       currentGamePoints = gamePoints;
-      totalPoints+=currentGamePoints;
+      totalPoints += currentGamePoints;
       if (mounted) currentGamePoints;
     });
   }
@@ -708,8 +753,7 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
     timer?.cancel();
     await showDialog(
       context: context,
-      builder: ((context) => AlertDialog(
-          content: GameHintDialog(hint: hint))),
+      builder: ((context) => AlertDialog(content: GameHintDialog(hint: hint))),
     );
     startTimer(seconds.value);
 
@@ -719,7 +763,7 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
   _showMysteryBox() async {
     timer?.cancel();
     hideMysteryBoxKey = true;
-    setState(() { });
+    setState(() {});
     await showDialog(
       context: context,
       builder: ((context) => const MysteryBoxOpen()),
@@ -798,7 +842,7 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
           ),
           curve: Curves.easeIn);
       addSelectedAnswer(
-          option: selectedAnswer, questioinId:widget. questionList[index].id);
+          option: selectedAnswer, questioinId: widget.questionList[index].id);
     } else {
       addSelectedAnswer(
           option: selectedAnswer, questioinId: widget.questionList[index].id);

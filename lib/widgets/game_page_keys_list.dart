@@ -10,20 +10,20 @@ import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class GamePageKeysList extends StatefulWidget {
-  const GamePageKeysList(
-      {super.key,
-      required this.answerStreaks,
-      required this.onFiftyTapped,
-      required this.onFreezeTapped,
-      required this.onSwapTapped,
-      required this.onGoldenTapped,
-      this.hideSwap =false,
-      });
+  const GamePageKeysList({
+    super.key,
+    required this.answerStreaks,
+    required this.onFiftyTapped,
+    required this.onFreezeTapped,
+    required this.onSwapTapped,
+    required this.onGoldenTapped,
+    this.hideSwap = false,
+  });
   final int answerStreaks;
-  final Function() onFiftyTapped;
-  final Function() onFreezeTapped;
-  final Function() onSwapTapped;
-  final Function() onGoldenTapped;
+  final Function()? onFiftyTapped;
+  final Function()? onFreezeTapped;
+  final Function()? onSwapTapped;
+  final Function()? onGoldenTapped;
   final bool hideSwap;
 
   @override
@@ -81,14 +81,15 @@ class _GamePageKeysListState extends State<GamePageKeysList> {
                   ],
                 ),
               ),
-              keyWithAmount(
-                size,
-                icon: AppImages.fiftyFiftyKey,
-                number: gameItemsProvider
-                        .userKeys[GameKeyType.fiftyFifty]?.amount ??
-                    0,
-                onTap: widget.onFiftyTapped,
-              ),
+              if (widget.onFiftyTapped != null)
+                keyWithAmount(
+                  size,
+                  icon: AppImages.fiftyFiftyKey,
+                  number: gameItemsProvider
+                          .userKeys[GameKeyType.fiftyFifty]?.amount ??
+                      0,
+                  onTap: widget.onFiftyTapped!,
+                ),
             ],
           ),
           // keyWithAmount(
@@ -101,31 +102,34 @@ class _GamePageKeysListState extends State<GamePageKeysList> {
           //     gameItemsProvider.reduceKeyAmount(GameKeyType.retakeKey);
           //   },
           // ),
-          keyWithAmount(size,
-              icon: AppImages.freezeTimeKey,
-              number: gameItemsProvider
-                      .userKeys[GameKeyType.freezeTimeKey]?.amount ??
-                  0, onTap: () {
-            widget.onFreezeTapped.call();
-            gameItemsProvider.reduceKeyAmount(GameKeyType.freezeTimeKey);
-          }),
+          if (widget.onFreezeTapped != null)
+            keyWithAmount(size,
+                icon: AppImages.freezeTimeKey,
+                number: gameItemsProvider
+                        .userKeys[GameKeyType.freezeTimeKey]?.amount ??
+                    0, onTap: () {
+              widget.onFreezeTapped?.call();
+              gameItemsProvider.reduceKeyAmount(GameKeyType.freezeTimeKey);
+            }),
 
-          if(!widget.hideSwap)
-          keyWithAmount(size,
-              icon: AppImages.swapKey,
-              number: gameItemsProvider.userKeys[GameKeyType.swapKey]?.amount ??
-                  0, onTap: () {
-            widget.onSwapTapped.call();
-            gameItemsProvider.reduceKeyAmount(GameKeyType.swapKey);
-          }),
-          keyWithAmount(size,
-              icon: AppImages.goldenKey,
-              number:
-                  gameItemsProvider.userKeys[GameKeyType.goldenKey]?.amount ??
-                      0, onTap: () {
-            widget.onGoldenTapped.call();
-            gameItemsProvider.reduceKeyAmount(GameKeyType.goldenKey);
-          }),
+          if (widget.onSwapTapped != null)
+            keyWithAmount(size,
+                icon: AppImages.swapKey,
+                number:
+                    gameItemsProvider.userKeys[GameKeyType.swapKey]?.amount ??
+                        0, onTap: () {
+              widget.onSwapTapped?.call();
+              gameItemsProvider.reduceKeyAmount(GameKeyType.swapKey);
+            }),
+          if (widget.onGoldenTapped != null)
+            keyWithAmount(size,
+                icon: AppImages.goldenKey,
+                number:
+                    gameItemsProvider.userKeys[GameKeyType.goldenKey]?.amount ??
+                        0, onTap: () {
+              widget.onGoldenTapped?.call();
+              gameItemsProvider.reduceKeyAmount(GameKeyType.goldenKey);
+            }),
         ],
       );
     });

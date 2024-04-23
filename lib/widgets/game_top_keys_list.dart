@@ -26,6 +26,7 @@ class GameTopKeysList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
+      flex: 2,
       child: Consumer<GameItemsProvider>(
           builder: (context, gameItemsProvider, chikd) {
         return Row(

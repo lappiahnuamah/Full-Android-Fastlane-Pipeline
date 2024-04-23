@@ -485,7 +485,7 @@ class _SurvivalQuestGamePlayState extends State<SurvivalQuestGamePlay>
                                     onFiftyTapped: () {
                                       _useFiftyFiifty(question.option);
                                     },
-                                    hideSwap: true,
+                                    // hideSwap: true,
                                     onFreezeTapped: () {
                                       _freezeTime(question.questionTime);
                                     },
