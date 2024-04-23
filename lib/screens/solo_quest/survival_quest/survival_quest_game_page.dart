@@ -179,6 +179,7 @@ class _SurvivalQuestGamePlayState extends State<SurvivalQuestGamePlay>
                         },
                         child: Card(
                           elevation: .1,
+                          margin: EdgeInsets.zero,
                           child: Padding(
                             padding: EdgeInsets.all(d.pSH(6)),
                             child: SvgPicture.network(
