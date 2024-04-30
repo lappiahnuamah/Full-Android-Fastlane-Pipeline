@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
+import 'package:savyminds/functions/categories/categories_functions.dart';
 import 'package:savyminds/functions/games/game_function.dart';
 import 'package:savyminds/models/games/question_model.dart';
 import 'package:savyminds/providers/game_provider.dart';
@@ -15,11 +16,19 @@ import 'package:savyminds/utils/game_utils.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
 
+import '../../models/categories/categories_model.dart';
+
 class CategorySubmitPage extends StatefulWidget {
-  const CategorySubmitPage({super.key, required this.questionList,required this.totalPoints,required this.resultList});
+  const CategorySubmitPage(
+      {super.key,
+      required this.questionList,
+      required this.categoryModel,
+      required this.totalPoints,
+      required this.resultList});
   final List<QuestionModel> questionList;
+  final CategoryModel? categoryModel;
   final int totalPoints;
- final Map<int, dynamic> resultList;
+  final Map<int, dynamic> resultList;
 
   @override
   State<CategorySubmitPage> createState() => _CategorySubmitPageState();
@@ -35,10 +44,15 @@ class _CategorySubmitPageState extends State<CategorySubmitPage> {
     questionList = widget.questionList;
     gameProvider.addCurrentPointsToTotal();
     gameProvider.clearPreviousList();
-    GameFunction().submitAnswers(
-        context: context,
-        resultList: gameProvider.resultList,
-        totalPoints: gameProvider.currentGamePoints);
+
+    if (widget.categoryModel != null) {
+      
+      CategoryFunctions().submitCategoryPoints(
+          context: context,
+          category: widget.categoryModel!.id,
+          totalPoints: gameProvider.currentGamePoints);
+    }
+
     GameFunction().postGameStreaks(
         context: context,
         fiftyFifty: gameProvider.fiftyFifty,
@@ -93,7 +107,8 @@ class _CategorySubmitPageState extends State<CategorySubmitPage> {
                                 ),
                                 twinee(
                                     title: "Correct Answers",
-                                    subTitle: "${game.getTotalResults()}/${widget.questionList.length}"),
+                                    subTitle:
+                                        "${game.getTotalResults()}/${widget.questionList.length}"),
                                 SizedBox(
                                   height: d.pSH(18),
                                 ),
@@ -179,7 +194,6 @@ class _CategorySubmitPageState extends State<CategorySubmitPage> {
                       ),
                       TransformedButton(
                         onTap: () {
-                          
                           nextScreen(context, const CustomBottomNav());
                         },
                         buttonText: 'Return Home',

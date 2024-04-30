@@ -118,6 +118,7 @@ class _SurvivalQuestGamePlayState extends State<SurvivalQuestGamePlay>
           nextScreen(
               context,
               CategorySubmitPage(
+                categoryModel: null,
                 questionList: widget.questionList,
                 totalPoints: totalPoints,
                 resultList: resultList,
@@ -573,6 +574,7 @@ class _SurvivalQuestGamePlayState extends State<SurvivalQuestGamePlay>
         nextScreen(
             context,
             CategorySubmitPage(
+              categoryModel: null,
               questionList: widget.questionList,
               totalPoints: totalPoints,
               resultList: resultList,
@@ -758,6 +760,7 @@ class _SurvivalQuestGamePlayState extends State<SurvivalQuestGamePlay>
       nextScreen(
           context,
           CategorySubmitPage(
+            categoryModel: null,
             questionList: widget.questionList,
             totalPoints: totalPoints,
             resultList: resultList,

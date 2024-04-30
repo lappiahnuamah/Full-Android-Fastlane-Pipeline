@@ -6,10 +6,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/api_urls/category_url.dart';
 import 'package:savyminds/api_urls/game_url.dart';
+import 'package:savyminds/constants.dart';
 import 'package:savyminds/data/shared_preference_values.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:savyminds/models/categories/category_level_model.dart';
+import 'package:savyminds/models/categories/user_category_points.dart';
 import 'package:savyminds/models/games/question_model.dart';
 import 'package:savyminds/models/http_response_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
@@ -36,7 +38,7 @@ class CategoryFunctions {
           "Authorization": "Bearer $accessToken"
         },
       );
-     // log('categories:${response.body}');
+      // log('categories:${response.body}');
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final responseModel = HttpResponseModel.fromJson(data);
@@ -59,6 +61,37 @@ class CategoryFunctions {
     return null;
   }
 
+  Future<UserCategoryPoint?> submitCategoryPoints(
+      {required BuildContext context,
+      required int category,
+      required int totalPoints}) async {
+    final String accessToken =
+        Provider.of<UserDetailsProvider>(context, listen: false)
+            .getAccessToken();
+
+    try {
+      final response = await http.post(Uri.parse(CategoryUrl.categoryPoints),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            "Authorization": "Bearer $accessToken"
+          },
+          body:
+              jsonEncode({'category': category, 'total_points': totalPoints}));
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = json.decode(response.body);
+        lg(data);
+        return UserCategoryPoint.fromJson(data);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      lg(e);
+      return null;
+    }
+  }
+
 //Favorite Categories
   Future<List<CategoryModel>?> getFavoriteCategories(
       {required BuildContext context, String? nextUrl}) async {
@@ -77,7 +110,7 @@ class CategoryFunctions {
           "Authorization": "Bearer $accessToken"
         },
       );
-     // log('fav categories:${response.body}');
+      // log('fav categories:${response.body}');
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         for (var item in data) {
@@ -180,49 +213,50 @@ class CategoryFunctions {
       required List<int> categories,
       required String level}) async {
     final hasConnection = await ConnectionCheck().hasConnection();
-    try{
-    if (hasConnection) {
-      if (context.mounted) {
-        final String accessToken =
-            Provider.of<UserDetailsProvider>(context, listen: false)
-                .getAccessToken();
-      log('cat: ${categories.toString()}');
-        final response = await http.get(
-          Uri.parse(nextUrl.isNotEmpty
-              ? nextUrl
-              : '${GameUrl.questions}?categories=${listToString(categories)}&level=$level'),
-          headers: {
-            "content-type": "application/json",
-            "accept": "application/json",
-            "Authorization": "Bearer $accessToken"
-          },
-        );
-        if (response.statusCode == 200) {
-         final  result=   HttpResponseModel.fromJson(jsonDecode(response.body));
-           return  (result.results ?? []).map((e) => QuestionModel.fromJson(e)).toList();
-        } else {
-          //print("Error ${response.body}");
+    try {
+      if (hasConnection) {
+        if (context.mounted) {
+          final String accessToken =
+              Provider.of<UserDetailsProvider>(context, listen: false)
+                  .getAccessToken();
+          log('cat: ${categories.toString()}');
+          final response = await http.get(
+            Uri.parse(nextUrl.isNotEmpty
+                ? nextUrl
+                : '${GameUrl.questions}?categories=${listToString(categories)}&level=$level'),
+            headers: {
+              "content-type": "application/json",
+              "accept": "application/json",
+              "Authorization": "Bearer $accessToken"
+            },
+          );
+          if (response.statusCode == 200) {
+            final result =
+                HttpResponseModel.fromJson(jsonDecode(response.body));
+            return (result.results ?? [])
+                .map((e) => QuestionModel.fromJson(e))
+                .toList();
+          } else {
+            //print("Error ${response.body}");
 
-          return [];
+            return [];
+          }
         }
-        
+        return [];
+      } else {
+        //print('error');
+        if (context.mounted) {
+          Fluttertoast.showToast(msg: 'No internet connection');
+        }
+        return [];
       }
-      return [];
-
-    } else {
-      //print('error');
-      if (context.mounted) {
-        Fluttertoast.showToast(msg: 'No internet connection');
-      }
-      return [];
-    }
-    }catch(e){
+    } catch (e) {
       log('e: $e');
       return [];
     }
   }
 
-static  String listToString(List<int> list) {
+  static String listToString(List<int> list) {
     String str = '';
     for (int i = 0; i < list.length; i++) {
       str += list[i].toString();

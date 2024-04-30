@@ -117,6 +117,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
           nextScreen(
               context,
               CategorySubmitPage(
+                categoryModel: widget.category,
                 questionList: widget.questionList,
                 totalPoints: totalPoints,
                 resultList: resultList,
@@ -804,6 +805,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
       nextScreen(
           context,
           CategorySubmitPage(
+            categoryModel: widget.category,
             questionList: widget.questionList,
             totalPoints: totalPoints,
             resultList: resultList,

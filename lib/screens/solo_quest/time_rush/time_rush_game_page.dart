@@ -121,6 +121,7 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
           nextScreen(
               context,
               CategorySubmitPage(
+                categoryModel: null,
                 questionList: widget.questionList,
                 totalPoints: totalPoints,
                 resultList: resultList,
@@ -366,8 +367,8 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
                                                 child: Text(
                                                   "${index + 1}",
                                                   style: TextStyle(
-                                                      color:
-                                                          AppColors.hintTextBlack,
+                                                      color: AppColors
+                                                          .hintTextBlack,
                                                       fontSize:
                                                           getFontSize(20, size),
                                                       fontWeight:
@@ -376,7 +377,6 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
                                               ),
                                               SizedBox(width: d.pSH(30)),
                                               GameTopKeysList(
-
                                                 showHint:
                                                     question.hint.isNotEmpty,
                                                 showMysteryBox:
@@ -409,8 +409,10 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
                                                     return Expanded(
                                                       flex: 2,
                                                       child: Container(
-                                                        padding: EdgeInsets.only(
-                                                            right: d.pSW(25)),
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                right:
+                                                                    d.pSW(25)),
                                                         width: d.pSH(25),
                                                         child: Text(
                                                           '$time s',
@@ -561,7 +563,7 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
                                                 _freezeTime(
                                                     question.questionTime);
                                               },
-                                              onSwapTapped: null, 
+                                              onSwapTapped: null,
                                               onGoldenTapped: () {
                                                 _useGoldenChance(
                                                     question: question,
@@ -849,6 +851,7 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
       nextScreen(
           context,
           CategorySubmitPage(
+            categoryModel: null,
             questionList: widget.questionList,
             totalPoints: totalPoints,
             resultList: resultList,
