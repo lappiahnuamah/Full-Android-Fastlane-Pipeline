@@ -154,6 +154,7 @@ class _CreateContestState extends State<CreateContest> {
                     },
                     child: LevelCard(
                       level: levelList[i],
+                      totalPoints: 50,
                     ),
                   )
               ],

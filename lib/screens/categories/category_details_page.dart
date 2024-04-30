@@ -106,6 +106,7 @@ class _CategoryDetailsPageState extends State<CategoryDetailsPage> {
                                         }
                                         return LevelCard(
                                           level: _level,
+                                          totalPoints: catLevel.totalPoints,
                                         );
                                       },
                                     )

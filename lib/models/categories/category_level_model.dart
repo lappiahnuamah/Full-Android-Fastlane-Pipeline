@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:savyminds/models/level_model.dart';
 
 class CategoryLevelModel {
@@ -18,6 +20,7 @@ class CategoryLevelModel {
   });
 
   factory CategoryLevelModel.fromJson(Map<String, dynamic> json) {
+  log('category_points: ${json['category_points']}');
     return CategoryLevelModel(
       id: json['category_points']?['id'] ?? 0,
       levels: ((json['levels'] ?? []) as List)

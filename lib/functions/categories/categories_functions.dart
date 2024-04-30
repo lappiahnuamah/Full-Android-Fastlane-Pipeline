@@ -154,7 +154,7 @@ class CategoryFunctions {
         Provider.of<CategoryProvider>(context, listen: false);
     try {
       final response = await http.get(
-        Uri.parse('${CategoryUrl.getMyLevel(id)}'),
+        Uri.parse('${CategoryUrl.getMyLevel(1)}'),
         headers: {
           "content-type": "application/json",
           "accept": "application/json",

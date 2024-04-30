@@ -5,12 +5,16 @@ class LevelModel {
   Color color;
   String name;
   bool isCurrentLevel;
+  int lowerboundary;
+  int upperboundary;
 
   LevelModel({
     required this.isCurrentLevel,
     required this.isLocked,
     required this.color,
     required this.name,
+    this.lowerboundary = 0,
+    this.upperboundary = 0,
   });
 
   factory LevelModel.fromJson(Map<String, dynamic> json) {
@@ -19,6 +23,8 @@ class LevelModel {
       color: getColorFromString(json['color'] ?? ''),
       name: json['name'] ?? '',
       isCurrentLevel: json['is_current_level'] ?? false,
+      lowerboundary: json['lower_boundry'] ?? 0,
+      upperboundary: json['upper_boundry'] ?? 0,
     );
   }
 

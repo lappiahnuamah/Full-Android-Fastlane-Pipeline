@@ -112,6 +112,7 @@ class _TrainingModeState extends State<TrainingMode> {
                     },
                     child: LevelCard(
                       level: levelList[i],
+                      totalPoints: 50,
                     ),
                   )
               ],

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:savyminds/constants.dart';
@@ -8,8 +10,9 @@ import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class LevelCard extends StatelessWidget {
-  const LevelCard({super.key, required this.level});
+  const LevelCard({super.key, required this.level, required this.totalPoints});
   final LevelModel level;
+  final num totalPoints;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -21,10 +24,20 @@ class LevelCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: LayoutBuilder(builder: (context, layout) {
+          final colorWidth = totalPoints > level.upperboundary
+                    ? layout.maxWidth
+                    : totalPoints < level.lowerboundary
+                        ? 0
+                        : ((totalPoints - level.lowerboundary) /
+                                level.upperboundary) *
+                            layout.maxWidth ;
+
+                            // log('totalPoonts: $totalPoints');
+          // log('message: $colorWidth');
           return Stack(
             children: [
               Container(
-                width: layout.maxWidth * 0, //level.totalPoints,//TODO:
+                width: colorWidth.toDouble(),
                 height: layout.maxHeight,
                 color: level.color,
               ),

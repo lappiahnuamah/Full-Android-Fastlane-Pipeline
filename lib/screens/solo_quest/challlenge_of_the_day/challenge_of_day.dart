@@ -88,6 +88,7 @@ class _ChallengeOfTheDayState extends State<ChallengeOfTheDay> {
                 for (int i = 0; i < levelList.length; i++)
                   LevelCard(
                     level: levelList[i],
+                    totalPoints: 50,
                   ),
               ],
             ),

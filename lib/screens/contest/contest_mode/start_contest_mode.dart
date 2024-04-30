@@ -78,6 +78,7 @@ class _StartContestModeState extends State<StartContestMode> {
             SizedBox(height: d.pSH(10)),
             LevelCard(
               level: widget.level,
+              totalPoints: 50,
             ),
             SizedBox(height: d.pSH(25)),
             CustomText(
