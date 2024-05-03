@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:savyminds/constants.dart';
-import 'package:savyminds/screens/categories/categories.dart';
 
 class QuestionModel extends Equatable {
   final int id;

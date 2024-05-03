@@ -47,6 +47,8 @@ class GameKeyModel extends Equatable {
     );
   }
 
+  
+
   @override
   List<Object?> get props => [id, name, amount, icon, isLocked];
 

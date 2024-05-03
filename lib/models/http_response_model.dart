@@ -1,3 +1,5 @@
+import 'package:savyminds/models/games/game_type_matrice_model.dart';
+
 class HttpResponseModel {
   int? count;
   String? next;
@@ -36,6 +38,16 @@ class HttpResponseModel {
   }
 
   static HttpResponseModel fromJsonList() => HttpResponseModel();
+
+  List<GameTypeMatric> toGameTypeMatricList() {
+    List<GameTypeMatric> newList = [];
+    if (results != null) {
+      for (var value in results!) {
+        newList.add(GameTypeMatric.fromJson(value));
+      }
+    }
+    return newList;
+  }
 
   Map<String, dynamic> toJson() {
     return {
