@@ -46,11 +46,10 @@ class _CategorySubmitPageState extends State<CategorySubmitPage> {
     gameProvider.clearPreviousList();
 
     if (widget.categoryModel != null) {
-      
       CategoryFunctions().submitCategoryPoints(
           context: context,
           category: widget.categoryModel!.id,
-          totalPoints: gameProvider.currentGamePoints);
+          totalPoints: widget.totalPoints);
     }
 
     GameFunction().postGameStreaks(

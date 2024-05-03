@@ -5,5 +5,5 @@ class CategoryUrl {
   static const categories = "$baseUrl/question-category/";
   static const categoryPoints = "$baseUrl/category-points/";
   static const favoriteCategories = "$baseUrl/question-category/get-favorites/";
-  static getMyLevel(int id) => "$baseUrl/question-category/$id/get-my-level/";
+  static getMyLevel(int?id) => "$baseUrl/question-category/$id/get-my-level/";
 }

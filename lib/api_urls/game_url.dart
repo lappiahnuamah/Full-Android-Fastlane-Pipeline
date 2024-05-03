@@ -15,4 +15,8 @@ class GameUrl {
   static const submitMultiplayerAnswer = "$baseUrl/submit-multiplayer-answer/";
   static const gameSession = "$baseUrl/game-session/";
   static const joinSession = "$baseUrl/game-session/join-session/";
+
+  //type level
+    static getGameTypeLevel(int id) => "$baseUrl/game-types/$id/get-my-level/";
+
 }

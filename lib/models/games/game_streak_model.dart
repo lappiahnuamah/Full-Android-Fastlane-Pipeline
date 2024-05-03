@@ -46,17 +46,11 @@ class GameStreakModel {
 
     data['fifty_fifty_points'] = fiftyFifty;
     data['golden_badges'] = goldenBadges;
+    data['swap_question'] = swapQuestion;
+    data['freeze_time'] = freezeTime;
+    data['retake_question'] = retakeQuestion;
 
     return data;
   }
 
-//   {
-//   "fifty_fifty_points": 0,
-//   "golden_badges": 0,
-//   "total_single_player_points": 0,
-//   "single_player_rank": 1,
-//   "total_multiplayer_points": 0,
-//   "multiplayer_rank": 1,
-//   "overall_game_points": 0
-// }
 }

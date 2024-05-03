@@ -12,6 +12,7 @@ import 'package:savyminds/providers/contest_provider.dart';
 import 'package:savyminds/providers/dark_theme_provider.dart';
 import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/providers/game_provider.dart';
+import 'package:savyminds/providers/game_type_provider.dart';
 import 'package:savyminds/providers/registration_provider.dart';
 import 'package:savyminds/providers/solo_quest_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
@@ -43,6 +44,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => SoloQuestProvider()),
     ChangeNotifierProvider(create: (_) => ContestProvider()),
     ChangeNotifierProvider(create: (_) => GameItemsProvider()),
+    ChangeNotifierProvider(create: (_) => GameTypeProvider())
   ], child: const MyApp()));
 }
 

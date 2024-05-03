@@ -78,10 +78,10 @@ class CategoryFunctions {
           },
           body:
               jsonEncode({'category': category, 'total_points': totalPoints}));
+      lg('point submit: ${response.body} : points: $totalPoints');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);
-        lg(data);
         return UserCategoryPoint.fromJson(data);
       } else {
         return null;
@@ -187,7 +187,7 @@ class CategoryFunctions {
         Provider.of<CategoryProvider>(context, listen: false);
     try {
       final response = await http.get(
-        Uri.parse('${CategoryUrl.getMyLevel(1)}'),
+        Uri.parse('${CategoryUrl.getMyLevel(id)}'),
         headers: {
           "content-type": "application/json",
           "accept": "application/json",
