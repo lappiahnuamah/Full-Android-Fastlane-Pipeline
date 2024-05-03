@@ -11,7 +11,6 @@ import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/games/option_model.dart';
 import 'package:savyminds/models/games/question_model.dart';
-import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
@@ -30,25 +29,17 @@ import 'package:savyminds/widgets/game_top_keys_list.dart';
 import 'package:savyminds/widgets/mystery_box_open.dart';
 import 'package:savyminds/widgets/retake_key_display.dart';
 
-class TrainingModegamePage extends StatefulWidget {
-  const TrainingModegamePage(
-      {super.key,
-      required this.category,
-      required this.questionList,
-      required this.swapQuestionList,
-      required this.quest,
-      required this.level});
+class CategoryGamePage extends StatefulWidget {
+  const CategoryGamePage({super.key, required this.category,required this.questionList,required this.swapQuestionList});
   final CategoryModel category;
-  final QuestModel quest;
-  final String level;
-  final List<QuestionModel> questionList;
-  final List<QuestionModel> swapQuestionList;
+ final List<QuestionModel> questionList;
+ final List<QuestionModel> swapQuestionList;
 
   @override
-  State<TrainingModegamePage> createState() => _TrainingModegamePageState();
+  State<CategoryGamePage> createState() => _CategoryGamePageState();
 }
 
-class _TrainingModegamePageState extends State<TrainingModegamePage>
+class _CategoryGamePageState extends State<CategoryGamePage>
     with TickerProviderStateMixin {
   PageController pageController = PageController(initialPage: 0);
   ValueNotifier<int> seconds = ValueNotifier<int>(10);
@@ -89,7 +80,7 @@ class _TrainingModegamePageState extends State<TrainingModegamePage>
 
   //hide keys
   bool hideDoublePointsKey = false;
-  bool hideMysteryBoxKey = false;
+  bool hideMysteryBoxKey =false;
 
   //swap
   PageController swapController = PageController(initialPage: 0);
@@ -99,7 +90,7 @@ class _TrainingModegamePageState extends State<TrainingModegamePage>
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       seconds.value = seconds.value - 1;
       if (seconds.value == 0) {
-        if (selectedIndex < widget.questionList.length - 1) {
+        if (selectedIndex <widget.questionList.length - 1) {
           pageController.nextPage(
               duration: const Duration(
                 milliseconds: 400,
@@ -109,7 +100,7 @@ class _TrainingModegamePageState extends State<TrainingModegamePage>
           //     option: selectedAnswer,
           //     questioinId: questionList[selectedIndex].id);
           if (selectedAnswer == null) {
-            answerStreak = 0;
+            answerStreak=0;
           }
           timer.cancel();
           FlameAudio.bgm.stop();
@@ -118,9 +109,9 @@ class _TrainingModegamePageState extends State<TrainingModegamePage>
           //     option: selectedAnswer,
           //     questioinId: questionList[selectedIndex].id);
           if (selectedAnswer == null) {
-            answerStreak = 0;
+            answerStreak=0;
           }
-          timer.cancel();
+          timer.cancel(); 
           FlameAudio.bgm.stop();
           FlameAudio.play('outro_game_over.mp3');
           nextScreen(
@@ -229,8 +220,7 @@ class _TrainingModegamePageState extends State<TrainingModegamePage>
                           } else {
                             FlameAudio.play('new_question.mp3');
                           }
-                          startTimer(
-                              widget.questionList[selectedIndex].questionTime);
+                          startTimer(widget.questionList[selectedIndex].questionTime);
                         },
                         itemBuilder: (context, index) {
                           //swap page builder
@@ -240,20 +230,18 @@ class _TrainingModegamePageState extends State<TrainingModegamePage>
                             physics: const NeverScrollableScrollPhysics(),
                             scrollDirection: Axis.vertical,
                             onPageChanged: (val) {
-                              hideDoublePointsKey = false;
-                              hideMysteryBoxKey = false;
-                              if (widget
-                                  .swapQuestionList[selectedIndex].isGolden) {
+                               hideDoublePointsKey = false;
+                          hideMysteryBoxKey = false;
+                              if (widget.swapQuestionList[selectedIndex].isGolden) {
                                 FlameAudio.play('when_question_is_star.mp3');
                               } else {
                                 FlameAudio.play('new_question.mp3');
                               }
-                              startTimer(widget.swapQuestionList[selectedIndex]
-                                  .questionTime);
+                              startTimer(
+                                  widget.swapQuestionList[selectedIndex].questionTime);
                             },
                             itemBuilder: (context, swapIndex) {
-                              QuestionModel question =
-                                  widget.questionList[index];
+                              QuestionModel question = widget.questionList[index];
                               if (swapIndex != 0) {
                                 question = widget.swapQuestionList[index];
                               }
@@ -353,17 +341,14 @@ class _TrainingModegamePageState extends State<TrainingModegamePage>
                                                 showHint:
                                                     question.hint.isNotEmpty,
                                                 showMysteryBox:
-                                                    question.hasMysteryBox &&
-                                                        !hideMysteryBoxKey,
-                                                showTimesTwo: question
-                                                        .hasTimesTwoPoints &&
-                                                    !hideDoublePointsKey,
+                                                    question.hasMysteryBox && !hideMysteryBoxKey,
+                                                showTimesTwo:
+                                                    question.hasTimesTwoPoints && !hideDoublePointsKey,
                                                 onMysteryBoxPressed: () {
                                                   _showMysteryBox();
                                                 },
                                                 onHintPressed: () {
-                                                  _showHintDialog(
-                                                      question.hint);
+                                                  _showHintDialog(question.hint);
                                                 },
                                                 onTimesTwoPressed: () {
                                                   setState(() {
@@ -610,11 +595,11 @@ class _TrainingModegamePageState extends State<TrainingModegamePage>
           questionPoints: question.points,
           isGolden: question.isGolden,
           time: question.questionTime);
-      answerStreak++;
-      if (answerStreak == 5) {
-        gameItemsProvider.increaseKeyAmount(GameKeyType.fiftyFifty);
-        answerStreak = 0;
-      }
+        answerStreak++;
+        if(answerStreak==5){
+          gameItemsProvider.increaseKeyAmount(GameKeyType.fiftyFifty);
+          answerStreak=0;
+        }
       // gameProvider.increaseAnswerStreak(
       //     context: context, hasGolden: question.isGolden && seconds.value > 6);
     } else {
@@ -674,7 +659,7 @@ class _TrainingModegamePageState extends State<TrainingModegamePage>
     startScoreAnimation();
     Future.delayed(const Duration(seconds: 2), () {
       currentGamePoints = gamePoints;
-      totalPoints += currentGamePoints;
+      totalPoints+=currentGamePoints;
       if (mounted) currentGamePoints;
     });
   }
@@ -723,7 +708,8 @@ class _TrainingModegamePageState extends State<TrainingModegamePage>
     timer?.cancel();
     await showDialog(
       context: context,
-      builder: ((context) => AlertDialog(content: GameHintDialog(hint: hint))),
+      builder: ((context) => AlertDialog(
+          content: GameHintDialog(hint: hint))),
     );
     startTimer(seconds.value);
 
@@ -733,7 +719,7 @@ class _TrainingModegamePageState extends State<TrainingModegamePage>
   _showMysteryBox() async {
     timer?.cancel();
     hideMysteryBoxKey = true;
-    setState(() {});
+    setState(() { });
     await showDialog(
       context: context,
       builder: ((context) => const MysteryBoxOpen()),
@@ -812,7 +798,7 @@ class _TrainingModegamePageState extends State<TrainingModegamePage>
           ),
           curve: Curves.easeIn);
       addSelectedAnswer(
-          option: selectedAnswer, questioinId: widget.questionList[index].id);
+          option: selectedAnswer, questioinId:widget. questionList[index].id);
     } else {
       addSelectedAnswer(
           option: selectedAnswer, questioinId: widget.questionList[index].id);

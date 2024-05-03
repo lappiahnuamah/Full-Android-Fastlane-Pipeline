@@ -3,17 +3,21 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/categories/categories_functions.dart';
+import 'package:savyminds/functions/questions_functions.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/categories/category_level_model.dart';
+import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_fonts.dart';
 import 'package:savyminds/resources/app_images.dart';
+import 'package:savyminds/screens/categories/category_game_page.dart';
 import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/screens/categories/components/category_placeholder.dart';
 import 'package:savyminds/screens/categories/components/level_card.dart';
 import 'package:savyminds/screens/categories/select_categoiries.dart';
+import 'package:savyminds/screens/solo_quest/training_mode/training_mode_game_page.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/availalble_keys_widget.dart';
@@ -22,9 +26,9 @@ import 'package:savyminds/widgets/quest_icon_desc_card.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
 
 class TrainingMode extends StatefulWidget {
-  const TrainingMode({super.key, required this.quest,this.category});
+  const TrainingMode({super.key, required this.quest, this.category});
   final QuestModel quest;
-  final CategoryModel ?category;
+  final CategoryModel? category;
 
   @override
   State<TrainingMode> createState() => _TrainingModeState();
@@ -32,7 +36,7 @@ class TrainingMode extends StatefulWidget {
 
 class _TrainingModeState extends State<TrainingMode> {
   late CategoryProvider categoryProvider;
-    bool isLoading = false;
+  bool isLoading = false;
   CategoryModel? selectedCategory;
   List levelList = [];
   String level = '';
@@ -41,16 +45,18 @@ class _TrainingModeState extends State<TrainingMode> {
   void initState() {
     categoryProvider = context.read<CategoryProvider>();
     selectedCategory = widget.category;
+    if (widget.category != null) {
+      getCategoryLevel();
+    }
     super.initState();
   }
 
-
-   getCategoryLevel() async {
+  getCategoryLevel() async {
     setState(() {
       isLoading = true;
     });
-    final result =
-        await CategoryFunctions().getCategoryLevel(context, selectedCategory?.id??0);
+    final result = await CategoryFunctions()
+        .getCategoryLevel(context, selectedCategory?.id ?? 0);
     if (result is CategoryLevelModel) {}
     setState(() {
       isLoading = false;
@@ -91,8 +97,7 @@ class _TrainingModeState extends State<TrainingMode> {
                             if (result is CategoryModel) {
                               setState(() {
                                 selectedCategory = result;
-                                 getCategoryLevel();
-
+                                getCategoryLevel();
                               });
                             }
                           },
@@ -106,7 +111,7 @@ class _TrainingModeState extends State<TrainingMode> {
                             setState(() {
                               selectedCategory =
                                   categoryProvider.getRandomCategory();
-                                  getCategoryLevel();
+                              getCategoryLevel();
                             });
                           },
                           child: SvgPicture.asset(
@@ -130,7 +135,7 @@ class _TrainingModeState extends State<TrainingMode> {
                 : Consumer<CategoryProvider>(
                     builder: (context, catProv, chils) {
                     final CategoryLevelModel? catLevel =
-                        catProv.getCategoryLevel(selectedCategory?.id??0);
+                        catProv.getCategoryLevel(selectedCategory?.id ?? 0);
                     return catLevel != null
                         ? Wrap(
                             runSpacing: d.pSH(10),
@@ -142,7 +147,7 @@ class _TrainingModeState extends State<TrainingMode> {
                                 (index) {
                                   final _level = catLevel.levels[index];
                                   if (_level.isCurrentLevel) {
-                                    level = _level.name;
+                                    level = _level.name.name.capitalize();
                                   }
                                   return LevelCard(
                                     level: _level,
@@ -199,7 +204,9 @@ class _TrainingModeState extends State<TrainingMode> {
               SizedBox(
                 width: d.pSH(240),
                 child: TransformedButton(
-                  onTap: () {},
+                  onTap: () {
+                    getQuestions();
+                  },
                   buttonColor: AppColors.kGameGreen,
                   buttonText: ' START ',
                   textColor: Colors.white,
@@ -212,5 +219,27 @@ class _TrainingModeState extends State<TrainingMode> {
         ),
       ),
     );
+  }
+
+  getQuestions() async {
+    
+    final result = await QuestionFunction().getQuestions(
+      context: context,
+      gameType: widget.quest.id,
+      gameLevel: level,
+    );
+    if (result != null) {
+      if (mounted) {
+        nextScreen(
+            context,
+            TrainingModegamePage(
+              category: selectedCategory!,
+              quest: widget.quest,
+              questionList: [],
+              swapQuestionList: [],
+              level: level,
+            ));
+      }
+    }
   }
 }

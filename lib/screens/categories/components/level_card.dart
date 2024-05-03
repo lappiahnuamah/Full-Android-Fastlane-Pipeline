@@ -33,7 +33,7 @@ class LevelCard extends StatelessWidget {
                             layout.maxWidth ;
 
                             // log('totalPoonts: $totalPoints');
-          // log('message: $colorWidth');
+           log('colorWidths: $colorWidth');
           return Stack(
             children: [
               Container(
@@ -64,7 +64,7 @@ class LevelCard extends StatelessWidget {
                         ),
                       if (level.isLocked) SizedBox(width: d.pSW(5)),
                       CustomText(
-                        label: level.name,
+                        label: level.name.name.capitalize(),
                         fontSize: getFontSize(12, size),
                         fontWeight: FontWeight.w400,
                         color: level.isCurrentLevel

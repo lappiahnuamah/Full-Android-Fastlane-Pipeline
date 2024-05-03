@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
+import 'package:savyminds/providers/solo_quest_provider.dart';
 import 'package:savyminds/resources/app_images.dart';
-import 'package:savyminds/screens/categories/category_details_page.dart';
+import 'package:savyminds/screens/solo_quest/training_mode/training_mode.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
-class CategoryCard extends StatelessWidget {
+class CategoryCard extends StatefulWidget {
   const CategoryCard({
     super.key,
     required this.category,
@@ -25,6 +27,19 @@ class CategoryCard extends StatelessWidget {
   final double? borderRadius;
 
   @override
+  State<CategoryCard> createState() => _CategoryCardState();
+}
+
+class _CategoryCardState extends State<CategoryCard> {
+   late   SoloQuestProvider soloQuestProvider ;
+
+
+@override
+  void initState() {
+   soloQuestProvider = context.read<SoloQuestProvider>();
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: d.pSH(4)),
@@ -37,25 +52,25 @@ class CategoryCard extends StatelessWidget {
         child: Container(
           clipBehavior: Clip.antiAliasWithSaveLayer,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(borderRadius ?? d.pSH(25)),
+            borderRadius: BorderRadius.circular(widget.borderRadius ?? d.pSH(25)),
           ),
           child: Stack(
             children: [
               Container(
-                color: category.isLocked
+                color: widget.category.isLocked
                     ? const Color(0xFF717582)
-                    : category.color,
+                    : widget.category.color,
                 width: double.infinity,
                 height: double.maxFinite,
               ),
-              if (category.icon.isNotEmpty)
+              if (widget.category.icon.isNotEmpty)
                 Positioned(
                   left: -d.pSH(50),
                   top: d.pSH(20),
                   child: RotationTransition(
                     turns: const AlwaysStoppedAnimation(40 / 360),
                     child: SvgPicture.network(
-                      category.icon,
+                      widget.category.icon,
                       fit: BoxFit.cover,
                       height: d.pSH(130),
                       colorFilter: ColorFilter.mode(
@@ -77,33 +92,33 @@ class CategoryCard extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            if (category.icon.isNotEmpty)
+                            if (widget.category.icon.isNotEmpty)
                               SvgPicture.network(
-                                category.icon,
+                                widget.category.icon,
                                 fit: BoxFit.cover,
-                                height: iconSize,
+                                height: widget.iconSize,
                               ),
                             SizedBox(height: d.pSH(5)),
                             CustomText(
-                              label: category.name,
+                              label: widget.category.name,
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               textAlign: TextAlign.center,
-                              fontSize: fontSize ?? 15,
+                              fontSize: widget.fontSize ?? 15,
                             )
                           ],
                         ),
                       ),
 
                       //Play or Unlock
-                      if (!hidePlay)
+                      if (!widget.hidePlay)
                         Align(
                             alignment: Alignment.bottomRight,
                             child: InkWell(
                               onTap: () {
-                                if (!category.isLocked) {
+                                if (!widget.category.isLocked) {
                                   nextScreen(context,
-                                      CategoryDetailsPage(category: category));
+                                      TrainingMode(category: widget.category,quest: soloQuestProvider.getQuestByName('Training Mode'),));
                                 } else {}
                               },
                               child: Padding(
@@ -121,7 +136,7 @@ class CategoryCard extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       SvgPicture.asset(
-                                        category.isLocked
+                                        widget.category.isLocked
                                             ? AppImages.openedLock
                                             : AppImages.playCategoryIcon,
                                         fit: BoxFit.cover,
@@ -129,7 +144,7 @@ class CategoryCard extends StatelessWidget {
                                       ),
                                       SizedBox(width: d.pSW(5)),
                                       CustomText(
-                                        label: category.isLocked
+                                        label: widget.category.isLocked
                                             ? 'Unlock'
                                             : 'Play',
                                         color: Colors.white,
@@ -147,7 +162,7 @@ class CategoryCard extends StatelessWidget {
               ),
 
               //Lock
-              if (category.isLocked)
+              if (widget.category.isLocked)
                 Padding(
                   padding: EdgeInsets.all(d.pSH(12)),
                   child: SvgPicture.asset(

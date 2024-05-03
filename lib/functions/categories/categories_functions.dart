@@ -194,6 +194,7 @@ class CategoryFunctions {
           "Authorization": " Bearer $accessToken"
         },
       );
+      log('level:${response.body}');
       if (response.statusCode == 200) {
         final level = CategoryLevelModel.fromJson(jsonDecode(response.body));
         categoryProvider.setCategoryLevel(id, level);

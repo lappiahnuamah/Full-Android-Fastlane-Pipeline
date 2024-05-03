@@ -2,9 +2,9 @@ import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/games/question_model.dart';
 
 class QuestionListResponseModel {
-  List? easyQuestions;
-  List? mediumQuestions;
-  List? hardQuestions;
+  List<QuestionModel> ?easyQuestions;
+  List<QuestionModel> ?mediumQuestions;
+  List<QuestionModel>? hardQuestions;
 
   QuestionListResponseModel(
       {required this.easyQuestions,
@@ -12,9 +12,9 @@ class QuestionListResponseModel {
       required this.mediumQuestions});
 
   QuestionListResponseModel.fromJson(Map<String, dynamic> json) {
-    easyQuestions = json['easy_questions'] ?? [];
-    mediumQuestions = json['medium_questions'] ?? [];
-    hardQuestions = json['hard_questions'] ?? [];
+    easyQuestions = ((json['easy_questions'] ?? []) as List).map((e) => QuestionModel.fromJson(e)).toList();
+    mediumQuestions = ((json['medium_questions'] ?? []) as List).map((e) => QuestionModel.fromJson(e)).toList();
+    hardQuestions = ((json['hard_questions'] ?? []) as List).map((e) => QuestionModel.fromJson(e)).toList();
   }
 
   checkNextPreviousDataType(dynamic data) {

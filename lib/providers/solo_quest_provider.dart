@@ -14,4 +14,9 @@ class SoloQuestProvider extends ChangeNotifier {
     _soloQuests = quests;
     notifyListeners();
   }
+
+
+ QuestModel getQuestByName(String name) {
+    return _soloQuests.firstWhere((element) => element.name == name);
+  }
 }
