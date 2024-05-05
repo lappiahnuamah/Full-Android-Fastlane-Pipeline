@@ -6,9 +6,11 @@ import 'package:savyminds/functions/categories/categories_functions.dart';
 import 'package:savyminds/functions/questions_functions.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/categories/category_level_model.dart';
+import 'package:savyminds/models/games/question_model.dart';
 import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
+import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_fonts.dart';
 import 'package:savyminds/resources/app_images.dart';
@@ -36,6 +38,7 @@ class TrainingMode extends StatefulWidget {
 
 class _TrainingModeState extends State<TrainingMode> {
   late CategoryProvider categoryProvider;
+  late GameProvider gameProvider;
   bool isLoading = false;
   CategoryModel? selectedCategory;
   List levelList = [];
@@ -44,10 +47,14 @@ class _TrainingModeState extends State<TrainingMode> {
   @override
   void initState() {
     categoryProvider = context.read<CategoryProvider>();
-    selectedCategory = widget.category;
-    if (widget.category != null) {
-      getCategoryLevel();
-    }
+    gameProvider = context.read<GameProvider>();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      selectedCategory = widget.category;
+      if (widget.category != null) {
+        getCategoryLevel();
+      }
+    });
     super.initState();
   }
 
@@ -57,7 +64,10 @@ class _TrainingModeState extends State<TrainingMode> {
     });
     final result = await CategoryFunctions()
         .getCategoryLevel(context, selectedCategory?.id ?? 0);
-    if (result is CategoryLevelModel) {}
+
+    if (result is CategoryLevelModel) {
+      await getQuestions();
+    }
     setState(() {
       isLoading = false;
     });
@@ -222,24 +232,23 @@ class _TrainingModeState extends State<TrainingMode> {
   }
 
   getQuestions() async {
-    
-    final result = await QuestionFunction().getQuestions(
-      context: context,
-      gameType: widget.quest.id,
-      gameLevel: level,
-    );
-    if (result != null) {
+    if (!context.mounted) return;
+    gameProvider
+        .fetchQuestionsNew(
+            context: context, gameLevel: level, gameType: widget.quest.id)
+        .then((value) {
       if (mounted) {
-        nextScreen(
-            context,
-            TrainingModegamePage(
-              category: selectedCategory!,
-              quest: widget.quest,
-              questionList: [],
-              swapQuestionList: [],
-              level: level,
-            ));
+
+        // nextScreen(
+        //     context,
+        //     TrainingModegamePage(
+        //       category: selectedCategory!,
+        //       quest: widget.quest,
+        //       questionList: [],
+        //       swapQuestionList: [],
+        //       level: level,
+        //     ));
       }
-    }
+    });
   }
 }

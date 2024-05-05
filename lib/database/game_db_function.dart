@@ -46,6 +46,13 @@ class GameLocalDatabase {
         conflictAlgorithm: sql.ConflictAlgorithm.replace);
     return 'id';
   }
+  static Future<String> addQuestionNew(QuestionModel question) async {
+    final db = await GameLocalDatabase.db();
+
+    await db.insert(questionDB, question.toLocalDBJson(),
+        conflictAlgorithm: sql.ConflictAlgorithm.replace);
+    return 'id';
+  }
 
   static Future<List<QuestionModel>> getAllQuestions() async {
     final db = await GameLocalDatabase.db();

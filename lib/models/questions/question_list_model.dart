@@ -1,20 +1,31 @@
 import 'package:savyminds/constants.dart';
-import 'package:savyminds/models/games/question_model.dart';
+import 'package:savyminds/models/questions/question_model.dart';
 
 class QuestionListResponseModel {
-  List<QuestionModel> ?easyQuestions;
-  List<QuestionModel> ?mediumQuestions;
-  List<QuestionModel>? hardQuestions;
+  List<NewQuestionModel>? easyQuestions;
+  List<NewQuestionModel>? mediumQuestions;
+  List<NewQuestionModel>? hardQuestions;
+  List<NewQuestionModel>? allQuestions;
 
   QuestionListResponseModel(
       {required this.easyQuestions,
       required this.hardQuestions,
+      required this.allQuestions,
       required this.mediumQuestions});
 
   QuestionListResponseModel.fromJson(Map<String, dynamic> json) {
-    easyQuestions = ((json['easy_questions'] ?? []) as List).map((e) => QuestionModel.fromJson(e)).toList();
-    mediumQuestions = ((json['medium_questions'] ?? []) as List).map((e) => QuestionModel.fromJson(e)).toList();
-    hardQuestions = ((json['hard_questions'] ?? []) as List).map((e) => QuestionModel.fromJson(e)).toList();
+    easyQuestions = ((json['easy_questions'] ?? []) as List)
+        .map((e) => NewQuestionModel.fromJson(e))
+        .toList();
+    mediumQuestions = ((json['medium_questions'] ?? []) as List)
+        .map((e) => NewQuestionModel.fromJson(e))
+        .toList();
+    hardQuestions = ((json['hard_questions'] ?? []) as List)
+        .map((e) => NewQuestionModel.fromJson(e))
+        .toList();
+    allQuestions?.addAll(easyQuestions ?? []);
+    allQuestions?.addAll(mediumQuestions ?? []);
+    allQuestions?.addAll(hardQuestions ?? []);
   }
 
   checkNextPreviousDataType(dynamic data) {
@@ -25,11 +36,11 @@ class QuestionListResponseModel {
     }
   }
 
-  List<QuestionModel> toQuestionModel(List data) {
+  List<NewQuestionModel> toQuestionModel(List data) {
     try {
-      List<QuestionModel> questions = [];
+      List<NewQuestionModel> questions = [];
       for (var d in data) {
-        questions.add(QuestionModel.fromJson(d));
+        questions.add(NewQuestionModel.fromJson(d));
       }
 
       return questions;
@@ -44,6 +55,7 @@ class QuestionListResponseModel {
       'easy_questions': easyQuestions ?? [],
       'medium_questions': mediumQuestions ?? [],
       'hard_questions': hardQuestions ?? [],
+      'all_questions': allQuestions ?? [],
     };
   }
 }

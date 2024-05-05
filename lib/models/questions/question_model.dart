@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 import 'package:savyminds/constants.dart';
+import 'package:savyminds/models/questions/question_option_model.dart';
+import 'package:savyminds/models/questions/short_question_category.dart';
 
-class QuestionModel extends Equatable {
+const String questionDB = 'question';
+
+class NewQuestionModel extends Equatable {
   final int id;
   final String text;
   final List<ShortQuestionCategory> categories;
@@ -20,7 +26,7 @@ class QuestionModel extends Equatable {
   final List<QuestionOption> options;
   final String dateCreated;
 
-  const QuestionModel({
+  const NewQuestionModel({
     required this.id,
     required this.categories,
     required this.text,
@@ -40,8 +46,8 @@ class QuestionModel extends Equatable {
     required this.options,
   });
 
-  factory QuestionModel.fromJson(Map<String, dynamic> json) {
-    return QuestionModel(
+  factory NewQuestionModel.fromJson(Map<String, dynamic> json) {
+    return NewQuestionModel(
       id: json['id'] ?? 0,
       text: json['text'] ?? "",
       categoryWeight: json['category_weight'] ?? 0,
@@ -59,6 +65,28 @@ class QuestionModel extends Equatable {
       hasTwoTimes: json['has_times_two'] ?? false,
       categories: toCategories(json['categories'] ?? []),
       options: toQuestionOptions(json['options'] ?? []),
+    );
+  }
+
+  factory NewQuestionModel.fromLocalDBJson(Map<String, dynamic> json) {
+    return NewQuestionModel(
+      id: json['id'] ?? 0,
+      text: json['text'] ?? "",
+      categoryWeight: int.parse(json['category_weight']),
+      difficultyWeight: int.parse(json['difficulty_weight'] ?? ""),
+      difficulty: json['difficulty'] ?? "",
+      level: json['level'] ?? "",
+      image: json['image'] ?? "",
+      questionTime: json['question_time'] ?? 0,
+      complexityWeight: int.parse(json['complexity_weight']),
+      hint: json['hint'] ?? "",
+      dateCreated: json['date_created'] ?? "",
+      hasHint: json['has_hint'] == 1,
+      isGolden: json['is_golden'] == 1,
+      hasMysteryBox: json['has_mystery_box'] == 1,
+      hasTwoTimes: json['has_times_two'] == 1,
+      categories: toCategories(jsonDecode(json['categories']) ?? []),
+      options: toQuestionOptions(jsonDecode(json['options']) ?? []),
     );
   }
 
@@ -92,9 +120,9 @@ class QuestionModel extends Equatable {
     }
   }
 
-   List<Map<String,dynamic>> toQuestionOptionsMap(List<QuestionOption> data ) {
+  List<Map<String, dynamic>> toQuestionOptionsMap(List<QuestionOption> data) {
     try {
-      List <Map<String,dynamic>> options = [];
+      List<Map<String, dynamic>> options = [];
 
       for (var d in data) {
         options.add(d.toMap());
@@ -106,10 +134,10 @@ class QuestionModel extends Equatable {
       return [];
     }
   }
-  
-   List<Map<String,dynamic>> toCategoriesMap(List<ShortQuestionCategory> data ) {
+
+  List<Map<String, dynamic>> toCategoriesMap(List<ShortQuestionCategory> data) {
     try {
-      List <Map<String,dynamic>> options = [];
+      List<Map<String, dynamic>> options = [];
 
       for (var d in data) {
         options.add(d.toMap());
@@ -122,7 +150,7 @@ class QuestionModel extends Equatable {
     }
   }
 
-   toMap() {
+  toMap() {
     return {
       'id': id,
       'text': text,
@@ -143,7 +171,28 @@ class QuestionModel extends Equatable {
       'options': toQuestionOptionsMap(options)
     };
   }
-  
+
+  toLocalDBMap() {
+    return {
+      'id': id,
+      'text': text,
+      'category_weight': categoryWeight.toString(),
+      'difficulty_weight': difficultyWeight.toString(),
+      'difficulty': difficulty,
+      'level': level,
+      'image': image,
+      'question_time': questionTime,
+      'complexity_weight': complexityWeight.toString(),
+      'hint': hint,
+      'date_created': dateCreated,
+      'has_hint': hasHint ? 1 : 0,
+      'is_golden': isGolden ? 1 : 0,
+      'has_mystery_box': hasMysteryBox ? 1 : 0,
+      'has_two_times': hasTwoTimes ? 1 : 0,
+      'categories': jsonEncode(toCategoriesMap(categories)),
+      'options': jsonEncode(toQuestionOptionsMap(options))
+    };
+  }
 
   @override
   List<Object?> get props => [id];
@@ -151,69 +200,4 @@ class QuestionModel extends Equatable {
   @override
   bool get stringify =>
       true; // Enable toString() method for better debugging  "🇬🇭 +233(0) "
-}
-
-class ShortQuestionCategory extends Equatable {
-  final int id;
-  final String name;
-
-  const ShortQuestionCategory({required this.id, required this.name});
-
-  factory ShortQuestionCategory.fromJson(Map<String, dynamic> json) {
-    return ShortQuestionCategory(
-      id: json['id'] ?? 0,
-      name: json['name'] ?? "",
-    );
-  }
-
-  toMap() {
-    return {'id': id, 'name': name};
-  }
-
-  @override
-  List<Object?> get props => [id, name];
-
-  @override
-  bool get stringify => true;
-}
-
-class QuestionOption extends Equatable {
-  final int id;
-  final String image;
-  final String text;
-  final int question;
-  final bool isCorrect;
-
-  const QuestionOption(
-      {required this.id,
-      required this.image,
-      required this.isCorrect,
-      required this.question,
-      required this.text});
-
-  factory QuestionOption.fromJson(Map<String, dynamic> json) {
-    return QuestionOption(
-      id: json['id'] ?? 0,
-      question: json['question'] ?? 0,
-      image: json['image'] ?? "",
-      text: json['text'] ?? "",
-      isCorrect: json['is_correct'] ?? false,
-    );
-  }
-
-  toMap() {
-    return {
-      'id': id,
-      'text': text,
-      'image': image,
-      'is_correct': isCorrect,
-      'question': question
-    };
-  }
-
-  @override
-  List<Object?> get props => [id, text, image, question, isCorrect];
-
-  @override
-  bool get stringify => true;
 }
