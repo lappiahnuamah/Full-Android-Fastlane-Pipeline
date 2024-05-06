@@ -2,30 +2,26 @@ import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/questions/question_model.dart';
 
 class QuestionListResponseModel {
-  List<NewQuestionModel>? easyQuestions;
-  List<NewQuestionModel>? mediumQuestions;
-  List<NewQuestionModel>? hardQuestions;
-  List<NewQuestionModel>? allQuestions;
+  List<NewQuestionModel> easyQuestions;
+  List<NewQuestionModel> mediumQuestions;
+  List<NewQuestionModel> hardQuestions;
 
   QuestionListResponseModel(
       {required this.easyQuestions,
       required this.hardQuestions,
-      required this.allQuestions,
       required this.mediumQuestions});
 
-  QuestionListResponseModel.fromJson(Map<String, dynamic> json) {
-    easyQuestions = ((json['easy_questions'] ?? []) as List)
-        .map((e) => NewQuestionModel.fromJson(e))
-        .toList();
-    mediumQuestions = ((json['medium_questions'] ?? []) as List)
-        .map((e) => NewQuestionModel.fromJson(e))
-        .toList();
-    hardQuestions = ((json['hard_questions'] ?? []) as List)
-        .map((e) => NewQuestionModel.fromJson(e))
-        .toList();
-    allQuestions?.addAll(easyQuestions ?? []);
-    allQuestions?.addAll(mediumQuestions ?? []);
-    allQuestions?.addAll(hardQuestions ?? []);
+  factory QuestionListResponseModel.fromJson(Map<String, dynamic> json) {
+    return QuestionListResponseModel(
+        easyQuestions: ((json['easy_questions'] ?? []) as List)
+            .map((e) => NewQuestionModel.fromJson(e))
+            .toList(),
+        mediumQuestions: ((json['medium_questions'] ?? []) as List)
+            .map((e) => NewQuestionModel.fromJson(e))
+            .toList(),
+        hardQuestions: ((json['hard_questions'] ?? []) as List)
+            .map((e) => NewQuestionModel.fromJson(e))
+            .toList());
   }
 
   checkNextPreviousDataType(dynamic data) {
@@ -52,10 +48,9 @@ class QuestionListResponseModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'easy_questions': easyQuestions ?? [],
-      'medium_questions': mediumQuestions ?? [],
-      'hard_questions': hardQuestions ?? [],
-      'all_questions': allQuestions ?? [],
+      'easy_questions': easyQuestions ,
+      'medium_questions': mediumQuestions ,
+      'hard_questions': hardQuestions ,
     };
   }
 }

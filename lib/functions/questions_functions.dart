@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/api_urls/category_url.dart';
 import 'package:savyminds/constants.dart';
+import 'package:savyminds/database/new_game_db_functions.dart';
 import 'package:savyminds/models/questions/question_list_model.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:http/http.dart' as http;
@@ -32,7 +33,14 @@ class QuestionFunction {
       lg('questions:${response.body}');
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        return QuestionListResponseModel.fromJson(data);
+        final result= QuestionListResponseModel.fromJson(data);
+        final allQuestions = result.easyQuestions + result.mediumQuestions + result.hardQuestions;
+           for (int i = 0; i < allQuestions.length; i++) {
+            final question = allQuestions[i];
+              NewGameLocalDatabase.addQuestion(question);
+            }
+
+        return result;
       } else {
         return null;
       }

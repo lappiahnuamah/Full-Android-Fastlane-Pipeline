@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/database/game_db_function.dart';
-import 'package:savyminds/database/new_game_db_functions.dart';
 import 'package:savyminds/functions/games/game_function.dart';
-import 'package:savyminds/functions/questions_functions.dart';
 import 'package:savyminds/models/auth/app_user.dart';
 import 'package:savyminds/models/games/game_rank_model.dart';
 import 'package:savyminds/models/games/option_model.dart';
 import 'package:savyminds/models/games/overlay_model.dart';
 import 'package:savyminds/models/games/question_model.dart';
 import 'package:savyminds/models/games/start_game.dart';
-import 'package:savyminds/models/questions/question_list_model.dart';
 import 'package:savyminds/models/questions/question_model.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/game/game/multi_game.dart/multi_question_page.dart';
@@ -254,66 +251,6 @@ class GameProvider extends ChangeNotifier {
     }
   }
 
-  //
-  Future<void> fetchQuestionsNew(
-      {required BuildContext context,
-      required int gameType,
-      required String gameLevel}) async {
-    fectchGames = true;
-    notifyListeners();
-
-    /// Fiirst check local database
-    final localResult = await NewGameLocalDatabase.getBatchQuestion();
-    lg("Local Result: $localResult");
-    if (localResult.isNotEmpty && localResult.length >= 20) {
-      fectchGames = false;
-      badgequestionsListNew = localResult;
-      notifyListeners();
-    } else {
-      ///Nothing found in database , fetch from server
-      if (context.mounted) {
-        final questionListResponse = await QuestionFunction().getQuestions(
-            context: context,
-            nextUrl: nextUrl,
-            gameLevel: gameLevel,
-            gameType: gameType);
-
-        lg("Question List Response: $questionListResponse");
-
-        if (questionListResponse is QuestionListResponseModel) {
-          final quesitions = questionListResponse.allQuestions ?? [];
-                  lg("All Questions: $quesitions");
-
-          for (var i = 0; i < quesitions.length; i++) {
-            final question = quesitions[i];
-
-            // add first 20 to batch list
-            if (i < 20) {
-              badgequestionsListNew.add(question);
-            }
-
-            // add the rest to database
-            else {
-              NewGameLocalDatabase.addQuestion(question);
-            }
-
-            //TODO: Modify this code
-            //move on without waiting for the rest
-            if (i == 19) {
-              fectchGames = false;
-              notifyListeners();
-            }
-          }
-          // nextUrl = result.next ?? '';
-          cacheNextUrl();
-        } else {
-          fectchGames = false;
-          notifyListeners();
-        }
-      }
-      notifyListeners();
-    }
-  }
 
   void addSelectedAnswer(
       {required int questioinId, required OptionModel? option}) {

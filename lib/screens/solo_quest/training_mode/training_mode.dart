@@ -3,10 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/categories/categories_functions.dart';
-import 'package:savyminds/functions/questions_functions.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/categories/category_level_model.dart';
-import 'package:savyminds/models/games/question_model.dart';
 import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
@@ -14,14 +12,13 @@ import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_fonts.dart';
 import 'package:savyminds/resources/app_images.dart';
-import 'package:savyminds/screens/categories/category_game_page.dart';
 import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/screens/categories/components/category_placeholder.dart';
 import 'package:savyminds/screens/categories/components/level_card.dart';
 import 'package:savyminds/screens/categories/select_categoiries.dart';
-import 'package:savyminds/screens/solo_quest/training_mode/training_mode_game_page.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
+import 'package:savyminds/utils/questions/questions_manager.dart';
 import 'package:savyminds/widgets/availalble_keys_widget.dart';
 import 'package:savyminds/widgets/page_template.dart';
 import 'package:savyminds/widgets/quest_icon_desc_card.dart';
@@ -233,22 +230,12 @@ class _TrainingModeState extends State<TrainingMode> {
 
   getQuestions() async {
     if (!context.mounted) return;
-    gameProvider
-        .fetchQuestionsNew(
-            context: context, gameLevel: level, gameType: widget.quest.id)
-        .then((value) {
-      if (mounted) {
-
-        // nextScreen(
-        //     context,
-        //     TrainingModegamePage(
-        //       category: selectedCategory!,
-        //       quest: widget.quest,
-        //       questionList: [],
-        //       swapQuestionList: [],
-        //       level: level,
-        //     ));
-      }
-    });
+   
+    
+    final result = await QuestionsManager.getTrainingModeQuestions(
+        context: context,
+        questId: widget.quest.id,
+        level: level,
+       );
   }
 }

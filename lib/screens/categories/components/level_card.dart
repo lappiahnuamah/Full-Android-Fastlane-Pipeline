@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:savyminds/constants.dart';
@@ -32,8 +30,6 @@ class LevelCard extends StatelessWidget {
                                 level.upperboundary) *
                             layout.maxWidth ;
 
-                            // log('totalPoonts: $totalPoints');
-           log('colorWidths: $colorWidth');
           return Stack(
             children: [
               Container(

@@ -71,10 +71,10 @@ class NewGameLocalDatabase {
   }
 
   static Future<List<NewQuestionModel>> getLevelQuestions(
-      {required String difficulty}) async {
+      {required String difficulty,required int limit}) async {
     final db = await NewGameLocalDatabase.db();
     final result = await db.query(questionDB,
-        orderBy: 'id', where: 'difficulty =? ', whereArgs: [difficulty]);
+        orderBy: 'id', where: 'difficulty =? ', whereArgs: [difficulty],limit: limit);
     return result.map((e) => NewQuestionModel.fromLocalDBJson(e)).toList();
   }
 
