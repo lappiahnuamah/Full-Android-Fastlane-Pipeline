@@ -31,7 +31,7 @@ class GameLocalDatabase {
         });
       },
     ).then((value) {
-      log('db opened');
+      // log('db opened');
       return value;
     }).onError((error, stackTrace) {
       log('DB Open Error $error');

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:savyminds/api_urls/category_url.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/database/new_game_db_functions.dart';
+import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/models/questions/question_list_model.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:http/http.dart' as http;
@@ -23,14 +24,14 @@ class QuestionFunction {
     try {
       final response = await http.get(
         Uri.parse(nextUrl ??
-            "${CategoryUrl.listQuestions}?game_type=$gameType&game_level=$gameLevel"),
+            "${CategoryUrl.listQuestions}?game_type=$gameType&game_level=${gameLevel.capitalize()}"),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           "Authorization": "Bearer $accessToken"
         },
       );
-      lg('questions:${response.body}');
+      // lg('questions:${response.body}');
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final result= QuestionListResponseModel.fromJson(data);
@@ -63,7 +64,7 @@ class QuestionFunction {
     try {
       final response = await http.get(
         Uri.parse(nextUrl ??
-            "${CategoryUrl.listQuestions}?game_type=$gameType&game_level=$gameLevel&search=$search"),
+            "${CategoryUrl.listQuestions}?game_type=$gameType&game_level=${gameLevel.capitalize()}&search=$search"),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
