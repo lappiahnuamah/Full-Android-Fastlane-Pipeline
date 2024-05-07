@@ -24,12 +24,12 @@ class QuestionsManager {
 
       final easyQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
           limit: noOfEasyQuestions,
-          difficulty: level.name,
+          difficulty: level.name.capitalize(),
           categoryId: categoryId);
 
       final mediumQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
           limit: noOfMediumQuestions,
-          difficulty: level.name,
+          difficulty: level.name.capitalize(),
           categoryId: categoryId);
 
       if (easyQuestionsList.length >= noOfEasyQuestions &&
@@ -51,13 +51,13 @@ class QuestionsManager {
               final easyQuestionsList =
                   await NewGameLocalDatabase.getLevelQuestions(
                       limit: noOfEasyQuestions,
-                      difficulty: level.name,
+                      difficulty: level.name.capitalize(),
                       categoryId: categoryId);
 
               final mediumQuestionsList =
                   await NewGameLocalDatabase.getLevelQuestions(
                       limit: noOfMediumQuestions,
-                      difficulty: level.name,
+                      difficulty: level.name.capitalize(),
                       categoryId: categoryId);
 
               if (easyQuestionsList.length >= noOfEasyQuestions &&
@@ -84,17 +84,17 @@ class QuestionsManager {
 
       final easyQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
           limit: noOfEasyQuestions,
-          difficulty: level.name,
+          difficulty: level.name.capitalize(),
           categoryId: categoryId);
 
       final mediumQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
           limit: noOfMediumQuestions,
-          difficulty: level.name,
+          difficulty: level.name.capitalize(),
           categoryId: categoryId);
 
       final hardQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
           limit: noOfHardQuestions,
-          difficulty: level.name,
+          difficulty: level.name.capitalize(),
           categoryId: categoryId);
 
       if (easyQuestionsList.length >= noOfEasyQuestions &&

@@ -83,17 +83,17 @@ class NewGameLocalDatabase {
 
     List<Map<String, Object?>> result = [];
     log('categoryId: $categoryId');
-    if (categoryId == null) {
+    //if (categoryId == null) {
       result = await db.query(questionDB,
           orderBy: 'id',
-          where: 'difficulty = ?', 
+          where: 'difficulty = ?',
           whereArgs: [difficulty],
           limit: limit);
-    } else {
-      await db.rawQuery(
-          'SELECT * FROM $questionDB WHERE difficulty = ?  AND categories LIKE ?',
-          [difficulty, '%$categoryId%']);
-    }
+    // } else {
+    //   await db.rawQuery(
+    //       'SELECT * FROM $questionDB WHERE difficulty = ?  AND categories LIKE ?',
+    //       [difficulty, '%$categoryId%']);
+    // }
     log('Result: ${result.length}');
     return result.map((e) => NewQuestionModel.fromLocalDBJson(e)).toList();
   }
