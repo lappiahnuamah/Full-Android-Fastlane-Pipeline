@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/database/game_db_function.dart';
-import 'package:savyminds/models/games/option_model.dart';
+import 'package:savyminds/models/questions/option_model.dart';
 import 'package:savyminds/models/games/question_model.dart';
 import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';

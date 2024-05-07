@@ -5,6 +5,7 @@ import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/categories/categories_functions.dart';
 import 'package:savyminds/functions/games/game_function.dart';
 import 'package:savyminds/models/games/question_model.dart';
+import 'package:savyminds/models/questions/question_model.dart';
 import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
@@ -16,7 +17,7 @@ import 'package:savyminds/utils/game_utils.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
 
-import '../../models/categories/categories_model.dart';
+import '../../../models/categories/categories_model.dart';
 
 class CategorySubmitPage extends StatefulWidget {
   const CategorySubmitPage(
@@ -25,7 +26,7 @@ class CategorySubmitPage extends StatefulWidget {
       required this.categoryModel,
       required this.totalPoints,
       required this.resultList});
-  final List<QuestionModel> questionList;
+  final List<NewQuestionModel> questionList;
   final CategoryModel? categoryModel;
   final int totalPoints;
   final Map<int, dynamic> resultList;
@@ -36,7 +37,7 @@ class CategorySubmitPage extends StatefulWidget {
 
 class _CategorySubmitPageState extends State<CategorySubmitPage> {
   late GameProvider gameProvider;
-  List<QuestionModel> questionList = [];
+  List<NewQuestionModel> questionList = [];
 
   @override
   void initState() {

@@ -4,7 +4,7 @@ import 'package:savyminds/database/game_db_function.dart';
 import 'package:savyminds/functions/games/game_function.dart';
 import 'package:savyminds/models/auth/app_user.dart';
 import 'package:savyminds/models/games/game_rank_model.dart';
-import 'package:savyminds/models/games/option_model.dart';
+import 'package:savyminds/models/questions/option_model.dart';
 import 'package:savyminds/models/games/overlay_model.dart';
 import 'package:savyminds/models/games/question_model.dart';
 import 'package:savyminds/models/games/start_game.dart';

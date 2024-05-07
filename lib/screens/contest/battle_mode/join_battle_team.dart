@@ -5,7 +5,6 @@ import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_images.dart';
-import 'package:savyminds/screens/categories/category_details_page.dart';
 import 'package:savyminds/screens/contest/battle_mode/compoents/battle_team_card.dart';
 import 'package:savyminds/screens/contest/battle_mode/create_battle_team.dart';
 import 'package:savyminds/screens/contest/contest_mode/start_contest_mode.dart';
@@ -98,21 +97,21 @@ class _JoinBattleTeamState extends State<JoinBattleTeam> {
             onTap: () {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState?.save();
-                nextScreen(
-                    context,
-                    StartContestMode(
-                      quest: widget.quest,
-                      category: const CategoryModel(
-                          id: 1,
-                          name: 'Happy',
-                          icon: '',
-                          isLocked: false,
-                          color: AppColors.kGameGreen,
-                          noOfQuestion: 200),
-                      level: levelList[2],
-                      gameName: 'Happy Game',
-                      isCreator: false,
-                    ));
+                // nextScreen(
+                //     context,
+                //     StartContestMode(
+                //       quest: widget.quest,
+                //       category: const CategoryModel(
+                //           id: 1,
+                //           name: 'Happy',
+                //           icon: '',
+                //           isLocked: false,
+                //           color: AppColors.kGameGreen,
+                //           noOfQuestion: 200),
+                //       level: levelList[2],
+                //       gameName: 'Happy Game',
+                //       isCreator: false,
+                //     ));
               }
             },
             buttonColor: AppColors.kGameGreen,

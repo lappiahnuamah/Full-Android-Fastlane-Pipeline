@@ -5,7 +5,6 @@ import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
-import 'package:savyminds/screens/categories/category_details_page.dart';
 import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/screens/categories/components/category_placeholder.dart';
 import 'package:savyminds/screens/categories/components/level_card.dart';
@@ -80,18 +79,18 @@ class _ChallengeOfTheDayState extends State<ChallengeOfTheDay> {
               ),
             ),
             SizedBox(height: d.pSH(30)),
-            Wrap(
-              runSpacing: d.pSH(10),
-              spacing: d.pSW(15),
-              alignment: WrapAlignment.center,
-              children: [
-                for (int i = 0; i < levelList.length; i++)
-                  LevelCard(
-                    level: levelList[i],
-                    totalPoints: 50,
-                  ),
-              ],
-            ),
+            // Wrap(
+            //   runSpacing: d.pSH(10),
+            //   spacing: d.pSW(15),
+            //   alignment: WrapAlignment.center,
+            //   children: [
+            //     for (int i = 0; i < levelList.length; i++)
+            //       LevelCard(
+            //         level: levelList[i],
+            //         totalPoints: 50,
+            //       ),
+            //   ],
+            // ),
             SizedBox(height: d.pSH(20)),
             Flexible(child: Container()),
             SizedBox(

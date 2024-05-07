@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/categories/categories_functions.dart';
@@ -16,6 +17,7 @@ import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/screens/categories/components/category_placeholder.dart';
 import 'package:savyminds/screens/categories/components/level_card.dart';
 import 'package:savyminds/screens/categories/select_categoiries.dart';
+import 'package:savyminds/screens/solo_quest/training_mode/training_mode_game_page.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/utils/questions/questions_manager.dart';
@@ -37,9 +39,11 @@ class _TrainingModeState extends State<TrainingMode> {
   late CategoryProvider categoryProvider;
   late GameProvider gameProvider;
   bool isLoading = false;
+    bool questionsLoading = false;
+
   CategoryModel? selectedCategory;
   List levelList = [];
-  String level = '';
+  LevelName level = LevelName.beginner;
 
   @override
   void initState() {
@@ -59,12 +63,9 @@ class _TrainingModeState extends State<TrainingMode> {
     setState(() {
       isLoading = true;
     });
-    final result = await CategoryFunctions()
+    await CategoryFunctions()
         .getCategoryLevel(context, selectedCategory?.id ?? 0);
 
-    if (result is CategoryLevelModel) {
-      await getQuestions();
-    }
     setState(() {
       isLoading = false;
     });
@@ -154,7 +155,7 @@ class _TrainingModeState extends State<TrainingMode> {
                                 (index) {
                                   final _level = catLevel.levels[index];
                                   if (_level.isCurrentLevel) {
-                                    level = _level.name.name.capitalize();
+                                    level = _level.name;
                                   }
                                   return LevelCard(
                                     level: _level,
@@ -230,12 +231,36 @@ class _TrainingModeState extends State<TrainingMode> {
 
   getQuestions() async {
     if (!context.mounted) return;
-   
-    
+
+    setState(() {
+      questionsLoading = true;
+    });
+
     final result = await QuestionsManager.getTrainingModeQuestions(
-        context: context,
-        questId: widget.quest.id,
-        level: level,
-       );
+      context: context,
+      questId: widget.quest.id,
+      level: level,
+    );
+
+    setState(() {
+      questionsLoading = false;
+    });
+
+    if (result.isNotEmpty) {
+      if (mounted) {
+        nextScreen(
+            context,
+            TrainingModeGamePage(
+                category: selectedCategory!,
+                questionList: result,
+                swapQuestionList: const [],
+                quest: widget.quest,
+                level: level));
+      }
+    } else {
+      Fluttertoast.showToast(
+          msg:
+              'No questions available for this category. Please select another category.');
+    }
   }
 }

@@ -9,7 +9,6 @@ import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_fonts.dart';
 import 'package:savyminds/resources/app_images.dart';
-import 'package:savyminds/screens/categories/category_details_page.dart';
 import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/screens/categories/components/category_placeholder.dart';
 import 'package:savyminds/screens/categories/components/level_card.dart';
@@ -116,18 +115,18 @@ class _TimeRushState extends State<TimeRush> {
                   ),
                 ),
               if (selectedCategories.isEmpty) SizedBox(height: d.pSH(50)),
-              Wrap(
-                runSpacing: d.pSH(10),
-                spacing: d.pSW(15),
-                alignment: WrapAlignment.center,
-                children: [
-                  for (int i = 0; i < levelList.length; i++)
-                    LevelCard(
-                      level: levelList[i],
-                      totalPoints: 50,
-                    )
-                ],
-              ),
+              // Wrap(
+              //   runSpacing: d.pSH(10),
+              //   spacing: d.pSW(15),
+              //   alignment: WrapAlignment.center,
+              //   children: [
+              //     for (int i = 0; i < levelList.length; i++)
+              //       LevelCard(
+              //         level: levelList[i],
+              //         totalPoints: 50,
+              //       )
+              //   ],
+              // ),
               if (selectedCategories.isNotEmpty) SizedBox(height: d.pSH(40)),
               if (selectedCategories.isNotEmpty)
                 Column(

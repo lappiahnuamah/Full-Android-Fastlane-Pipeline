@@ -25,7 +25,6 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
   void initState() {
     currentIndex = widget.currentIndex;
     playMusic();
-
     super.initState();
   }
 

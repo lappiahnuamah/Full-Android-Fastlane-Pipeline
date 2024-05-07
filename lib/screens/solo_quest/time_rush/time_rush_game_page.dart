@@ -8,7 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
-import 'package:savyminds/models/games/option_model.dart';
+import 'package:savyminds/models/questions/option_model.dart';
 import 'package:savyminds/models/games/question_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/game_items_provider.dart';
@@ -16,7 +16,7 @@ import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_enums.dart';
 import 'package:savyminds/resources/app_fonts.dart';
-import 'package:savyminds/screens/categories/categories_submit_page.dart';
+import 'package:savyminds/screens/solo_quest/training_mode/training_mode_submit_page.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/answer_button.dart';
@@ -118,14 +118,14 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
           timer.cancel();
           FlameAudio.bgm.stop();
           FlameAudio.play('outro_game_over.mp3');
-          nextScreen(
-              context,
-              CategorySubmitPage(
-                categoryModel: null,
-                questionList: widget.questionList,
-                totalPoints: totalPoints,
-                resultList: resultList,
-              ));
+          // nextScreen(
+          //     context,
+          //     CategorySubmitPage(
+          //       categoryModel: null,
+          //       questionList: widget.questionList,
+          //       totalPoints: totalPoints,
+          //       resultList: resultList,
+          //     ));
           // pageController.jumpToPage(0);
           selectedIndex = 0;
           startTimer(15);
@@ -848,14 +848,14 @@ class _TimeRushGamePageState extends State<TimeRushGamePage>
     } else {
       addSelectedAnswer(
           option: selectedAnswer, questioinId: widget.questionList[index].id);
-      nextScreen(
-          context,
-          CategorySubmitPage(
-            categoryModel: null,
-            questionList: widget.questionList,
-            totalPoints: totalPoints,
-            resultList: resultList,
-          ));
+      // nextScreen(
+      //     context,
+      //     CategorySubmitPage(
+      //       categoryModel: null,
+      //       questionList: widget.questionList,
+      //       totalPoints: totalPoints,
+      //       resultList: resultList,
+      //     ));
     }
 
     ///  GameLocalDatabase.deleteQuestion(questionId);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:savyminds/constants.dart';
-import 'package:savyminds/models/games/option_model.dart';
+import 'package:savyminds/models/questions/option_model.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
 

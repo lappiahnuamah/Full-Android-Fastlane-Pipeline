@@ -9,14 +9,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
-import 'package:savyminds/models/games/option_model.dart';
-import 'package:savyminds/models/games/question_model.dart';
+import 'package:savyminds/models/questions/option_model.dart';
+import 'package:savyminds/models/level_model.dart';
+import 'package:savyminds/models/questions/question_model.dart';
+import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_enums.dart';
 import 'package:savyminds/resources/app_fonts.dart';
-import 'package:savyminds/screens/categories/categories_submit_page.dart';
+import 'package:savyminds/screens/solo_quest/training_mode/training_mode_submit_page.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/answer_button.dart';
@@ -29,17 +31,25 @@ import 'package:savyminds/widgets/game_top_keys_list.dart';
 import 'package:savyminds/widgets/mystery_box_open.dart';
 import 'package:savyminds/widgets/retake_key_display.dart';
 
-class CategoryGamePage extends StatefulWidget {
-  const CategoryGamePage({super.key, required this.category,required this.questionList,required this.swapQuestionList});
+class TrainingModeGamePage extends StatefulWidget {
+  const TrainingModeGamePage(
+      {super.key,
+      required this.category,
+      required this.questionList,
+      required this.swapQuestionList,
+      required this.level,
+      required this.quest});
   final CategoryModel category;
- final List<QuestionModel> questionList;
- final List<QuestionModel> swapQuestionList;
+  final QuestModel quest;
+  final LevelName level;
+  final List<NewQuestionModel> questionList;
+  final List<NewQuestionModel> swapQuestionList;
 
   @override
-  State<CategoryGamePage> createState() => _CategoryGamePageState();
+  State<TrainingModeGamePage> createState() => _TrainingModeGamePageState();
 }
 
-class _CategoryGamePageState extends State<CategoryGamePage>
+class _TrainingModeGamePageState extends State<TrainingModeGamePage>
     with TickerProviderStateMixin {
   PageController pageController = PageController(initialPage: 0);
   ValueNotifier<int> seconds = ValueNotifier<int>(10);
@@ -80,7 +90,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
 
   //hide keys
   bool hideDoublePointsKey = false;
-  bool hideMysteryBoxKey =false;
+  bool hideMysteryBoxKey = false;
 
   //swap
   PageController swapController = PageController(initialPage: 0);
@@ -90,7 +100,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       seconds.value = seconds.value - 1;
       if (seconds.value == 0) {
-        if (selectedIndex <widget.questionList.length - 1) {
+        if (selectedIndex < widget.questionList.length - 1) {
           pageController.nextPage(
               duration: const Duration(
                 milliseconds: 400,
@@ -100,7 +110,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
           //     option: selectedAnswer,
           //     questioinId: questionList[selectedIndex].id);
           if (selectedAnswer == null) {
-            answerStreak=0;
+            answerStreak = 0;
           }
           timer.cancel();
           FlameAudio.bgm.stop();
@@ -109,9 +119,9 @@ class _CategoryGamePageState extends State<CategoryGamePage>
           //     option: selectedAnswer,
           //     questioinId: questionList[selectedIndex].id);
           if (selectedAnswer == null) {
-            answerStreak=0;
+            answerStreak = 0;
           }
-          timer.cancel(); 
+          timer.cancel();
           FlameAudio.bgm.stop();
           FlameAudio.play('outro_game_over.mp3');
           nextScreen(
@@ -220,7 +230,8 @@ class _CategoryGamePageState extends State<CategoryGamePage>
                           } else {
                             FlameAudio.play('new_question.mp3');
                           }
-                          startTimer(widget.questionList[selectedIndex].questionTime);
+                          startTimer(
+                              widget.questionList[selectedIndex].questionTime);
                         },
                         itemBuilder: (context, index) {
                           //swap page builder
@@ -230,18 +241,20 @@ class _CategoryGamePageState extends State<CategoryGamePage>
                             physics: const NeverScrollableScrollPhysics(),
                             scrollDirection: Axis.vertical,
                             onPageChanged: (val) {
-                               hideDoublePointsKey = false;
-                          hideMysteryBoxKey = false;
-                              if (widget.swapQuestionList[selectedIndex].isGolden) {
+                              hideDoublePointsKey = false;
+                              hideMysteryBoxKey = false;
+                              if (widget
+                                  .swapQuestionList[selectedIndex].isGolden) {
                                 FlameAudio.play('when_question_is_star.mp3');
                               } else {
                                 FlameAudio.play('new_question.mp3');
                               }
-                              startTimer(
-                                  widget.swapQuestionList[selectedIndex].questionTime);
+                              startTimer(widget.swapQuestionList[selectedIndex]
+                                  .questionTime);
                             },
                             itemBuilder: (context, swapIndex) {
-                              QuestionModel question = widget.questionList[index];
+                              NewQuestionModel question =
+                                  widget.questionList[index];
                               if (swapIndex != 0) {
                                 question = widget.swapQuestionList[index];
                               }
@@ -341,14 +354,17 @@ class _CategoryGamePageState extends State<CategoryGamePage>
                                                 showHint:
                                                     question.hint.isNotEmpty,
                                                 showMysteryBox:
-                                                    question.hasMysteryBox && !hideMysteryBoxKey,
-                                                showTimesTwo:
-                                                    question.hasTimesTwoPoints && !hideDoublePointsKey,
+                                                    question.hasMysteryBox &&
+                                                        !hideMysteryBoxKey,
+                                                showTimesTwo: question
+                                                        .hasTwoTimes &&
+                                                    !hideDoublePointsKey,
                                                 onMysteryBoxPressed: () {
                                                   _showMysteryBox();
                                                 },
                                                 onHintPressed: () {
-                                                  _showHintDialog(question.hint);
+                                                  _showHintDialog(
+                                                      question.hint);
                                                 },
                                                 onTimesTwoPressed: () {
                                                   setState(() {
@@ -404,10 +420,10 @@ class _CategoryGamePageState extends State<CategoryGamePage>
                                             children: [
                                               ///// Options --- (Text)
                                               ///
-                                              if (question.option.isNotEmpty &&
-                                                  question.option[0].image
+                                              if (question.options.isNotEmpty &&
+                                                  question.options[0].image
                                                       .isEmpty &&
-                                                  question.option[0].text !=
+                                                  question.options[0].text !=
                                                       '.')
                                                 Container(
                                                   padding: EdgeInsets.only(
@@ -430,12 +446,12 @@ class _CategoryGamePageState extends State<CategoryGamePage>
                                                                   children: [
                                                                     ...List.generate(
                                                                         question
-                                                                            .option
+                                                                            .options
                                                                             .length,
                                                                         (subIndex) {
                                                                       final option =
                                                                           question
-                                                                              .option[subIndex];
+                                                                              .options[subIndex];
 
                                                                       return list
                                                                               .contains(option.id)
@@ -456,10 +472,10 @@ class _CategoryGamePageState extends State<CategoryGamePage>
                                                           }),
                                                 ),
 
-                                              if (question.option.isNotEmpty &&
-                                                      question.option[0].image
+                                              if (question.options.isNotEmpty &&
+                                                      question.options[0].image
                                                           .isNotEmpty ||
-                                                  question.option[0].text ==
+                                                  question.options[0].text ==
                                                       '.')
                                                 Container(
                                                     width:
@@ -478,7 +494,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
                                                               return GameImageOptions(
                                                                 options:
                                                                     question
-                                                                        .option,
+                                                                        .options,
                                                                 selectedAnswer:
                                                                     selectedAnswer,
                                                                 fiftyfityList:
@@ -507,7 +523,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
                                               answerStreaks: answerStreak,
                                               onFiftyTapped: () {
                                                 _useFiftyFiifty(
-                                                    question.option);
+                                                    question.options);
                                               },
                                               //onRetakeTapped: () {},
                                               onFreezeTapped: () {
@@ -582,7 +598,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
     ));
   }
 
-  void answerButtonPressed(OptionModel option, QuestionModel question,
+  void answerButtonPressed(OptionModel option, NewQuestionModel question,
       BuildContext context, int index) {
     selectedAnswer = option;
     breakTime = true;
@@ -592,14 +608,14 @@ class _CategoryGamePageState extends State<CategoryGamePage>
     if (option.isCorrect) {
       FlameAudio.play('correct_ans.mp3');
       _addPoints(
-          questionPoints: question.points,
+          questionPoints:3, //question.points,
           isGolden: question.isGolden,
           time: question.questionTime);
-        answerStreak++;
-        if(answerStreak==5){
-          gameItemsProvider.increaseKeyAmount(GameKeyType.fiftyFifty);
-          answerStreak=0;
-        }
+      answerStreak++;
+      if (answerStreak == 5) {
+        gameItemsProvider.increaseKeyAmount(GameKeyType.fiftyFifty);
+        answerStreak = 0;
+      }
       // gameProvider.increaseAnswerStreak(
       //     context: context, hasGolden: question.isGolden && seconds.value > 6);
     } else {
@@ -659,7 +675,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
     startScoreAnimation();
     Future.delayed(const Duration(seconds: 2), () {
       currentGamePoints = gamePoints;
-      totalPoints+=currentGamePoints;
+      totalPoints += currentGamePoints;
       if (mounted) currentGamePoints;
     });
   }
@@ -708,8 +724,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
     timer?.cancel();
     await showDialog(
       context: context,
-      builder: ((context) => AlertDialog(
-          content: GameHintDialog(hint: hint))),
+      builder: ((context) => AlertDialog(content: GameHintDialog(hint: hint))),
     );
     startTimer(seconds.value);
 
@@ -719,7 +734,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
   _showMysteryBox() async {
     timer?.cancel();
     hideMysteryBoxKey = true;
-    setState(() { });
+    setState(() {});
     await showDialog(
       context: context,
       builder: ((context) => const MysteryBoxOpen()),
@@ -752,8 +767,8 @@ class _CategoryGamePageState extends State<CategoryGamePage>
     }
   }
 
-  _useGoldenChance({required QuestionModel question, required int questionID}) {
-    for (var element in question.option) {
+  _useGoldenChance({required NewQuestionModel question, required int questionID}) {
+    for (var element in question.options) {
       if (element.isCorrect) {
         FlameAudio.play('correct_ans.mp3');
         selectedAnswer = element;
@@ -765,7 +780,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
     setState(() {});
     loseStreaks = 0;
     _addPoints(
-        questionPoints: question.points,
+        questionPoints:3, //question.points, //TODO: Get points
         isGolden: false,
         time: question.questionTime);
     Future.delayed(const Duration(seconds: 3), () {
@@ -798,7 +813,7 @@ class _CategoryGamePageState extends State<CategoryGamePage>
           ),
           curve: Curves.easeIn);
       addSelectedAnswer(
-          option: selectedAnswer, questioinId:widget. questionList[index].id);
+          option: selectedAnswer, questioinId: widget.questionList[index].id);
     } else {
       addSelectedAnswer(
           option: selectedAnswer, questioinId: widget.questionList[index].id);

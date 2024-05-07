@@ -9,6 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/database/game_db_function.dart';
+import 'package:savyminds/database/new_game_db_functions.dart';
 import 'package:savyminds/functions/auth/auth_functions.dart';
 import 'package:savyminds/functions/games/game_function.dart';
 import 'package:savyminds/models/auth/app_user.dart';
@@ -39,6 +40,8 @@ class _SplashScreenState extends State<SplashScreen> {
     ///////////// Set Theme ////////////////////////////
     Provider.of<DarkThemeProvider>(context, listen: false)
         .getThemeFromPreference();
+    NewGameLocalDatabase.db();
+
     startTimer();
   }
 

@@ -13,7 +13,7 @@ import 'package:savyminds/models/error_response.dart';
 import 'package:savyminds/models/games/game_rank_model.dart';
 import 'package:savyminds/models/games/game_session.dart';
 import 'package:savyminds/models/games/game_streak_model.dart';
-import 'package:savyminds/models/games/option_model.dart';
+import 'package:savyminds/models/questions/option_model.dart';
 import 'package:savyminds/models/games/start_game.dart';
 import 'package:savyminds/models/http_response_model.dart';
 import 'package:savyminds/providers/game_items_provider.dart';

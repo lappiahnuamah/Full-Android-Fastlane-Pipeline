@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 import 'package:savyminds/constants.dart';
-import 'package:savyminds/models/questions/question_option_model.dart';
+import 'package:savyminds/models/questions/option_model.dart';
 import 'package:savyminds/models/questions/short_question_category.dart';
 
 const String questionDB = 'question';
@@ -23,7 +23,7 @@ class NewQuestionModel extends Equatable {
   final bool isGolden;
   final bool hasMysteryBox;
   final bool hasTwoTimes;
-  final List<QuestionOption> options;
+  final List<OptionModel> options;
   final String dateCreated;
 
   const NewQuestionModel({
@@ -105,12 +105,12 @@ class NewQuestionModel extends Equatable {
     }
   }
 
-  static List<QuestionOption> toQuestionOptions(List data) {
+  static List<OptionModel> toQuestionOptions(List data) {
     try {
-      List<QuestionOption> options = [];
+      List<OptionModel> options = [];
 
       for (var d in data) {
-        options.add(QuestionOption.fromJson(d));
+        options.add(OptionModel.fromJson(d));
       }
 
       return options;
@@ -120,12 +120,12 @@ class NewQuestionModel extends Equatable {
     }
   }
 
-  List<Map<String, dynamic>> toQuestionOptionsMap(List<QuestionOption> data) {
+  List<Map<String, dynamic>> toQuestionOptionsMap(List<OptionModel> data) {
     try {
       List<Map<String, dynamic>> options = [];
 
       for (var d in data) {
-        options.add(d.toMap());
+        options.add(d.toJson());
       }
 
       return options;

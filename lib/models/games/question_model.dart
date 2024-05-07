@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:savyminds/models/games/option_model.dart';
+import 'package:savyminds/models/questions/option_model.dart';
 
 const String questionDB = 'question';
 
