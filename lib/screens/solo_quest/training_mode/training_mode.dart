@@ -39,7 +39,7 @@ class _TrainingModeState extends State<TrainingMode> {
   late CategoryProvider categoryProvider;
   late GameProvider gameProvider;
   bool isLoading = false;
-    bool questionsLoading = false;
+  bool questionsLoading = false;
 
   CategoryModel? selectedCategory;
   List levelList = [];
@@ -240,6 +240,7 @@ class _TrainingModeState extends State<TrainingMode> {
       context: context,
       questId: widget.quest.id,
       level: level,
+      categoryId: selectedCategory?.id ?? 0,
     );
 
     setState(() {

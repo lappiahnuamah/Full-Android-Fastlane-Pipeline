@@ -188,7 +188,7 @@ class NewQuestionModel extends Equatable {
       'has_hint': hasHint ? 1 : 0,
       'is_golden': isGolden ? 1 : 0,
       'has_mystery_box': hasMysteryBox ? 1 : 0,
-      'has_two_times': hasTwoTimes ? 1 : 0,
+      'has_times_two': hasTwoTimes ? 1 : 0,
       'categories': jsonEncode(toCategoriesMap(categories)),
       'options': jsonEncode(toQuestionOptionsMap(options))
     };

@@ -100,7 +100,6 @@ class _SplashScreenState extends State<SplashScreen> {
 //// Checking navigating function
   Future<void> navigatorPage(context) async {
     try {
-      // await GameLocalDatabase.db();
       // read all values
       Map<String, String> allValues = await allSecureStorage();
 

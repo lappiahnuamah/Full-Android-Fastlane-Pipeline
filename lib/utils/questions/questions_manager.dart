@@ -5,10 +5,12 @@ import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/models/questions/question_model.dart';
 
 class QuestionsManager {
-  static Future<List<NewQuestionModel>> getTrainingModeQuestions(
-      {required BuildContext context,
-      required int questId,
-      required LevelName level}) async {
+  static Future<List<NewQuestionModel>> getTrainingModeQuestions({
+    required BuildContext context,
+    required int questId,
+    required LevelName level,
+    required int categoryId,
+  }) async {
     // First get metric for the level
     int noOfEasyQuestions = 0;
     int noOfMediumQuestions = 0;
@@ -21,10 +23,14 @@ class QuestionsManager {
       noOfHardQuestions = 0;
 
       final easyQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
-          limit: noOfEasyQuestions, difficulty: level.name);
+          limit: noOfEasyQuestions,
+          difficulty: level.name,
+          categoryId: categoryId);
 
       final mediumQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
-          limit: noOfMediumQuestions, difficulty: level.name);
+          limit: noOfMediumQuestions,
+          difficulty: level.name,
+          categoryId: categoryId);
 
       if (easyQuestionsList.length >= noOfEasyQuestions &&
           mediumQuestionsList.length >= noOfMediumQuestions) {
@@ -42,11 +48,25 @@ class QuestionsManager {
 
           if (questionListResponse != null) {
             if (context.mounted) {
-              final questions = questionListResponse.easyQuestions
-                      .sublist(0, noOfEasyQuestions) +
-                  questionListResponse.mediumQuestions
-                      .sublist(0, noOfMediumQuestions);
-              return questions;
+              final easyQuestionsList =
+                  await NewGameLocalDatabase.getLevelQuestions(
+                      limit: noOfEasyQuestions,
+                      difficulty: level.name,
+                      categoryId: categoryId);
+
+              final mediumQuestionsList =
+                  await NewGameLocalDatabase.getLevelQuestions(
+                      limit: noOfMediumQuestions,
+                      difficulty: level.name,
+                      categoryId: categoryId);
+
+              if (easyQuestionsList.length >= noOfEasyQuestions &&
+                  mediumQuestionsList.length >= noOfMediumQuestions) {
+                final questions =
+                    easyQuestionsList.sublist(0, noOfEasyQuestions) +
+                        mediumQuestionsList.sublist(0, noOfMediumQuestions);
+                return questions;
+              }
             }
             return [];
           }
@@ -54,8 +74,8 @@ class QuestionsManager {
         }
         return [];
       }
-    } 
-    
+    }
+
     //Intermediate
     else if (level == LevelName.intermediate) {
       noOfEasyQuestions = 10;
@@ -63,13 +83,19 @@ class QuestionsManager {
       noOfHardQuestions = 0;
 
       final easyQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
-          limit: noOfEasyQuestions, difficulty: level.name);
+          limit: noOfEasyQuestions,
+          difficulty: level.name,
+          categoryId: categoryId);
 
       final mediumQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
-          limit: noOfMediumQuestions, difficulty: level.name);
+          limit: noOfMediumQuestions,
+          difficulty: level.name,
+          categoryId: categoryId);
 
       final hardQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
-          limit: noOfHardQuestions, difficulty: level.name);
+          limit: noOfHardQuestions,
+          difficulty: level.name,
+          categoryId: categoryId);
 
       if (easyQuestionsList.length >= noOfEasyQuestions &&
           mediumQuestionsList.length >= noOfMediumQuestions &&

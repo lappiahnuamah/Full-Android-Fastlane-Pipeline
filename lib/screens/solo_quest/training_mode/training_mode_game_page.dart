@@ -321,6 +321,15 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                                           child: Image.network(
                                                             question.image,
                                                             fit: BoxFit.fill,
+                                                            errorBuilder: ((context,
+                                                                    error,
+                                                                    stackTrace) =>
+                                                             const   Text(
+                                                                  '?',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          30),
+                                                                )),
                                                           )),
                                                     ),
                                                   ),
@@ -356,9 +365,9 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                                 showMysteryBox:
                                                     question.hasMysteryBox &&
                                                         !hideMysteryBoxKey,
-                                                showTimesTwo: question
-                                                        .hasTwoTimes &&
-                                                    !hideDoublePointsKey,
+                                                showTimesTwo:
+                                                    question.hasTwoTimes &&
+                                                        !hideDoublePointsKey,
                                                 onMysteryBoxPressed: () {
                                                   _showMysteryBox();
                                                 },
@@ -492,9 +501,8 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                                             builder: (context,
                                                                 list, child) {
                                                               return GameImageOptions(
-                                                                options:
-                                                                    question
-                                                                        .options,
+                                                                options: question
+                                                                    .options,
                                                                 selectedAnswer:
                                                                     selectedAnswer,
                                                                 fiftyfityList:
@@ -608,7 +616,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
     if (option.isCorrect) {
       FlameAudio.play('correct_ans.mp3');
       _addPoints(
-          questionPoints:3, //question.points,
+          questionPoints: 3, //question.points,
           isGolden: question.isGolden,
           time: question.questionTime);
       answerStreak++;
@@ -767,7 +775,8 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
     }
   }
 
-  _useGoldenChance({required NewQuestionModel question, required int questionID}) {
+  _useGoldenChance(
+      {required NewQuestionModel question, required int questionID}) {
     for (var element in question.options) {
       if (element.isCorrect) {
         FlameAudio.play('correct_ans.mp3');
@@ -780,7 +789,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
     setState(() {});
     loseStreaks = 0;
     _addPoints(
-        questionPoints:3, //question.points, //TODO: Get points
+        questionPoints: 3, //question.points, //TODO: Get points
         isGolden: false,
         time: question.questionTime);
     Future.delayed(const Duration(seconds: 3), () {
