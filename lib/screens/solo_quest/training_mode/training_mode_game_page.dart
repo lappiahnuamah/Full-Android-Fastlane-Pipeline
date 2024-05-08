@@ -21,6 +21,7 @@ import 'package:savyminds/resources/app_fonts.dart';
 import 'package:savyminds/screens/solo_quest/training_mode/training_mode_submit_page.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
+import 'package:savyminds/utils/questions/questions_utils.dart';
 import 'package:savyminds/widgets/answer_button.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 import 'package:savyminds/widgets/dialogs/game_hint_dialog.dart';
@@ -230,8 +231,17 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                           } else {
                             FlameAudio.play('new_question.mp3');
                           }
-                          startTimer(
-                              widget.questionList[selectedIndex].questionTime);
+                          final question = widget.questionList[selectedIndex];
+                          final questionTime = QuestionsUtils.getQuestionsTime(
+                              questionTime: question.questionTime,
+                              complexityWeight:
+                                  question.complexityWeight.toDouble(),
+                              difficultyWeight:
+                                  question.difficultyWeight.toDouble(),
+                              levelWeight: QuestionsUtils.getLevelWeight(
+                                  level: question.level.capitalize()));
+
+                          startTimer(questionTime);
                         },
                         itemBuilder: (context, index) {
                           //swap page builder
@@ -249,8 +259,21 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                               } else {
                                 FlameAudio.play('new_question.mp3');
                               }
-                              startTimer(widget.swapQuestionList[selectedIndex]
-                                  .questionTime);
+                              final question =
+                                  widget.swapQuestionList[selectedIndex];
+                              final questionTime = QuestionsUtils
+                                  .getQuestionsTime(
+                                      questionTime: question.questionTime,
+                                      complexityWeight: question
+                                          .complexityWeight
+                                          .toDouble(),
+                                      difficultyWeight:
+                                          question.difficultyWeight.toDouble(),
+                                      levelWeight:
+                                          QuestionsUtils.getLevelWeight(
+                                              level:
+                                                  question.level.capitalize()));
+                              startTimer(questionTime);
                             },
                             itemBuilder: (context, swapIndex) {
                               NewQuestionModel question =
@@ -324,7 +347,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                                             errorBuilder: ((context,
                                                                     error,
                                                                     stackTrace) =>
-                                                             const   Text(
+                                                                const Text(
                                                                   '?',
                                                                   style: TextStyle(
                                                                       fontSize:
@@ -468,7 +491,9 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                                                           : AnswerButton(
                                                                               answer: option,
                                                                               onTap: () {
-                                                                                answerButtonPressed(option, question, context, index);
+                                                                                final question = widget.questionList[selectedIndex];
+                                                                                final questionTime = QuestionsUtils.getQuestionsTime(questionTime: question.questionTime, complexityWeight: question.complexityWeight.toDouble(), difficultyWeight: question.difficultyWeight.toDouble(), levelWeight: QuestionsUtils.getLevelWeight(level: question.level.capitalize()));
+                                                                                answerButtonPressed(option, question, context, index, (questionTime - seconds.value).toDouble());
                                                                               },
                                                                               isSelected: selectedAnswer?.id == option.id,
                                                                               isReversed: subIndex % 2 == 0);
@@ -510,11 +535,30 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                                                         .value,
                                                                 onOptionSelected:
                                                                     (option) {
+                                                                  final question =
+                                                                      widget.questionList[
+                                                                          selectedIndex];
+                                                                  final questionTime = QuestionsUtils.getQuestionsTime(
+                                                                      questionTime:
+                                                                          question
+                                                                              .questionTime,
+                                                                      complexityWeight: question
+                                                                          .complexityWeight
+                                                                          .toDouble(),
+                                                                      difficultyWeight: question
+                                                                          .difficultyWeight
+                                                                          .toDouble(),
+                                                                      levelWeight:
+                                                                          QuestionsUtils.getLevelWeight(
+                                                                              level: question.level.capitalize()));
                                                                   answerButtonPressed(
                                                                       option,
                                                                       question,
                                                                       context,
-                                                                      index);
+                                                                      index,
+                                                                      (questionTime -
+                                                                              seconds.value)
+                                                                          .toDouble());
                                                                 },
                                                               );
                                                             })),
@@ -542,9 +586,33 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                                 _swapQuestion();
                                               },
                                               onGoldenTapped: () {
+                                                final question =
+                                                    widget.questionList[
+                                                        selectedIndex];
+                                                final questionTime = QuestionsUtils
+                                                    .getQuestionsTime(
+                                                        questionTime: question
+                                                            .questionTime,
+                                                        complexityWeight:
+                                                            question
+                                                                .complexityWeight
+                                                                .toDouble(),
+                                                        difficultyWeight:
+                                                            question
+                                                                .difficultyWeight
+                                                                .toDouble(),
+                                                        levelWeight: QuestionsUtils
+                                                            .getLevelWeight(
+                                                                level: question
+                                                                    .level
+                                                                    .capitalize()));
                                                 _useGoldenChance(
                                                     question: question,
-                                                    questionID: question.id);
+                                                    questionID: question.id,
+                                                    remainingTime:
+                                                        (questionTime -
+                                                                seconds.value)
+                                                            .toDouble());
                                               },
                                             ))
                                       ],
@@ -607,7 +675,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
   }
 
   void answerButtonPressed(OptionModel option, NewQuestionModel question,
-      BuildContext context, int index) {
+      BuildContext context, int index, double remainingTime) {
     selectedAnswer = option;
     breakTime = true;
     //timer?.cancel();
@@ -615,10 +683,23 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
     setState(() {});
     if (option.isCorrect) {
       FlameAudio.play('correct_ans.mp3');
+      final questionPoint = QuestionsUtils.getQuestionPoint(
+          remainingTime: remainingTime,
+          questionTime: question.questionTime.toDouble(),
+          categoryWeight: question.categoryWeight.toDouble(),
+          difficultWeight: question.difficultyWeight.toDouble(),
+          levelWeight: QuestionsUtils.getLevelWeight(
+              level: question.level.capitalize()));
+      final questionTime = QuestionsUtils.getQuestionsTime(
+          questionTime: question.questionTime,
+          complexityWeight: question.complexityWeight.toDouble(),
+          difficultyWeight: question.difficultyWeight.toDouble(),
+          levelWeight: QuestionsUtils.getLevelWeight(
+              level: question.level.capitalize()));
       _addPoints(
-          questionPoints: 3, //question.points,
+          questionPoints: questionPoint, //question.points,
           isGolden: question.isGolden,
-          time: question.questionTime);
+          time: questionTime);
       answerStreak++;
       if (answerStreak == 5) {
         gameItemsProvider.increaseKeyAmount(GameKeyType.fiftyFifty);
@@ -776,7 +857,9 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
   }
 
   _useGoldenChance(
-      {required NewQuestionModel question, required int questionID}) {
+      {required NewQuestionModel question,
+      required int questionID,
+      required double remainingTime}) {
     for (var element in question.options) {
       if (element.isCorrect) {
         FlameAudio.play('correct_ans.mp3');
@@ -788,10 +871,23 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
     timer?.cancel();
     setState(() {});
     loseStreaks = 0;
+    final questionPoint = QuestionsUtils.getQuestionPoint(
+        remainingTime: remainingTime,
+        questionTime: question.questionTime.toDouble(),
+        categoryWeight: question.categoryWeight.toDouble(),
+        difficultWeight: question.difficultyWeight.toDouble(),
+        levelWeight:
+            QuestionsUtils.getLevelWeight(level: question.level.capitalize()));
+    final questionTime = QuestionsUtils.getQuestionsTime(
+        questionTime: question.questionTime,
+        complexityWeight: question.complexityWeight.toDouble(),
+        difficultyWeight: question.difficultyWeight.toDouble(),
+        levelWeight:
+            QuestionsUtils.getLevelWeight(level: question.level.capitalize()));
     _addPoints(
-        questionPoints: 3, //question.points, //TODO: Get points
+        questionPoints: questionPoint, //question.points,
         isGolden: false,
-        time: question.questionTime);
+        time: questionTime);
     Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         breakTime = false;
