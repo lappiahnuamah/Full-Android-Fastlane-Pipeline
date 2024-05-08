@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/game_key_model.dart';
+import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
@@ -21,6 +22,14 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  late GameItemsProvider gameItemsProvider;
+
+  @override
+  void initState() {
+    gameItemsProvider = context.read<GameItemsProvider>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -155,10 +164,17 @@ class _ProfileState extends State<Profile> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
-                      ...List.generate(
-                        gameKeyList.length,
-                        (index) => KeyCard(gameKey: gameKeyList[index]),
-                      )
+                      ...List.generate(gameItemsProvider.userKeys.length,
+                          (index) {
+                        final userKey =
+                            gameItemsProvider.userKeys.values.elementAt(index);
+                        return Padding(
+                            padding: EdgeInsets.symmetric(horizontal: d.pSW(8)),
+                            child: KeyCard(
+                              gameKey: userKey,
+                              height: d.pSH(35),
+                            ));
+                      }),
                     ],
                   ),
 

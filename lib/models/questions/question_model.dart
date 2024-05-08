@@ -166,7 +166,7 @@ class NewQuestionModel extends Equatable {
       'has_hint': hasHint,
       'is_golden': isGolden,
       'has_mystery_box': hasMysteryBox,
-      'has_two_times': hasTwoTimes,
+      'has_times_two': hasTwoTimes,
       'categories': toCategoriesMap(categories),
       'options': toQuestionOptionsMap(options)
     };
