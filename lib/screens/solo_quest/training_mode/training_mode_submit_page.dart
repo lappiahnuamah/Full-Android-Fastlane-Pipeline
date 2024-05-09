@@ -25,11 +25,11 @@ class CategorySubmitPage extends StatefulWidget {
       required this.questionList,
       required this.categoryModel,
       required this.totalPoints,
-      required this.resultList});
+      required this.correctAnswers});
   final List<NewQuestionModel> questionList;
   final CategoryModel? categoryModel;
   final int totalPoints;
-  final Map<int, dynamic> resultList;
+  final int correctAnswers;
 
   @override
   State<CategorySubmitPage> createState() => _CategorySubmitPageState();
@@ -55,8 +55,7 @@ class _CategorySubmitPageState extends State<CategorySubmitPage> {
 
     GameFunction().postGameStreaks(
         context: context,
-        fiftyFifty: gameProvider.fiftyFifty,
-        goldenBadges: gameProvider.goldenChances);
+     );
     GameFunction().getGameStreaks(context: context);
 
     super.initState();
@@ -108,7 +107,7 @@ class _CategorySubmitPageState extends State<CategorySubmitPage> {
                                 twinee(
                                     title: "Correct Answers",
                                     subTitle:
-                                        "${game.getTotalResults()}/${widget.questionList.length}"),
+                                        "${widget.correctAnswers}/${widget.questionList.length}"),
                                 SizedBox(
                                   height: d.pSH(18),
                                 ),

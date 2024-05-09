@@ -9,10 +9,12 @@ class CategoryModel extends Equatable {
   final int noOfQuestion;
   final String icon;
   final bool isLocked;
+  final double categoryWeight ;
 
   const CategoryModel({
     required this.id,
     required this.name,
+    required this.categoryWeight,
     required this.color,
     required this.noOfQuestion,
     required this.icon,
@@ -25,6 +27,7 @@ class CategoryModel extends Equatable {
       name: json['name'] ?? "",
       color: _parseColor(json['color']),
       noOfQuestion: json['no_of_questions'] ?? 0,
+      categoryWeight: json['category_weight'] ?? 1.0,
       icon: json['icon'] ?? "",
       isLocked: json['is_locked'] ?? true,
     );

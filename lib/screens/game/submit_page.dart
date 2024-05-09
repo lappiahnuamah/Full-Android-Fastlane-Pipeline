@@ -40,8 +40,7 @@ class _SubmitPageState extends State<SubmitPage> {
         totalPoints: gameProvider.currentGamePoints);
     GameFunction().postGameStreaks(
         context: context,
-        fiftyFifty: gameProvider.fiftyFifty,
-        goldenBadges: gameProvider.goldenChances);
+  );
     GameFunction().getGameStreaks(context: context);
 
     super.initState();

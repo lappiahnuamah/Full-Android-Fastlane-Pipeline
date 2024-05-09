@@ -32,11 +32,11 @@ class SharedPreferencesHelper {
 
   //////////////////////////////////////
 /////////////////   SET  /////////////
-  Future<bool?> setInt({required String key, required int value}) async {
+   Future<bool?> setInt({required String key, required int value}) async {
     return _prefs?.setInt(key, value);
   }
 
-  Future<bool?> setString({required String key, required String value}) async {
+   Future<bool?> setString({required String key, required String value}) async {
     return _prefs?.setString(key, value);
   }
 

@@ -15,4 +15,7 @@ class SharedPreferenceValues {
   //Quests
   static const String soloQuests = 'SOLO_QUESTS';
   static const String contests = 'CONTESTS';
+  
+  //Metric
+  static const String allMetrics = 'All-METRICS';
 }

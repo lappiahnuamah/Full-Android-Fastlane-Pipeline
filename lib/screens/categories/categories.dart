@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/data/shared_preference_values.dart';
 import 'package:savyminds/functions/categories/categories_functions.dart';
+import 'package:savyminds/functions/games/game_matric_function.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
@@ -32,6 +33,7 @@ class _CategoriesState extends State<Categories> {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       getCategories();
       CategoryFunctions().getFavoriteCategories(context: context);
+      GameMatricFunction().getGameMatrics(context: context);
     });
     super.initState();
   }

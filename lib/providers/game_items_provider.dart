@@ -18,7 +18,7 @@ class GameItemsProvider extends ChangeNotifier {
     GameKeyType.goldenKey: const GameKeyModel(
       id: 1,
       name: 'Golden Key',
-      amount: 0,
+      amount: 10,
       icon: 'assets/icons/game_keys/golden_key.svg',
       isLocked: false,
       type: GameKeyType.goldenKey,
@@ -26,7 +26,7 @@ class GameItemsProvider extends ChangeNotifier {
     GameKeyType.fiftyFifty: const GameKeyModel(
       id: 1,
       name: 'Fifty fity Key',
-      amount: 0,
+      amount: 10,
       icon: 'assets/icons/game_keys/fifty_fifty.svg',
       isLocked: false,
       type: GameKeyType.fiftyFifty,
@@ -34,7 +34,7 @@ class GameItemsProvider extends ChangeNotifier {
     GameKeyType.swapKey: const GameKeyModel(
       id: 1,
       name: 'Swap Key',
-      amount: 0,
+      amount: 10,
       icon: 'assets/icons/game_keys/swap_key.svg',
       isLocked: false,
       type: GameKeyType.swapKey,
@@ -42,7 +42,7 @@ class GameItemsProvider extends ChangeNotifier {
     GameKeyType.freezeTimeKey: const GameKeyModel(
       id: 1,
       name: 'Freeze Time Key',
-      amount: 0,
+      amount: 10,
       icon: 'assets/icons/game_keys/freeze_time_key.svg',
       isLocked: false,
       type: GameKeyType.freezeTimeKey,
@@ -50,7 +50,7 @@ class GameItemsProvider extends ChangeNotifier {
     GameKeyType.retakeKey: const GameKeyModel(
       id: 1,
       name: 'Retake Key',
-      amount: 0,
+      amount: 10,
       icon: 'assets/icons/game_keys/retake_key.svg',
       isLocked: false,
       type: GameKeyType.retakeKey,

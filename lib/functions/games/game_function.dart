@@ -23,6 +23,8 @@ import 'package:savyminds/utils/connection_check.dart';
 import 'package:uuid/uuid.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
+import '../../resources/app_enums.dart';
+
 class GameFunction {
   Future fetchQuestions(
       {required BuildContext context, required String nextUrl}) async {
@@ -116,49 +118,49 @@ class GameFunction {
   }) async {
     final gameItemsProvider = context.read<GameItemsProvider>();
     final hasConnection = await ConnectionCheck().hasConnection();
-    try{
+    try {
+      if (hasConnection) {
+        if (context.mounted) {
+          AppUser user =
+              Provider.of<UserDetailsProvider>(context, listen: false)
+                  .getUserDetails();
+          String accessToken =
+              Provider.of<UserDetailsProvider>(context, listen: false)
+                  .getAccessToken();
 
-    if (hasConnection) {
-      if (context.mounted) {
-        AppUser user = Provider.of<UserDetailsProvider>(context, listen: false)
-            .getUserDetails();
-        String accessToken =
-            Provider.of<UserDetailsProvider>(context, listen: false)
-                .getAccessToken();
+          final gameProvider =
+              Provider.of<GameProvider>(context, listen: false);
 
-        final gameProvider = Provider.of<GameProvider>(context, listen: false);
+          final response = await http.get(
+            Uri.parse('${UserUrl.userUser}${user.id}/get-game-streaks/'),
+            headers: {
+              "content-type": "application/json",
+              "accept": "application/json",
+              "Authorization": "Bearer $accessToken"
+            },
+          );
+          log('streak get: ${response.body}');
+          if (response.statusCode == 200) {
+            final streaks = GameStreakModel.fromJson(jsonDecode(response.body));
+            gameProvider.setUserStreaks(streaks);
+            gameItemsProvider.setKeyItems(streaks);
 
-        final response = await http.get(
-          Uri.parse('${UserUrl.userUser}${user.id}/get-game-streaks/'),
-          headers: {
-            "content-type": "application/json",
-            "accept": "application/json",
-            "Authorization": "Bearer $accessToken"
-          },
-        );
-        log('streak get: ${response.body}');
-        if (response.statusCode == 200) {
-          final streaks = GameStreakModel.fromJson(jsonDecode(response.body));
-          gameProvider.setUserStreaks(streaks);
-          gameItemsProvider.setKeyItems(streaks);
-
-          return true;
-        } else {
-          return ErrorResponse.fromJson(jsonDecode(response.body));
+            return true;
+          } else {
+            return ErrorResponse.fromJson(jsonDecode(response.body));
+          }
         }
+      } else {
+        return ErrorResponse(errorMsg: 'No internet connection');
       }
-    } else {
-      return ErrorResponse(errorMsg: 'No internet connection');
-    }
-    }catch(e){
+    } catch (e) {
       log('streaks error: $e');
     }
   }
 
-  Future postGameStreaks(
-      {required BuildContext context,
-      required int fiftyFifty,
-      required int goldenBadges}) async {
+  Future postGameStreaks({
+    required BuildContext context,
+  }) async {
     final hasConnection = await ConnectionCheck().hasConnection();
 
     if (hasConnection) {
@@ -169,6 +171,17 @@ class GameFunction {
             Provider.of<UserDetailsProvider>(context, listen: false)
                 .getAccessToken();
 
+        final gameItemsProvider =
+            Provider.of<GameItemsProvider>(context, listen: false);
+
+        final userKeys = gameItemsProvider.userKeys;
+        Map data = {};
+        data['fifty_fifty_points'] = userKeys[GameKeyType.fiftyFifty]!.amount;
+        data['golden_badges'] = userKeys[GameKeyType.goldenKey]!.amount;
+        data['swap_question'] = userKeys[GameKeyType.swapKey]!.amount;
+        data['freeze_time'] = userKeys[GameKeyType.freezeTimeKey]!.amount;
+        data['retake_question'] = userKeys[GameKeyType.retakeKey]!.amount;
+
         final response = await http.patch(
           Uri.parse('${UserUrl.userUser}${user.id}/update-game-streaks/'),
           headers: {
@@ -177,10 +190,7 @@ class GameFunction {
             "Authorization": "Bearer $accessToken"
           },
           body: jsonEncode(
-            {
-              'fifty_fitfy_points': fiftyFifty,
-              'golden_badges': goldenBadges,
-            },
+            data,
           ),
         );
         if (response.statusCode == 200) {
