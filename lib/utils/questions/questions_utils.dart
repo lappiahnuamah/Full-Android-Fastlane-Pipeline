@@ -76,10 +76,11 @@ class QuestionsUtils {
       required String level,
       required int gameType,
       required double difficultWeight,
-      required double categoryWeight,
+      required num categoryWeight,
       required BuildContext context,
       int min = 10,
       int max = 60}) {
+        
     // round(⌈r/t×g ×d ×l ×10⌉,min⁡=10, max=⁡60 )
 
     final gameMetricsProvider =

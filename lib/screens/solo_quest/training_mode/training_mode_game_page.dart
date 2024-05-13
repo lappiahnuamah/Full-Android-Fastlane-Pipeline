@@ -18,6 +18,7 @@ import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_enums.dart';
 import 'package:savyminds/resources/app_fonts.dart';
+import 'package:savyminds/screens/solo_quest/training_mode/new_submit_page.dart';
 import 'package:savyminds/screens/solo_quest/training_mode/training_mode_submit_page.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
@@ -130,7 +131,8 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
           FlameAudio.play('outro_game_over.mp3');
           nextScreen(
               context,
-              CategorySubmitPage(
+              // CategorySubmitPage
+              NewSubmitPage(
                 categoryModel: widget.category,
                 questionList: widget.questionList,
                 totalPoints: totalPoints,
@@ -928,7 +930,9 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
     } else {
       nextScreen(
           context,
-          CategorySubmitPage(
+          // CategorySubmitPage
+          
+          NewSubmitPage(
             categoryModel: widget.category,
             questionList: widget.questionList,
             totalPoints: totalPoints,

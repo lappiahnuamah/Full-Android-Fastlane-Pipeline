@@ -9,7 +9,7 @@ class CategoryModel extends Equatable {
   final int noOfQuestion;
   final String icon;
   final bool isLocked;
-  final double categoryWeight ;
+  final num categoryWeight ;
 
   const CategoryModel({
     required this.id,

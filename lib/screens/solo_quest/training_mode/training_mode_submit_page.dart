@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/categories/categories_functions.dart';
 import 'package:savyminds/functions/games/game_function.dart';
-import 'package:savyminds/models/games/question_model.dart';
 import 'package:savyminds/models/questions/question_model.dart';
 import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
@@ -25,7 +24,8 @@ class CategorySubmitPage extends StatefulWidget {
       required this.questionList,
       required this.categoryModel,
       required this.totalPoints,
-      required this.correctAnswers});
+      required this.correctAnswers
+      });
   final List<NewQuestionModel> questionList;
   final CategoryModel? categoryModel;
   final int totalPoints;
@@ -241,6 +241,44 @@ class _CategorySubmitPageState extends State<CategorySubmitPage> {
       ],
     );
   }
+
+  // getQuestions() async {
+  //   if (!context.mounted) return;
+
+  //   if (questionsLoading) return;
+
+  //   setState(() {
+  //     questionsLoading = true;
+  //   });
+
+  //   final result = await QuestionsManager.getTrainingModeQuestions(
+  //     context: context,
+  //     questId: widget.quest.id,
+  //     level: level,
+  //     categoryId: selectedCategory?.id ?? 0,
+  //   );
+
+  //   setState(() {
+  //     questionsLoading = false;
+  //   });
+
+  //   if (result.isNotEmpty) {
+  //     if (mounted) {
+  //       nextScreen(
+  //           context,
+  //           TrainingModeGamePage(
+  //               category: selectedCategory!,
+  //               questionList: result,
+  //               swapQuestionList: const [],
+  //               quest: widget.quest,
+  //               level: level));
+  //     }
+  //   } else {
+  //     Fluttertoast.showToast(
+  //         msg:
+  //             'No questions available for this category. Please select another category.');
+  //   }
+  // }
 }
 
 class TwoImages extends StatelessWidget {

@@ -44,6 +44,7 @@ class QuestionsManager {
               context: context,
               nextUrl: null,
               gameLevel: level.name,
+              categories: [categoryId],
               gameType: questId);
 
           if (questionListResponse != null) {
@@ -111,6 +112,7 @@ class QuestionsManager {
               context: context,
               nextUrl: null,
               gameLevel: level.name,
+              categories: [categoryId],
               gameType: questId);
 
           if (questionListResponse != null) {

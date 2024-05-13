@@ -16,7 +16,10 @@ class QuestionFunction {
       {required BuildContext context,
       String? nextUrl,
       required int gameType,
-      required String gameLevel}) async {
+      required String gameLevel,
+      required List<int> categories,
+      
+      }) async {
     final String accessToken =
         Provider.of<UserDetailsProvider>(context, listen: false)
             .getAccessToken();
@@ -24,7 +27,7 @@ class QuestionFunction {
     try {
       final response = await http.get(
         Uri.parse(nextUrl ??
-            "${CategoryUrl.listQuestions}?game_type=$gameType&game_level=${gameLevel.capitalize()}"),
+            "${CategoryUrl.listQuestions}?game_type=$gameType&game_level=${gameLevel.capitalize()}&categories=${listToString(categories)}"),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -81,5 +84,16 @@ class QuestionFunction {
     } catch (e) {
       return null;
     }
+  }
+
+  static String listToString(List<int> list) {
+    String str = '';
+    for (int i = 0; i < list.length; i++) {
+      str += list[i].toString();
+      if (i != list.length - 1) {
+        str += ',';
+      }
+    }
+    return str;
   }
 }
