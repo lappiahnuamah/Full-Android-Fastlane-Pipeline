@@ -18,8 +18,8 @@ class QuestionsManager {
 
     ///Level
     if (level == LevelName.beginner) {
-      noOfEasyQuestions = 5;
-      noOfMediumQuestions = 0;
+      noOfEasyQuestions = 7;
+      noOfMediumQuestions = 3;
       noOfHardQuestions = 0;
 
       final easyQuestionsList = await NewGameLocalDatabase.getLevelQuestions(

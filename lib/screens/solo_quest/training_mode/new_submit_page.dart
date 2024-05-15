@@ -71,7 +71,7 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
           SubmitPageBackground(icon: widget.categoryModel!.icon),
           SafeArea(
             child: Container(
-              alignment: Alignment.center,
+              alignment: const Alignment(0.5,-0.5),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -101,7 +101,7 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
                     ),
                     SizedBox(height: d.pSH(15)),
                     SizedBox(
-                      width: d.pSW(102),
+                      width: d.pSW(115), 
                       height: d.pSH(100),
                       child: CategoryCard(
                         category: widget.categoryModel!,
@@ -305,7 +305,7 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
                                             vertical: d.pSH(10)),
                                         decoration: BoxDecoration(
                                             color: AppColors.kWhite
-                                                .withOpacity(0.7)),
+                                                .withOpacity(0.9)),
                                         child: Text(
                                           "You are ranked in top 10",
                                           style: TextStyle(

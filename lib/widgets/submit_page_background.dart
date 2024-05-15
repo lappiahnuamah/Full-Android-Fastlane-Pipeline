@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:savyminds/constants.dart';
+import 'package:savyminds/resources/app_images.dart';
 
 class SubmitPageBackground extends StatelessWidget {
   const SubmitPageBackground({super.key, required this.icon});
@@ -61,6 +62,7 @@ class SubmitPageBackground extends StatelessWidget {
             ),
           ),
         ),
+        
         //Background Design
         Opacity(
           opacity: 0.85,
@@ -74,6 +76,18 @@ class SubmitPageBackground extends StatelessWidget {
                 Color(0xFFF2E5FF),
               ], transform: GradientRotation(-168)),
             ),
+          ),
+        ),
+        Positioned(
+          top: 0,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: List.generate(6, (index) => Container(
+              margin: EdgeInsets.symmetric(vertical: d.pSH(30)),
+              child: SvgPicture.asset(AppImages.brainSvg,)) ).toList() 
+              
+            
           ),
         ),
       ],
