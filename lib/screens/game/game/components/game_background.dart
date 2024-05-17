@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:savyminds/resources/app_images.dart';
 
@@ -10,15 +11,19 @@ class GameBackground extends StatelessWidget {
     final bright = Theme.of(context).brightness;
     return Stack(
       children: [
-        SvgPicture.asset(
-          AppImages.gameBackgroundSvg,
-          colorFilter: bright == Brightness.dark
-              ? const ColorFilter.mode(
-                  Color.fromARGB(70, 24, 22, 22), BlendMode.srcIn)
-              : null,
+        Opacity(
+          opacity: 0.2,
+          child: SvgPicture.asset(
+            AppImages.gameBackgroundSvg,
+            colorFilter: bright == Brightness.dark
+                ? const ColorFilter.mode(
+                    Color.fromARGB(70, 24, 22, 22), BlendMode.srcIn)
+                : null,
+                
+          ),
         ),
         Opacity(
-          opacity: 0.5,
+          opacity: 0.7,
           child: Container(
             width: double.infinity,
             height: double.maxFinite,

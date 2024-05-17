@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/categories/categories_functions.dart';
+import 'package:savyminds/functions/games/game_function.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/categories/category_level_model.dart';
 import 'package:savyminds/models/level_model.dart';
@@ -45,6 +46,10 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
       if (widget.categoryModel != null) {
         getCategoryLevel();
       }
+      GameFunction().postGameStreaks(
+        context: context,
+      );
+      // GameFunction().getGameStreaks(context: context);
     });
     super.initState();
   }
@@ -71,7 +76,7 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
           SubmitPageBackground(icon: widget.categoryModel!.icon),
           SafeArea(
             child: Container(
-              alignment: const Alignment(0.5,-0.5),
+              alignment: const Alignment(0.5, -0.5),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -101,7 +106,7 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
                     ),
                     SizedBox(height: d.pSH(15)),
                     SizedBox(
-                      width: d.pSW(115), 
+                      width: d.pSW(115),
                       height: d.pSH(100),
                       child: CategoryCard(
                         category: widget.categoryModel!,
@@ -322,7 +327,12 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
                                   )
                                 : const SizedBox();
                           }),
-                    const AvailalableKeysWidget(showShop: false,)
+                    SizedBox(
+                      height: d.pSH(15),
+                    ),
+                    const AvailalableKeysWidget(
+                      showShop: false,
+                    )
                   ],
                 ),
               ),

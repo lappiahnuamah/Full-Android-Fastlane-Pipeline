@@ -11,13 +11,13 @@ class NewQuestionModel extends Equatable {
   final int id;
   final String text;
   final List<ShortQuestionCategory> categories;
-  final int categoryWeight;
+  final num categoryWeight;
   final String difficulty;
   final String level;
   final String image;
-  final int difficultyWeight;
+  final num difficultyWeight;
   final int questionTime;
-  final int complexityWeight;
+  final num complexityWeight;
   final String hint;
   final bool hasHint;
   final bool isGolden;
@@ -50,13 +50,13 @@ class NewQuestionModel extends Equatable {
     return NewQuestionModel(
       id: json['id'] ?? 0,
       text: json['text'] ?? "",
-      categoryWeight: json['category_weight'] ?? 0,
-      difficultyWeight: json['difficulty_weight'] ?? "",
+      categoryWeight: double.parse(json['category_weight'] ?? "0"),
+      difficultyWeight: double.parse(json['difficulty_weight'] ?? "0"),
       difficulty: json['difficulty'] ?? "",
       level: json['level'] ?? "",
       image: json['image'] ?? "",
       questionTime: json['question_time'] ?? 0,
-      complexityWeight: json['complexity_weight'] ?? 0,
+      complexityWeight: double.parse(json['complexity_weight'] ?? "0"),
       hint: json['hint'] ?? "",
       dateCreated: json['date_created'] ?? "",
       hasHint: json['has_hint'] ?? false,
@@ -72,13 +72,13 @@ class NewQuestionModel extends Equatable {
     return NewQuestionModel(
       id: json['id'] ?? 0,
       text: json['text'] ?? "",
-      categoryWeight: int.parse(json['category_weight']),
-      difficultyWeight: int.parse(json['difficulty_weight'] ?? ""),
+      categoryWeight: double.parse(json['category_weight']),
+      difficultyWeight: double.parse(json['difficulty_weight'] ?? ""),
       difficulty: json['difficulty'] ?? "",
       level: json['level'] ?? "",
       image: json['image'] ?? "",
       questionTime: json['question_time'] ?? 0,
-      complexityWeight: int.parse(json['complexity_weight']),
+      complexityWeight: double.parse(json['complexity_weight']),
       hint: json['hint'] ?? "",
       dateCreated: json['date_created'] ?? "",
       hasHint: json['has_hint'] == 1,

@@ -17,6 +17,7 @@ class TransformedButton extends StatelessWidget {
       this.height,
       this.keepBlue,
       this.width,
+      this.padding,
       super.key});
 
   final Function()? onTap;
@@ -29,6 +30,7 @@ class TransformedButton extends StatelessWidget {
   final double? height;
   final double? width;
   final bool? keepBlue;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +54,9 @@ class TransformedButton extends StatelessWidget {
                         buttonColor ?? AppColors.kGameBlue, BlendMode.srcIn)),
                 Align(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: d.pSH(3), vertical: d.pSH(5)),
+                    padding: padding ??
+                        EdgeInsets.symmetric(
+                            horizontal: d.pSH(3), vertical: d.pSH(5)),
                     child: Text(
                       buttonText,
                       maxLines: 3,

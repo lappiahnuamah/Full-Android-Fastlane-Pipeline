@@ -80,17 +80,16 @@ class QuestionsUtils {
       required BuildContext context,
       int min = 10,
       int max = 60}) {
-        
     // round(⌈r/t×g ×d ×l ×10⌉,min⁡=10, max=⁡60 )
 
     final gameMetricsProvider =
         Provider.of<GameMetricsProvider>(context, listen: false);
-    final levelMatrices = gameMetricsProvider.allMetric[gameType]!.levelMatrix;
+    final levelMatrices = gameMetricsProvider.allMetric[gameType]?.levelMatrix;
 
     final levelMatrix =
-        levelMatrices.where((element) => element.gameLevelName == level).first;
+        levelMatrices?.where((element) => element.gameLevelName == level).first;
 
-    final levelWeight = double.parse(levelMatrix.levelWeight);
+    final levelWeight = double.parse(levelMatrix?.levelWeight ?? '1.0');
 
     lg("Level Weight: $levelWeight");
     lg("Question Time: $questionTime");
@@ -104,18 +103,17 @@ class QuestionsUtils {
             difficultWeight *
             levelWeight *
             10)
-        .ceil();
+        .round();
 
-    // Ensure the rounded value falls within the specified range
-    if (roundedValue < min) {
-      return min;
-    } else if (roundedValue > max) {
+    // // Ensure the rounded value falls within the specified range
+    // if (roundedValue < min) {
+    //   return min;
+    // } else
+    if (roundedValue > max) {
       return max;
     } else {
       return roundedValue;
     }
-
-  
   }
 
   static double getLevelWeight({required String level}) {

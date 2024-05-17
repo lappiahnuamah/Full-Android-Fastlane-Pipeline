@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +35,6 @@ class QuestionFunction {
           "Authorization": "Bearer $accessToken"
         },
       );
-      // lg('questions:${response.body}');
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final result= QuestionListResponseModel.fromJson(data);
@@ -49,6 +49,7 @@ class QuestionFunction {
         return null;
       }
     } catch (e) {
+      log('error: $e');
       return null;
     }
   }

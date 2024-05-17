@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
@@ -30,8 +31,12 @@ class _AvailalableKeysWidgetState extends State<AvailalableKeysWidget> {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
+            Wrap(
+             // mainAxisSize: MainAxisSize.min,
+             crossAxisAlignment: WrapCrossAlignment.center,
+             runAlignment: WrapAlignment.center,
+             alignment:WrapAlignment.center,
+             runSpacing: 25,
               children: [
                 ...List.generate(gameItemsProvider.userKeys.length, (index) {
                   final userKey = gameItemsProvider.userKeys.values.elementAt(index);

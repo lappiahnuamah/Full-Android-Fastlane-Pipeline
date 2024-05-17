@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:savyminds/database/new_game_db_functions.dart';
 import 'package:savyminds/functions/questions_functions.dart';
@@ -19,13 +21,11 @@ class QuestionsManager {
     ///Level
     if (level == LevelName.beginner) {
       noOfEasyQuestions = 7;
-      noOfMediumQuestions = 3;
+      noOfMediumQuestions = 3; //?TODO: Change
       noOfHardQuestions = 0;
 
       final easyQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
-          limit: noOfEasyQuestions,
-          difficulty: 'Easy',
-          categoryId: categoryId);
+          limit: noOfEasyQuestions, difficulty: 'Easy', categoryId: categoryId);
 
       final mediumQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
           limit: noOfMediumQuestions,
@@ -84,9 +84,7 @@ class QuestionsManager {
       noOfHardQuestions = 0;
 
       final easyQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
-          limit: noOfEasyQuestions,
-          difficulty: 'Easy',
-          categoryId: categoryId);
+          limit: noOfEasyQuestions, difficulty: 'Easy', categoryId: categoryId);
 
       final mediumQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
           limit: noOfMediumQuestions,
@@ -94,9 +92,7 @@ class QuestionsManager {
           categoryId: categoryId);
 
       final hardQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
-          limit: noOfHardQuestions,
-          difficulty: 'Hard',
-          categoryId: categoryId);
+          limit: noOfHardQuestions, difficulty: 'Hard', categoryId: categoryId);
 
       if (easyQuestionsList.length >= noOfEasyQuestions &&
           mediumQuestionsList.length >= noOfMediumQuestions &&

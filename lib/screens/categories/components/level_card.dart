@@ -19,7 +19,7 @@ class LevelCard extends StatelessWidget {
         width: d.pSH(90),
         clipBehavior: Clip.antiAliasWithSaveLayer,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(15),
         ),
         child: LayoutBuilder(builder: (context, layout) {
           final colorWidth = totalPoints > level.upperboundary
@@ -40,7 +40,7 @@ class LevelCard extends StatelessWidget {
               Container(
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(15),
                   border: Border.all(
                     color: level.isCurrentLevel
                         ? AppColors.hintTextBlack

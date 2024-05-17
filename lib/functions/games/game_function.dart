@@ -193,6 +193,7 @@ class GameFunction {
             data,
           ),
         );
+        log('post streaks: ${response.body}');
         if (response.statusCode == 200) {
           return true;
         } else {
