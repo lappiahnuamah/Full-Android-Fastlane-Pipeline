@@ -78,8 +78,8 @@ class QuestionsUtils {
       required double difficultWeight,
       required num categoryWeight,
       required BuildContext context,
-      int min = 10,
-      int max = 60}) {
+      int min = 1,
+      int max = 30}) {
     // round(⌈r/t×g ×d ×l ×10⌉,min⁡=10, max=⁡60 )
 
     final gameMetricsProvider =
@@ -106,10 +106,9 @@ class QuestionsUtils {
         .round();
 
     // // Ensure the rounded value falls within the specified range
-    // if (roundedValue < min) {
-    //   return min;
-    // } else
-    if (roundedValue > max) {
+    if (roundedValue < min) {
+      return min;
+    } else if (roundedValue > max) {
       return max;
     } else {
       return roundedValue;

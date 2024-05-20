@@ -98,6 +98,8 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
   bool hideDoublePointsKey = false;
   bool hideMysteryBoxKey = false;
 
+  bool swapQuestion = false;
+
   //swap
   PageController swapController = PageController(initialPage: 0);
 
@@ -156,7 +158,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
   @override
   void initState() {
     gameItemsProvider = context.read<GameItemsProvider>();
-    startFirstQuestion();
+    startQuestion(0);
     FlameAudio.bgm.stop();
     controller = AnimationController(
       duration: const Duration(seconds: 2),
@@ -166,8 +168,8 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
     super.initState();
   }
 
-  startFirstQuestion() {
-    final question = widget.questionList[0];
+  startQuestion(int index) {
+    final question = widget.questionList[index];
     final time = QuestionsUtils.getQuestionsTime(
         complexityWeight: question.complexityWeight.toDouble(),
         difficultyWeight: question.difficultyWeight.toDouble(),
@@ -260,20 +262,18 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                           //swap page builder
                           return PageView.builder(
                             controller: swapController,
-                            itemCount: 2,
+                            itemCount: 1,
                             physics: const NeverScrollableScrollPhysics(),
                             scrollDirection: Axis.vertical,
                             onPageChanged: (val) {
                               hideDoublePointsKey = false;
                               hideMysteryBoxKey = false;
-                              if (widget
-                                  .swapQuestionList[selectedIndex].isGolden) {
+                              if (widget.swapQuestionList[0].isGolden) {
                                 FlameAudio.play('when_question_is_star.mp3');
                               } else {
                                 FlameAudio.play('new_question.mp3');
                               }
-                              final question =
-                                  widget.swapQuestionList[selectedIndex];
+                              final question = widget.swapQuestionList[0];
                               final questionTime =
                                   QuestionsUtils.getQuestionsTime(
                                       complexityWeight:
@@ -288,8 +288,8 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                             itemBuilder: (context, swapIndex) {
                               NewQuestionModel question =
                                   widget.questionList[index];
-                              if (swapIndex != 0) {
-                                question = widget.swapQuestionList[index];
+                              if (swapQuestion) {
+                                question = widget.swapQuestionList[0];
                               }
                               return Column(
                                 children: [
@@ -740,27 +740,21 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
       loseStreaks++;
     }
 
-    // GameComments().showGameCommentToast(
-    //     context: context,
-    //     isCorrectAswer: option.isCorrect,
-    //     streaks: gameProvider.answerStreaks,
-    //     lostStreaks: loseStreaks,
-    //     fifty: gameProvider.fiftyFifty,
-    //     goldenBadge: gameProvider.goldenChances);
     Future.delayed(const Duration(seconds: 3), () {
       setState(() {
-        breakTime = false;
         showRetake = false;
-      });
-
-      if (retakeActivated) {
-        retakeActivated = false;
+        selectedAnswer = null;
+        breakTime = false;
         setState(() {});
-      }
-
-      NewGameLocalDatabase.deleteQuestion(question.id);
-
-      moveToNextScreen(index: index, questionId: question.id);
+        if (retakeActivated) {
+          retakeActivated = false;
+          setState(() {});
+          startQuestion(index);
+        } else {
+          NewGameLocalDatabase.deleteQuestion(question.id);
+          moveToNextScreen(index: index, questionId: question.id);
+        }
+      });
     });
   }
 
@@ -916,6 +910,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
 
   _swapQuestion() {
     if (widget.swapQuestionList.isNotEmpty) {
+      swapQuestion = true;
       timer?.cancel();
 
       swapController.nextPage(
