@@ -13,14 +13,13 @@ import 'package:http/http.dart' as http;
 
 class QuestionFunction {
   //Get all questions
-  Future<QuestionListResponseModel?> getQuestions(
-      {required BuildContext context,
-      String? nextUrl,
-      required int gameType,
-      required String gameLevel,
-      required List<int> categories,
-      
-      }) async {
+  Future<QuestionListResponseModel?> getQuestions({
+    required BuildContext context,
+    String? nextUrl,
+    required int gameType,
+    required String gameLevel,
+    required List<int> categories,
+  }) async {
     final String accessToken =
         Provider.of<UserDetailsProvider>(context, listen: false)
             .getAccessToken();
@@ -35,14 +34,19 @@ class QuestionFunction {
           "Authorization": "Bearer $accessToken"
         },
       );
+
+      log('training games: ${response.body}');
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final result= QuestionListResponseModel.fromJson(data);
-        final allQuestions = result.easyQuestions + result.mediumQuestions + result.hardQuestions;
-           for (int i = 0; i < allQuestions.length; i++) {
-            final question = allQuestions[i];
-              NewGameLocalDatabase.addQuestion(question);
-            }
+        final result = QuestionListResponseModel.fromJson(data);
+        final allQuestions = result.easyQuestions +
+            result.mediumQuestions +
+            result.hardQuestions;
+        for (int i = 0; i < allQuestions.length; i++) {
+          final question = allQuestions[i];
+          NewGameLocalDatabase.addQuestion(question);
+        }
 
         return result;
       } else {

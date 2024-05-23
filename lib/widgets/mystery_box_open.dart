@@ -67,8 +67,9 @@ class _MysteryBoxOpenState extends State<MysteryBoxOpen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CustomText(
-                    label:
-                        'You got a ${gameItemsProvider.userKeys[key!]?.name ?? 'key'}',
+                    label: key != null
+                        ? 'You got a ${gameItemsProvider.userKeys[key!]?.name ?? 'key'}'
+                        : 'You got a key',
                     fontSize: getFontSize(30, size),
                     fontWeight: FontWeight.bold,
                     fontFamily: AppFonts.caveat,
@@ -80,7 +81,9 @@ class _MysteryBoxOpenState extends State<MysteryBoxOpen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       SvgPicture.asset(
-                        gameItemsProvider.userKeys[key!]!.icon,
+                        key == null
+                            ? ''
+                            : gameItemsProvider.userKeys[key!]!.icon,
                         height: d.pSH(45),
                       ),
                       CustomText(

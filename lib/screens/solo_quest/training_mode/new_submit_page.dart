@@ -10,12 +10,15 @@ import 'package:savyminds/models/questions/question_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_fonts.dart';
+import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
 import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/screens/categories/components/level_card.dart';
 import 'package:savyminds/utils/func.dart';
+import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/availalble_keys_widget.dart';
 import 'package:savyminds/widgets/game_page_background.dart';
 import 'package:savyminds/widgets/submit_page_background.dart';
+import 'package:savyminds/widgets/trasformed_button.dart';
 
 class NewSubmitPage extends StatefulWidget {
   const NewSubmitPage(
@@ -332,7 +335,20 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
                     ),
                     const AvailalableKeysWidget(
                       showShop: false,
-                    )
+                    ),
+                    SizedBox(
+                      height: d.pSH(30),
+                    ),
+                    TransformedButton(
+                      onTap: () {
+                        nextScreen(context, const CustomBottomNav());
+                      },
+                      buttonText: 'Return Home',
+                      fontSize: getFontSize(22, size),
+                      height: d.pSH(80),
+                      buttonColor: AppColors.kGameRed,
+                      width: d.getPhoneScreenWidth() * 0.65,
+                    ),
                   ],
                 ),
               ),

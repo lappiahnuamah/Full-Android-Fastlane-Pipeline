@@ -120,7 +120,6 @@ class _GamePageKeysListState extends State<GamePageKeysList> {
                     gameItemsProvider.userKeys[GameKeyType.swapKey]?.amount ??
                         0, onTap: () {
               widget.onSwapTapped?.call();
-              gameItemsProvider.reduceKeyAmount(GameKeyType.swapKey);
             }),
           if (widget.onGoldenTapped != null)
             keyWithAmount(size,

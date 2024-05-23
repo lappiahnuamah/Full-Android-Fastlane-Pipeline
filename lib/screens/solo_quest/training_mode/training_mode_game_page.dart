@@ -6,6 +6,7 @@ import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
@@ -41,14 +42,12 @@ class TrainingModeGamePage extends StatefulWidget {
       {super.key,
       required this.category,
       required this.questionList,
-      required this.swapQuestionList,
       required this.level,
       required this.quest});
   final CategoryModel category;
   final QuestModel quest;
   final LevelName level;
   final List<NewQuestionModel> questionList;
-  final List<NewQuestionModel> swapQuestionList;
 
   @override
   State<TrainingModeGamePage> createState() => _TrainingModeGamePageState();
@@ -154,6 +153,8 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
   }
 
   late GameItemsProvider gameItemsProvider;
+
+  List<NewQuestionModel> swapQuestionList = [];
 
   @override
   void initState() {
@@ -268,12 +269,12 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                             onPageChanged: (val) {
                               hideDoublePointsKey = false;
                               hideMysteryBoxKey = false;
-                              if (widget.swapQuestionList[0].isGolden) {
+                              if (swapQuestionList[0].isGolden) {
                                 FlameAudio.play('when_question_is_star.mp3');
                               } else {
                                 FlameAudio.play('new_question.mp3');
                               }
-                              final question = widget.swapQuestionList[0];
+                              final question = swapQuestionList[0];
                               final questionTime =
                                   QuestionsUtils.getQuestionsTime(
                                       complexityWeight:
@@ -288,8 +289,8 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                             itemBuilder: (context, swapIndex) {
                               NewQuestionModel question =
                                   widget.questionList[index];
-                              if (swapQuestion) {
-                                question = widget.swapQuestionList[0];
+                              if (swapQuestion && swapQuestionList.isNotEmpty) {
+                                question = swapQuestionList[0];
                               }
                               return Column(
                                 children: [
@@ -600,7 +601,8 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                                     question.questionTime);
                                               },
                                               onSwapTapped: () {
-                                                _swapQuestion();
+                                                _swapQuestion(
+                                                    question.difficulty);
                                               },
                                               onGoldenTapped: () {
                                                 final question =
@@ -748,6 +750,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
         setState(() {});
         if (retakeActivated) {
           retakeActivated = false;
+          gameItemsProvider.reduceKeyAmount(GameKeyType.retakeKey);
           setState(() {});
           startQuestion(index);
         } else {
@@ -908,16 +911,31 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
     });
   }
 
-  _swapQuestion() {
-    if (widget.swapQuestionList.isNotEmpty) {
-      swapQuestion = true;
-      timer?.cancel();
+  _swapQuestion(String questionDifficulty) async {
+    timer?.cancel();
+    breakTime = true;
+    setState(() {});
+    final result = await NewGameLocalDatabase.getLevelQuestions(
+        limit: 1,
+        difficulty: questionDifficulty,
+        categoryId: widget.category.id);
+    breakTime = false;
+    setState(() {});
 
-      swapController.nextPage(
+    dev.log('length of swap: ${result.length}');
+    if (result.isNotEmpty) {
+      swapQuestion = true;
+
+      swapQuestionList[0] = result[0];
+      swapController.animateToPage(0,
           duration: const Duration(
             milliseconds: 400,
           ),
           curve: Curves.easeIn);
+      gameItemsProvider.reduceKeyAmount(GameKeyType.swapKey);
+    } else {
+      startTimer(seconds.value);
+      Fluttertoast.showToast(msg: 'Failed to swap question');
     }
   }
 

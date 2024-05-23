@@ -198,7 +198,7 @@ class _CategorySubmitPageState extends State<CategorySubmitPage> {
                         buttonText: 'Return Home',
                         fontSize: getFontSize(22, size),
                         height: d.pSH(80),
-                        buttonColor: AppColors.kGameRed,
+                        buttonColor: AppColors.kGameGreen,
                         width: d.getPhoneScreenWidth() * 0.65,
                       ),
                     ],

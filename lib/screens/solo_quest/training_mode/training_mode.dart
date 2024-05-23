@@ -271,7 +271,6 @@ class _TrainingModeState extends State<TrainingMode> {
             TrainingModeGamePage(
                 category: selectedCategory!,
                 questionList: result,
-                swapQuestionList: const [],
                 quest: widget.quest,
                 level: level));
       }

@@ -11,7 +11,8 @@ class GameItemsProvider extends ChangeNotifier {
     GameKeyType.fiftyFifty,
     GameKeyType.hintKey,
     GameKeyType.freezeTimeKey,
-    GameKeyType.retakeKey
+    GameKeyType.retakeKey,
+    GameKeyType.swapKey
   ];
 
   Map<GameKeyType, GameKeyModel> userKeys = {
