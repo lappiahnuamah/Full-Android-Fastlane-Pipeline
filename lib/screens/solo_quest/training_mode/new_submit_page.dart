@@ -7,6 +7,7 @@ import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/categories/category_level_model.dart';
 import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/models/questions/question_model.dart';
+import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_fonts.dart';
@@ -16,21 +17,20 @@ import 'package:savyminds/screens/categories/components/level_card.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/availalble_keys_widget.dart';
-import 'package:savyminds/widgets/game_page_background.dart';
 import 'package:savyminds/widgets/submit_page_background.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
 
 class NewSubmitPage extends StatefulWidget {
   const NewSubmitPage(
       {super.key,
-      required this.questionList,
       required this.categoryModel,
       required this.totalPoints,
-      required this.correctAnswers});
-  final List<NewQuestionModel> questionList;
+      required this.correctAnswers,
+      required this.quest});
   final CategoryModel? categoryModel;
   final int totalPoints;
   final int correctAnswers;
+  final QuestModel quest;
 
   @override
   State<NewSubmitPage> createState() => _NewSubmitPageState();
@@ -76,10 +76,14 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
     return Scaffold(
       body: Stack(
         children: [
-          SubmitPageBackground(icon: widget.categoryModel!.icon),
+          SubmitPageBackground(
+            icon: widget.categoryModel?.icon ?? '',
+            gameIcon: widget.quest.icon,
+          ),
           SafeArea(
             child: Container(
               alignment: const Alignment(0.5, -0.5),
+              padding: EdgeInsets.symmetric(vertical: d.pSH(16)),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -110,7 +114,7 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
                     SizedBox(height: d.pSH(15)),
                     SizedBox(
                       width: d.pSW(115),
-                      height: d.pSH(100),
+                      height: d.pSH(120),
                       child: CategoryCard(
                         category: widget.categoryModel!,
                         borderRadius: d.pSH(10),
@@ -119,7 +123,7 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
                         iconSize: 24,
                       ),
                     ),
-                    SizedBox(height: d.pSH(15)),
+                    SizedBox(height: d.pSH(25)),
                     isLoading
                         ? SizedBox(
                             height: d.pSH(60),
@@ -335,6 +339,21 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
                     ),
                     const AvailalableKeysWidget(
                       showShop: false,
+                    ),
+                    SizedBox(
+                      height: d.pSH(40),
+                    ),
+                    TransformedButton(
+                      onTap: () {
+                        // gameProvider.resetGames();
+                        // nextScreen(context, const SinglePlayerIntro());
+                      },
+                      buttonText: 'PLAY AGAIN',
+                      fontSize: getFontSize(22, size),
+                      isReversed: true,
+                      height: d.pSH(70),
+                      width: d.getPhoneScreenWidth() * 0.55,
+                      buttonColor: AppColors.kGameGreen,
                     ),
                     SizedBox(
                       height: d.pSH(30),

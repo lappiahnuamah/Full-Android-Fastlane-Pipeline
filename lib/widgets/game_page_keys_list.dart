@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
@@ -8,7 +9,6 @@ import 'package:savyminds/resources/app_enums.dart';
 import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
-
 
 class GamePageKeysList extends StatefulWidget {
   const GamePageKeysList({
@@ -111,7 +111,7 @@ class _GamePageKeysListState extends State<GamePageKeysList> {
                     0, onTap: () {
               widget.onFreezeTapped?.call();
               gameItemsProvider.reduceKeyAmount(GameKeyType.freezeTimeKey);
-            }),
+            }).animate().shakeY(duration: const Duration(seconds: 2)),
 
           if (widget.onSwapTapped != null)
             keyWithAmount(size,
@@ -129,7 +129,7 @@ class _GamePageKeysListState extends State<GamePageKeysList> {
                         0, onTap: () {
               widget.onGoldenTapped?.call();
               gameItemsProvider.reduceKeyAmount(GameKeyType.goldenKey);
-            }),
+            }).animate().shakeY(duration: const Duration(seconds: 2)),
         ],
       );
     });

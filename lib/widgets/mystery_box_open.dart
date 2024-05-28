@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -35,6 +36,8 @@ class _MysteryBoxOpenState extends State<MysteryBoxOpen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    dev.log('key: $key');
     return Material(
       child: Container(
         padding: EdgeInsets.all(d.pSH(16)),
@@ -83,7 +86,7 @@ class _MysteryBoxOpenState extends State<MysteryBoxOpen> {
                       SvgPicture.asset(
                         key == null
                             ? ''
-                            : gameItemsProvider.userKeys[key!]!.icon,
+                            : gameItemsProvider.userKeys[key!]?.icon ?? '',
                         height: d.pSH(45),
                       ),
                       CustomText(

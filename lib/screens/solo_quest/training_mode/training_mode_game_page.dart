@@ -136,7 +136,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
               // CategorySubmitPage
               NewSubmitPage(
                 categoryModel: widget.category,
-                questionList: widget.questionList,
+                quest: widget.quest,
                 totalPoints: totalPoints,
                 correctAnswers: correctAnswers,
               ));
@@ -955,7 +955,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
 
           NewSubmitPage(
             categoryModel: widget.category,
-            questionList: widget.questionList,
+            quest: widget.quest,
             totalPoints: totalPoints,
             correctAnswers: correctAnswers,
           ));

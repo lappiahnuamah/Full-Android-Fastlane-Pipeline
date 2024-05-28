@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/level_model.dart';
@@ -23,16 +24,17 @@ class LevelCard extends StatelessWidget {
         ),
         child: LayoutBuilder(builder: (context, layout) {
           final colorWidth = totalPoints > level.upperboundary
-                    ? layout.maxWidth
-                    : totalPoints < level.lowerboundary
-                        ? 0
-                        : ((totalPoints - level.lowerboundary) /
-                                level.upperboundary) *
-                            layout.maxWidth ;
+              ? layout.maxWidth
+              : totalPoints < level.lowerboundary
+                  ? 0
+                  : ((totalPoints - level.lowerboundary) /
+                          level.upperboundary) *
+                      layout.maxWidth;
 
           return Stack(
             children: [
-              Container(
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 500),
                 width: colorWidth.toDouble(),
                 height: layout.maxHeight,
                 color: level.color,

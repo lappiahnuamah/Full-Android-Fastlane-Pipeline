@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:savyminds/constants.dart';
-import 'package:savyminds/resources/app_images.dart';
 
 class SubmitPageBackground extends StatelessWidget {
-  const SubmitPageBackground({super.key, required this.icon});
+  const SubmitPageBackground(
+      {super.key, required this.icon, required this.gameIcon});
   final String icon;
+  final String gameIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -62,32 +63,47 @@ class SubmitPageBackground extends StatelessWidget {
             ),
           ),
         ),
-        
+
+        Positioned(
+          top: -d.pSH(5),
+          bottom: -d.pSH(60),
+          left: 0,
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: List.generate(
+                7,
+                (index) => SvgPicture.network(
+                  gameIcon,
+                  colorFilter: const ColorFilter.mode(
+                      Color(0xFF525252), BlendMode.srcIn),
+                  height: d.pSH(70),
+                ),
+              ).toList()),
+        ),
+
         //Background Design
         Opacity(
-          opacity: 0.85,
+          opacity: 0.9,
           child: Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [
-                Color(0xFFF2E5FF),
-                Color(0xFFDEFEFC),
-                Color(0xFFF2E5FF),
-              ], transform: GradientRotation(-168)),
+            decoration: BoxDecoration(
+              gradient: RadialGradient(
+                center: Alignment(0.0, 0.0), // Equivalent to 50% 50%
+                radius: 1.3, // 313.54% ,
+                colors: [
+                  Color(0xFFD9FFFD),
+                  Color(0xFFDEF9FB),
+                  Color(0xFFEEDCFF),
+                ],
+                stops: [
+                  0.0, // 0%
+                  0.275, // 27.5%
+                  1, // 100%
+                ],
+              ),
             ),
-          ),
-        ),
-        Positioned(
-          top: 0,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: List.generate(6, (index) => Container(
-              margin: EdgeInsets.symmetric(vertical: d.pSH(30)),
-              child: SvgPicture.asset(AppImages.brainSvg,)) ).toList() 
-              
-            
           ),
         ),
       ],
