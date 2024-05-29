@@ -24,11 +24,11 @@ class NewSubmitPage extends StatefulWidget {
   const NewSubmitPage(
       {super.key,
       required this.categoryModel,
-      required this.totalPoints,
+      required this.pointsScored,
       required this.correctAnswers,
       required this.quest});
   final CategoryModel? categoryModel;
-  final int totalPoints;
+  final int pointsScored;
   final int correctAnswers;
   final QuestModel quest;
 
@@ -101,7 +101,7 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
                       ),
                     ),
                     Text(
-                      widget.totalPoints.toString(),
+                      widget.pointsScored.toString(),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: AppColors.kGameLightBlue,
@@ -167,6 +167,7 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
                                                   level: _level,
                                                   totalPoints:
                                                       catLevel.totalPoints,
+                                                      pointsScored: widget.pointsScored,
                                                 );
                                               },
                                             )
@@ -202,7 +203,7 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
                                                     children: [
                                                       TextSpan(
                                                           text:
-                                                              "${(levelUpperBound - (catLevel.totalPoints + widget.totalPoints)).toInt()}",
+                                                              "${(levelUpperBound - (catLevel.totalPoints + widget.pointsScored)).toInt()}",
                                                           style: TextStyle(
                                                             color: AppColors
                                                                 .kGameDarkLightBlue,
@@ -290,7 +291,7 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
                                                 height: d.pSH(7),
                                               ),
                                               Text(
-                                                "${(catLevel.totalPoints + widget.totalPoints).toInt()}",
+                                                "${(catLevel.totalPoints + widget.pointsScored).toInt()}",
                                                 style: TextStyle(
                                                   color: AppColors
                                                       .kGameDarkLightBlue,

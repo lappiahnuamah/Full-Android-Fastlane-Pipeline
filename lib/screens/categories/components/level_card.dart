@@ -9,9 +9,17 @@ import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class LevelCard extends StatelessWidget {
-  const LevelCard({super.key, required this.level, required this.totalPoints});
+  const LevelCard(
+      {super.key,
+      required this.level,
+      required this.totalPoints,
+      this.animationDuration = 2500, 
+      this.pointsScored = 0});
   final LevelModel level;
   final num totalPoints;
+  final num pointsScored;
+
+  final int animationDuration;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -31,11 +39,28 @@ class LevelCard extends StatelessWidget {
                           level.upperboundary) *
                       layout.maxWidth;
 
+          final colorWidthMinusIncrease = totalPoints > level.upperboundary
+              ? layout.maxWidth
+              : totalPoints < level.lowerboundary
+                  ? 0
+                  : ((totalPoints -
+                              (pointsScored > 0 ? pointsScored : 0) -
+                              level.lowerboundary) /
+                          level.upperboundary) *
+                      layout.maxWidth;
+
           return Stack(
             children: [
+              if (pointsScored > 0)
+                AnimatedContainer(
+                  duration:  Duration(milliseconds: animationDuration),
+                  width: colorWidth.toDouble(),
+                  height: layout.maxHeight,
+                  color: Colors.yellow[700],
+                ),
               AnimatedContainer(
-                duration: const Duration(milliseconds: 500),
-                width: colorWidth.toDouble(),
+                duration:  Duration(milliseconds: animationDuration),
+                width: colorWidthMinusIncrease.toDouble(),
                 height: layout.maxHeight,
                 color: level.color,
               ),
