@@ -14,6 +14,7 @@ import 'package:savyminds/resources/app_fonts.dart';
 import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
 import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/screens/categories/components/level_card.dart';
+import 'package:savyminds/screens/solo_quest/training_mode/training_mode.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/availalble_keys_widget.dart';
@@ -167,7 +168,8 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
                                                   level: _level,
                                                   totalPoints:
                                                       catLevel.totalPoints,
-                                                      pointsScored: widget.pointsScored,
+                                                  pointsScored:
+                                                      widget.pointsScored,
                                                 );
                                               },
                                             )
@@ -346,8 +348,13 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
                     ),
                     TransformedButton(
                       onTap: () {
-                        // gameProvider.resetGames();
-                        // nextScreen(context, const SinglePlayerIntro());
+                        nextScreen(context, const CustomBottomNav());
+                        nextScreen(
+                            context,
+                            TrainingMode(
+                              quest: widget.quest,
+                              category: widget.categoryModel,
+                            ));
                       },
                       buttonText: 'PLAY AGAIN',
                       fontSize: getFontSize(22, size),
