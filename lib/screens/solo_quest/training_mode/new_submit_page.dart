@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/categories/categories_functions.dart';
@@ -17,6 +18,7 @@ import 'package:savyminds/screens/categories/components/level_card.dart';
 import 'package:savyminds/screens/solo_quest/training_mode/training_mode.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
+import 'package:savyminds/utils/questions/questions_manager.dart';
 import 'package:savyminds/widgets/availalble_keys_widget.dart';
 import 'package:savyminds/widgets/submit_page_background.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
@@ -340,7 +342,7 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
                     SizedBox(
                       height: d.pSH(15),
                     ),
-                    const AvailalableKeysWidget(
+                    const AvailableKeysWidget(
                       showShop: false,
                     ),
                     SizedBox(
@@ -389,4 +391,41 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
   String getCategoryRankMessage({required int rank}) {
     return '';
   }
+
+  // getQuestions() async {
+  //   if (!context.mounted) return;
+
+  //   if (questionsLoading) return;
+
+  //   setState(() {
+  //     questionsLoading = true;
+  //   });
+
+  //   final result = await QuestionsManager.getTrainingModeQuestions(
+  //     context: context,
+  //     questId: widget.quest.id,
+  //     level: widget,
+  //     categoryId: selectedCategory?.id ?? 0,
+  //   );
+
+  //   setState(() {
+  //     questionsLoading = false;
+  //   });
+
+  //   if (result.isNotEmpty) {
+  //     if (mounted) {
+  //       nextScreen(
+  //           context,
+  //           TrainingModeGamePage(
+  //               category: selectedCategory!,
+  //               questionList: result,
+  //               quest: widget.quest,
+  //               level: level));
+  //     }
+  //   } else { n
+  //     Fluttertoast.showToast(
+  //         msg:
+  //             'No questions available for this category. Please select another category.');
+  //   }
+  // }
 }

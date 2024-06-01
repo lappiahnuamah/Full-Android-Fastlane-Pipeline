@@ -9,15 +9,15 @@ import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/screens/profile/components/key_card.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
-class AvailalableKeysWidget extends StatefulWidget {
-  const AvailalableKeysWidget({super.key, this.showShop = true});
+class AvailableKeysWidget extends StatefulWidget {
+  const AvailableKeysWidget({super.key, this.showShop = true});
   final bool showShop;
 
   @override
-  State<AvailalableKeysWidget> createState() => _AvailalableKeysWidgetState();
+  State<AvailableKeysWidget> createState() => _AvailableKeysWidgetState();
 }
 
-class _AvailalableKeysWidgetState extends State<AvailalableKeysWidget> {
+class _AvailableKeysWidgetState extends State<AvailableKeysWidget> {
   @override
   void initState() {
     super.initState();

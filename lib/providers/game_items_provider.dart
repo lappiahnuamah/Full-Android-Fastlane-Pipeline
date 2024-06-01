@@ -35,7 +35,7 @@ class GameItemsProvider extends ChangeNotifier {
     GameKeyType.swapKey: const GameKeyModel(
       id: 1,
       name: 'Swap Key',
-      amount: 0,
+      amount: 10,
       icon: 'assets/icons/game_keys/swap_key.svg',
       isLocked: false,
       type: GameKeyType.swapKey,

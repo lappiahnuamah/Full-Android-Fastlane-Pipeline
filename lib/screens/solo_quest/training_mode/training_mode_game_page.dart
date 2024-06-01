@@ -42,12 +42,14 @@ class TrainingModeGamePage extends StatefulWidget {
       {super.key,
       required this.category,
       required this.questionList,
+      required this.swapQuestions,
       required this.level,
       required this.quest});
   final CategoryModel category;
   final QuestModel quest;
   final LevelName level;
   final List<NewQuestionModel> questionList;
+  final Map<String, List<NewQuestionModel>> swapQuestions;
 
   @override
   State<TrainingModeGamePage> createState() => _TrainingModeGamePageState();
@@ -62,7 +64,6 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
   int correctAnswers = 0;
 
   int selectedIndex = 0;
-  int _questionTime = 10;
   Timer? timer;
 
   bool timesTwoActivated = false;
@@ -100,7 +101,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
   bool swapQuestion = false;
 
   //swap
-  PageController swapController = PageController(initialPage: 0);
+  late NewQuestionModel question;
 
   startTimer(int? time) {
     seconds.value = time ?? 10;
@@ -108,6 +109,10 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
       seconds.value = seconds.value - 1;
       if (seconds.value == 0) {
         if (selectedIndex < widget.questionList.length - 1) {
+          if (swapQuestion) {
+            swapQuestion = false;
+            setState(() {});
+          }
           pageController.nextPage(
               duration: const Duration(
                 milliseconds: 400,
@@ -154,11 +159,12 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
 
   late GameItemsProvider gameItemsProvider;
 
-  List<NewQuestionModel> swapQuestionList = [];
+  Map<String, List<NewQuestionModel>> swapQuestionList = {};
 
   @override
   void initState() {
     gameItemsProvider = context.read<GameItemsProvider>();
+    swapQuestionList = widget.swapQuestions;
     startQuestion(0);
     FlameAudio.bgm.stop();
     controller = AnimationController(
@@ -260,384 +266,344 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                           startTimer(questionTime);
                         },
                         itemBuilder: (context, index) {
-                          //swap page builder
-                          return PageView.builder(
-                            controller: swapController,
-                            itemCount: 1,
-                            physics: const NeverScrollableScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            onPageChanged: (val) {
-                              hideDoublePointsKey = false;
-                              hideMysteryBoxKey = false;
-                              if (swapQuestionList[0].isGolden) {
-                                FlameAudio.play('when_question_is_star.mp3');
-                              } else {
-                                FlameAudio.play('new_question.mp3');
-                              }
-                              final question = swapQuestionList[0];
-                              final questionTime =
-                                  QuestionsUtils.getQuestionsTime(
-                                      complexityWeight:
-                                          question.complexityWeight.toDouble(),
-                                      difficultyWeight:
-                                          question.difficultyWeight.toDouble(),
-                                      context: context,
-                                      gameType: widget.quest.id,
-                                      level: widget.level.name.capitalize());
-                              startTimer(questionTime);
-                            },
-                            itemBuilder: (context, swapIndex) {
-                              NewQuestionModel question =
-                                  widget.questionList[index];
-                              if (swapQuestion && swapQuestionList.isNotEmpty) {
-                                question = swapQuestionList[0];
-                              }
-                              return Column(
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: d.pSH(16)),
-                                      child: Column(
-                                        children: [
-                                          if (question.isGolden)
-                                            SvgPicture.asset(
-                                              'assets/icons/star.svg',
-                                              height: d.pSH(25),
-                                            ).animate()
-                                              ..shimmer(duration: 1000.ms)
-                                              ..scale(duration: 1000.ms),
-                                          SizedBox(height: d.pSH(10)),
-                                          Expanded(
-                                              child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(question.text,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    fontFamily: AppFonts.caveat,
-                                                    color: AppColors.textBlack,
-                                                    fontSize: getFontSize(
-                                                        question.image.isEmpty
-                                                            ? 30
-                                                            : 22,
-                                                        size), //88 : 20
-                                                    fontWeight: FontWeight.w600,
-                                                  )),
-                                              if (question.image.isNotEmpty)
-                                                SizedBox(height: d.pSH(20)),
-                                              if (question.image.isNotEmpty)
-                                                Expanded(
-                                                  child: AspectRatio(
-                                                    aspectRatio: 1,
-                                                    child: Transform(
-                                                      alignment:
-                                                          Alignment.center,
-                                                      transform:
-                                                          Matrix4.identity()
-                                                            ..setEntry(3, 2,
-                                                                0.002) // Adjust the perspective by changing this value
-                                                            ..rotateX(0.3)
-                                                            ..rotateY(0.05),
-                                                      child: Container(
-                                                          decoration: BoxDecoration(
-                                                              color:
-                                                                  Colors.white,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          d.pSH(
-                                                                              20))),
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  d.pSH(5)),
-                                                          child: Image.network(
-                                                            question.image,
-                                                            fit: BoxFit.fill,
-                                                            errorBuilder: ((context,
-                                                                    error,
-                                                                    stackTrace) =>
-                                                                const Text(
-                                                                  '?',
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          30),
-                                                                )),
-                                                          )),
-                                                    ),
-                                                  ),
-                                                ),
-                                              if (question.image.isNotEmpty)
-                                                SizedBox(height: d.pSH(10)),
-                                            ],
-                                          )),
+                          if (!swapQuestion) {
+                            question = widget.questionList[index];
+                          }
 
-                                          //Question Number and Timer
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              ///
-                                              ///Question number
-                                              Text(
-                                                "${index + 1}/${widget.questionList.length}",
-                                                style: TextStyle(
-                                                    color:
-                                                        AppColors.hintTextBlack,
-                                                    fontSize:
-                                                        getFontSize(20, size),
-                                                    fontWeight:
-                                                        FontWeight.w700),
+                          return Column(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: d.pSH(16)),
+                                  child: Column(
+                                    children: [
+                                      if (question.isGolden)
+                                        SvgPicture.asset(
+                                          'assets/icons/star.svg',
+                                          height: d.pSH(25),
+                                        ).animate()
+                                          ..shimmer(duration: 1000.ms)
+                                          ..scale(duration: 1000.ms),
+                                      SizedBox(height: d.pSH(10)),
+                                      Expanded(
+                                          child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(question.text,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontFamily: AppFonts.caveat,
+                                                color: AppColors.textBlack,
+                                                fontSize: getFontSize(
+                                                    question.image.isEmpty
+                                                        ? 30
+                                                        : 22,
+                                                    size), //88 : 20
+                                                fontWeight: FontWeight.w600,
+                                              )),
+                                          if (question.image.isNotEmpty)
+                                            SizedBox(height: d.pSH(20)),
+                                          if (question.image.isNotEmpty)
+                                            Expanded(
+                                              child: AspectRatio(
+                                                aspectRatio: 1,
+                                                child: Transform(
+                                                  alignment: Alignment.center,
+                                                  transform: Matrix4.identity()
+                                                    ..setEntry(3, 2,
+                                                        0.002) // Adjust the perspective by changing this value
+                                                    ..rotateX(0.3)
+                                                    ..rotateY(0.05),
+                                                  child: Container(
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      d.pSH(
+                                                                          20))),
+                                                      padding: EdgeInsets.all(
+                                                          d.pSH(5)),
+                                                      child: Image.network(
+                                                        question.image,
+                                                        fit: BoxFit.fill,
+                                                        errorBuilder: ((context,
+                                                                error,
+                                                                stackTrace) =>
+                                                            const Text(
+                                                              '?',
+                                                              style: TextStyle(
+                                                                  fontSize: 30),
+                                                            )),
+                                                      )),
+                                                ),
                                               ),
-                                              SizedBox(width: d.pSH(30)),
-                                              GameTopKeysList(
-                                                showHint:
-                                                    question.hint.isNotEmpty,
-                                                showMysteryBox:
-                                                    question.hasMysteryBox &&
-                                                        !hideMysteryBoxKey,
-                                                showTimesTwo:
-                                                    question.hasTwoTimes &&
-                                                        !hideDoublePointsKey,
-                                                onMysteryBoxPressed: () {
-                                                  _showMysteryBox();
-                                                },
-                                                onHintPressed: () {
-                                                  _showHintDialog(
-                                                      question.hint);
-                                                },
-                                                onTimesTwoPressed: () {
-                                                  setState(() {
-                                                    timesTwoActivated = true;
-                                                    hideDoublePointsKey = true;
-                                                  });
-                                                },
-                                              ),
-                                              SizedBox(width: d.pSH(30)),
-                                              ////
-                                              /// Timer
-                                              ValueListenableBuilder<int>(
-                                                  valueListenable: seconds,
-                                                  builder:
-                                                      (context, time, child) {
-                                                    return SizedBox(
-                                                      width: d.pSH(25),
-                                                      child: Text(
-                                                        '$time',
-                                                        textAlign:
-                                                            TextAlign.end,
-                                                        style: TextStyle(
-                                                            fontSize:
-                                                                getFontSize(
-                                                                    20, size),
-                                                            color: time < 6
-                                                                ? AppColors
-                                                                    .kGameRed
-                                                                : AppColors
-                                                                    .kGameGreen,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w700),
-                                                      ),
-                                                    );
-                                                  }),
-                                            ],
+                                            ),
+                                          if (question.image.isNotEmpty)
+                                            SizedBox(height: d.pSH(10)),
+                                        ],
+                                      )),
+
+                                      //Question Number and Timer
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          ///
+                                          ///Question number
+                                          Text(
+                                            "${index + 1}/${widget.questionList.length}",
+                                            style: TextStyle(
+                                                color: AppColors.hintTextBlack,
+                                                fontSize: getFontSize(20, size),
+                                                fontWeight: FontWeight.w700),
                                           ),
+                                          SizedBox(width: d.pSH(30)),
+                                          GameTopKeysList(
+                                            showHint: question.hint.isNotEmpty,
+                                            showMysteryBox:
+                                                question.hasMysteryBox &&
+                                                    !hideMysteryBoxKey,
+                                            showTimesTwo:
+                                                question.hasTwoTimes &&
+                                                    !hideDoublePointsKey,
+                                            onMysteryBoxPressed: () {
+                                              _showMysteryBox();
+                                            },
+                                            onHintPressed: () {
+                                              _showHintDialog(question.hint);
+                                            },
+                                            onTimesTwoPressed: () {
+                                              setState(() {
+                                                timesTwoActivated = true;
+                                                hideDoublePointsKey = true;
+                                              });
+                                            },
+                                          ),
+                                          SizedBox(width: d.pSH(30)),
+                                          ////
+                                          /// Timer
+                                          ValueListenableBuilder<int>(
+                                              valueListenable: seconds,
+                                              builder: (context, time, child) {
+                                                return SizedBox(
+                                                  width: d.pSH(25),
+                                                  child: Text(
+                                                    '$time',
+                                                    textAlign: TextAlign.end,
+                                                    style: TextStyle(
+                                                        fontSize: getFontSize(
+                                                            20, size),
+                                                        color: time < 6
+                                                            ? AppColors.kGameRed
+                                                            : AppColors
+                                                                .kGameGreen,
+                                                        fontWeight:
+                                                            FontWeight.w700),
+                                                  ),
+                                                );
+                                              }),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: d.pSH(5)),
+                              const Divider(
+                                  color: AppColors.blueBird, thickness: 4),
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: Stack(
+                                        alignment: AlignmentDirectional.center,
+                                        children: [
+                                          ///// Options --- (Text)
+                                          ///
+                                          if (question.options.isNotEmpty &&
+                                              question
+                                                  .options[0].image.isEmpty &&
+                                              question.options[0].text != '.')
+                                            Container(
+                                              padding: EdgeInsets.only(
+                                                left: d.pSW(15),
+                                                right: d.pSW(15),
+                                                top: d.pSH(5),
+                                              ),
+                                              child:
+                                                  ValueListenableBuilder<
+                                                          List<int>>(
+                                                      valueListenable:
+                                                          fiftyfityList,
+                                                      builder: (context, list,
+                                                          child) {
+                                                        final questionOptions =
+                                                            question.options;
+
+                                                        return SingleChildScrollView(
+                                                          child: Column(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                ...List.generate(
+                                                                    questionOptions
+                                                                        .length,
+                                                                    (subIndex) {
+                                                                  final option =
+                                                                      questionOptions[
+                                                                          subIndex];
+
+                                                                  return list.contains(
+                                                                          option
+                                                                              .id)
+                                                                      ? const SizedBox()
+                                                                      : AnswerButton(
+                                                                          answer:
+                                                                              option,
+                                                                          onTap:
+                                                                              () {
+                                                                            final question =
+                                                                                widget.questionList[selectedIndex];
+                                                                            final questionTime = QuestionsUtils.getQuestionsTime(
+                                                                                complexityWeight: question.complexityWeight.toDouble(),
+                                                                                difficultyWeight: question.difficultyWeight.toDouble(),
+                                                                                context: context,
+                                                                                gameType: widget.quest.id,
+                                                                                level: widget.level.name.capitalize());
+                                                                            answerButtonPressed(
+                                                                                option: option,
+                                                                                question: question,
+                                                                                context: context,
+                                                                                index: index,
+                                                                                questionTime: questionTime);
+                                                                          },
+                                                                          isSelected: selectedAnswer?.id ==
+                                                                              option
+                                                                                  .id,
+                                                                          isReversed:
+                                                                              subIndex % 2 == 0);
+                                                                }),
+                                                                const SizedBox(
+                                                                    height: 20)
+                                                              ]),
+                                                        );
+                                                      }),
+                                            ),
+
+                                          if (question.options.isNotEmpty &&
+                                                  question.options[0].image
+                                                      .isNotEmpty ||
+                                              question.options[0].text == '.')
+                                            Container(
+                                                width: d.getPhoneScreenWidth() *
+                                                    0.75,
+                                                padding: EdgeInsets.only(
+                                                    top: d.pSH(20),
+                                                    bottom: d.pSH(10)),
+                                                child: ValueListenableBuilder<
+                                                        List<int>>(
+                                                    valueListenable:
+                                                        fiftyfityList,
+                                                    builder:
+                                                        (context, list, child) {
+                                                      final questionOptions =
+                                                          question.options;
+                                                      return GameImageOptions(
+                                                        options:
+                                                            questionOptions,
+                                                        selectedAnswer:
+                                                            selectedAnswer,
+                                                        fiftyfityList:
+                                                            fiftyfityList.value,
+                                                        onOptionSelected:
+                                                            (option) {
+                                                          final question = widget
+                                                                  .questionList[
+                                                              selectedIndex];
+                                                          final questionTime = QuestionsUtils.getQuestionsTime(
+                                                              complexityWeight:
+                                                                  question
+                                                                      .complexityWeight
+                                                                      .toDouble(),
+                                                              difficultyWeight:
+                                                                  question
+                                                                      .difficultyWeight
+                                                                      .toDouble(),
+                                                              context: context,
+                                                              gameType: widget
+                                                                  .quest.id,
+                                                              level: widget
+                                                                  .level.name
+                                                                  .capitalize());
+
+                                                          answerButtonPressed(
+                                                              option: option,
+                                                              question:
+                                                                  question,
+                                                              context: context,
+                                                              index: index,
+                                                              questionTime:
+                                                                  questionTime);
+                                                        },
+                                                      );
+                                                    })),
                                         ],
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(height: d.pSH(5)),
-                                  const Divider(
-                                      color: AppColors.blueBird, thickness: 4),
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        Expanded(
-                                          child: Stack(
-                                            alignment:
-                                                AlignmentDirectional.center,
-                                            children: [
-                                              ///// Options --- (Text)
-                                              ///
-                                              if (question.options.isNotEmpty &&
-                                                  question.options[0].image
-                                                      .isEmpty &&
-                                                  question.options[0].text !=
-                                                      '.')
-                                                Container(
-                                                  padding: EdgeInsets.only(
-                                                    left: d.pSW(15),
-                                                    right: d.pSW(15),
-                                                    top: d.pSH(5),
-                                                  ),
-                                                  child:
-                                                      ValueListenableBuilder<
-                                                              List<int>>(
-                                                          valueListenable:
-                                                              fiftyfityList,
-                                                          builder: (context,
-                                                              list, child) {
-                                                            return SingleChildScrollView(
-                                                              child: Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  children: [
-                                                                    ...List.generate(
-                                                                        question
-                                                                            .options
-                                                                            .length,
-                                                                        (subIndex) {
-                                                                      final option =
-                                                                          question
-                                                                              .options[subIndex];
+                                    SizedBox(height: d.pSH(15)),
 
-                                                                      return list
-                                                                              .contains(option.id)
-                                                                          ? const SizedBox()
-                                                                          : AnswerButton(
-                                                                              answer: option,
-                                                                              onTap: () {
-                                                                                final question = widget.questionList[selectedIndex];
-                                                                                final questionTime = QuestionsUtils.getQuestionsTime(complexityWeight: question.complexityWeight.toDouble(), difficultyWeight: question.difficultyWeight.toDouble(), context: context, gameType: widget.quest.id, level: widget.level.name.capitalize());
-                                                                                answerButtonPressed(option: option, question: question, context: context, index: index, questionTime: questionTime);
-                                                                              },
-                                                                              isSelected: selectedAnswer?.id == option.id,
-                                                                              isReversed: subIndex % 2 == 0);
-                                                                    }),
-                                                                    const SizedBox(
-                                                                        height:
-                                                                            20)
-                                                                  ]),
-                                                            );
-                                                          }),
-                                                ),
-
-                                              if (question.options.isNotEmpty &&
-                                                      question.options[0].image
-                                                          .isNotEmpty ||
-                                                  question.options[0].text ==
-                                                      '.')
-                                                Container(
-                                                    width:
-                                                        d.getPhoneScreenWidth() *
-                                                            0.75,
-                                                    padding: EdgeInsets.only(
-                                                        top: d.pSH(20),
-                                                        bottom: d.pSH(10)),
-                                                    child:
-                                                        ValueListenableBuilder<
-                                                                List<int>>(
-                                                            valueListenable:
-                                                                fiftyfityList,
-                                                            builder: (context,
-                                                                list, child) {
-                                                              return GameImageOptions(
-                                                                options: question
-                                                                    .options,
-                                                                selectedAnswer:
-                                                                    selectedAnswer,
-                                                                fiftyfityList:
-                                                                    fiftyfityList
-                                                                        .value,
-                                                                onOptionSelected:
-                                                                    (option) {
-                                                                  final question =
-                                                                      widget.questionList[
-                                                                          selectedIndex];
-                                                                  final questionTime = QuestionsUtils.getQuestionsTime(
-                                                                      complexityWeight: question
-                                                                          .complexityWeight
-                                                                          .toDouble(),
-                                                                      difficultyWeight: question
-                                                                          .difficultyWeight
-                                                                          .toDouble(),
-                                                                      context:
-                                                                          context,
-                                                                      gameType: widget
-                                                                          .quest
-                                                                          .id,
-                                                                      level: widget
-                                                                          .level
-                                                                          .name
-                                                                          .capitalize());
-
-                                                                  answerButtonPressed(
-                                                                      option:
-                                                                          option,
-                                                                      question:
-                                                                          question,
-                                                                      context:
-                                                                          context,
-                                                                      index:
-                                                                          index,
-                                                                      questionTime:
-                                                                          questionTime);
-                                                                },
-                                                              );
-                                                            })),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(height: d.pSH(15)),
-
-                                        //Bottom Keys
-                                        Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: d.pSH(16)),
-                                            child: GamePageKeysList(
-                                              answerStreaks: answerStreak,
-                                              onFiftyTapped: () {
-                                                _useFiftyFiifty(
-                                                    question.options);
-                                              },
-                                              //onRetakeTapped: () {},
-                                              onFreezeTapped: () {
-                                                _freezeTime(
-                                                    question.questionTime);
-                                              },
-                                              onSwapTapped: () {
-                                                _swapQuestion(
-                                                    question.difficulty);
-                                              },
-                                              onGoldenTapped: () {
-                                                final question =
-                                                    widget.questionList[
-                                                        selectedIndex];
-                                                final questionTime = QuestionsUtils
-                                                    .getQuestionsTime(
-                                                        complexityWeight:
-                                                            question
-                                                                .complexityWeight
-                                                                .toDouble(),
-                                                        difficultyWeight:
-                                                            question
-                                                                .difficultyWeight
-                                                                .toDouble(),
-                                                        context: context,
-                                                        gameType:
-                                                            widget.quest.id,
-                                                        level: widget.level.name
-                                                            .capitalize());
-                                                _useGoldenChance(
-                                                    question: question,
-                                                    questionID: question.id,
-                                                    questionTime: questionTime
-                                                        .toDouble());
-                                              },
-                                            ))
-                                      ],
-                                    ),
-                                  ),
-                                  if (Platform.isAndroid)
-                                    SizedBox(height: d.pSH(8))
-                                ],
-                              );
-                            },
+                                    //Bottom Keys
+                                    Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: d.pSH(16)),
+                                        child: GamePageKeysList(
+                                          answerStreaks: answerStreak,
+                                          onFiftyTapped: () {
+                                            _useFiftyFiifty(question.options);
+                                          },
+                                          //onRetakeTapped: () {},
+                                          onFreezeTapped: () {
+                                            _freezeTime(question.questionTime);
+                                          },
+                                          onSwapTapped: () {
+                                            if (!swapQuestion) {
+                                              _swapQuestion(
+                                                  question.difficulty);
+                                            }
+                                          },
+                                          onGoldenTapped: () {
+                                            final question = widget
+                                                .questionList[selectedIndex];
+                                            final questionTime =
+                                                QuestionsUtils.getQuestionsTime(
+                                                    complexityWeight: question
+                                                        .complexityWeight
+                                                        .toDouble(),
+                                                    difficultyWeight: question
+                                                        .difficultyWeight
+                                                        .toDouble(),
+                                                    context: context,
+                                                    gameType: widget.quest.id,
+                                                    level: widget.level.name
+                                                        .capitalize());
+                                            _useGoldenChance(
+                                                question: question,
+                                                questionID: question.id,
+                                                questionTime:
+                                                    questionTime.toDouble());
+                                          },
+                                        ))
+                                  ],
+                                ),
+                              ),
+                              if (Platform.isAndroid) SizedBox(height: d.pSH(8))
+                            ],
                           );
                         }))
               ],
@@ -754,7 +720,9 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
           setState(() {});
           startQuestion(index);
         } else {
-          NewGameLocalDatabase.deleteQuestion(question.id);
+          if (option.isCorrect) {
+            NewGameLocalDatabase.deleteQuestion(question.id);
+          }
           moveToNextScreen(index: index, questionId: question.id);
         }
       });
@@ -915,33 +883,35 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
     timer?.cancel();
     breakTime = true;
     setState(() {});
-    final result = await NewGameLocalDatabase.getLevelQuestions(
-        limit: 1,
-        difficulty: questionDifficulty,
-        categoryId: widget.category.id);
-    breakTime = false;
-    setState(() {});
-
-    dev.log('length of swap: ${result.length}');
-    if (result.isNotEmpty) {
+    final result = getSwapQuestion(difficulty: questionDifficulty);
+    dev.log('got swap question: $result');
+    if (result) {
       swapQuestion = true;
-
-      swapQuestionList[0] = result[0];
-      swapController.animateToPage(0,
-          duration: const Duration(
-            milliseconds: 400,
-          ),
-          curve: Curves.easeIn);
+      breakTime = false;
       gameItemsProvider.reduceKeyAmount(GameKeyType.swapKey);
+
+      setState(() {});
+
+      final questionTime = QuestionsUtils.getQuestionsTime(
+          complexityWeight: question.complexityWeight.toDouble(),
+          difficultyWeight: question.difficultyWeight.toDouble(),
+          context: context,
+          gameType: widget.quest.id,
+          level: widget.level.name.capitalize());
+
+      startTimer(questionTime);
     } else {
       startTimer(seconds.value);
-      Fluttertoast.showToast(msg: 'Failed to swap question');
     }
   }
 
   moveToNextScreen({required int index, required int questionId}) {
     timer?.cancel();
     FlameAudio.bgm.stop();
+    if (swapQuestion) {
+      swapQuestion = false;
+      setState(() {});
+    }
     if (index < widget.questionList.length - 1) {
       pageController.nextPage(
           duration: const Duration(
@@ -951,8 +921,6 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
     } else {
       nextScreen(
           context,
-          // CategorySubmitPage
-
           NewSubmitPage(
             categoryModel: widget.category,
             quest: widget.quest,
@@ -960,14 +928,27 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
             correctAnswers: correctAnswers,
           ));
     }
+  }
 
-    ///  GameLocalDatabase.deleteQuestion(questionId);
+  bool getSwapQuestion({required String difficulty}) {
+    List<NewQuestionModel> typeQuestionList =
+        swapQuestionList[difficulty] ?? [];
+
+    if (typeQuestionList.isNotEmpty) {
+      question = typeQuestionList[0];
+      typeQuestionList.removeAt(0);
+      swapQuestionList[difficulty] = typeQuestionList;
+
+      return true;
+    } else {
+      Fluttertoast.showToast(msg: 'Failed swap question,please try again');
+      return false;
+    }
   }
 
   @override
   void dispose() {
     controller.dispose();
-    swapController.dispose();
 
     if (timer != null) {
       timer!.cancel();

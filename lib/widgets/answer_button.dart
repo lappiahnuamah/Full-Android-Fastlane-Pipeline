@@ -30,8 +30,7 @@ class AnswerButton extends StatelessWidget {
                 ? AppColors.everGreen
                 : AppColors.kGameRed
             : null,
-        buttonText: answer
-            .text, // 'df t rtr trtrtrtr  t trtretrertretrtrt trtrwrere  ', // answer.text,
+        buttonText: answer.text, // answer.text,
         fontSize: answer.text.length > 40
             ? 18
             : answer.text.length > 25

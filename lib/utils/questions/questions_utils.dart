@@ -61,8 +61,8 @@ class QuestionsUtils {
       lg("Complexity Weight: $complexityWeight");
       lg("Difficulty Weight: $difficultyWeight");
 
-      lg("Question Time: ${(complexityWeight * difficultyWeight * (1 / levelWeight) * 10).round()}");
-      return (complexityWeight * difficultyWeight * (1 / levelWeight) * 10)
+      lg("Question Time: ${(complexityWeight * difficultyWeight * (1 / levelWeight) * 20).round()}");
+      return (complexityWeight * difficultyWeight * (1 / levelWeight) * 20)
           .round();
     } catch (e) {
       lg("getQuestionsTime Error: $e");

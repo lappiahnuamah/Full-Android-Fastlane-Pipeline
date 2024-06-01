@@ -165,7 +165,7 @@ class _SurvivalQuestState extends State<SurvivalQuest> {
                       ],
                     ),
                   SizedBox(height: d.pSH(25)),
-                  if (selectedCategory != null) const AvailalableKeysWidget(),
+                  if (selectedCategory != null) const AvailableKeysWidget(),
                 ]),
               ),
             ),
@@ -177,7 +177,10 @@ class _SurvivalQuestState extends State<SurvivalQuest> {
                 width: d.pSH(240),
                 child: TransformedButton(
                   onTap: () {
-                    nextScreen(context, SurvivalQuestGamePlay(quest: widget.quest, questionList: questionList));
+                    nextScreen(
+                        context,
+                        SurvivalQuestGamePlay(
+                            quest: widget.quest, questionList: questionList));
                   },
                   buttonColor: AppColors.kGameGreen,
                   buttonText: ' START ',

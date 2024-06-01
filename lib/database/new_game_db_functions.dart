@@ -85,13 +85,13 @@ class NewGameLocalDatabase {
     log('categoryId: $categoryId' 'difficulty: $difficulty limit: $limit');
     if (categoryId == null) {
       result = await db.query(questionDB,
-          orderBy: 'id',
+          orderBy: 'RANDOM()',
           where: 'difficulty = ?',
           whereArgs: [difficulty],
           limit: limit);
     } else {
       result = await db.query(questionDB,
-          orderBy: 'id',
+          orderBy: 'RANDOM()',
           where: 'categories LIKE ? AND difficulty = ?',
           whereArgs: ['%$categoryId%', difficulty],
           limit: limit);

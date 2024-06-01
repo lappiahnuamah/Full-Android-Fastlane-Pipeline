@@ -111,7 +111,7 @@ class _GamePageKeysListState extends State<GamePageKeysList> {
                     0, onTap: () {
               widget.onFreezeTapped?.call();
               gameItemsProvider.reduceKeyAmount(GameKeyType.freezeTimeKey);
-            }).animate().shakeY(duration: const Duration(seconds: 2)),
+            }),
 
           if (widget.onSwapTapped != null)
             keyWithAmount(size,
@@ -129,7 +129,7 @@ class _GamePageKeysListState extends State<GamePageKeysList> {
                         0, onTap: () {
               widget.onGoldenTapped?.call();
               gameItemsProvider.reduceKeyAmount(GameKeyType.goldenKey);
-            }).animate().shakeY(duration: const Duration(seconds: 2)),
+            }),
         ],
       );
     });

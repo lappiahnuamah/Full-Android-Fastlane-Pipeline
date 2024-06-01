@@ -157,13 +157,20 @@ class _TimeRushState extends State<TimeRush> {
                           ]),
                     ),
                     SizedBox(height: d.pSH(40)),
-                    const AvailalableKeysWidget(),
+                    const AvailableKeysWidget(),
                     SizedBox(height: d.pSH(40)),
                     SizedBox(
                       width: d.pSH(240),
                       child: TransformedButton(
                         onTap: () {
-           nextScreen(context, TimeRushGamePage(questModel: widget.quest,questionList: questionList,swapQuestionList: swapQuestionList,),);
+                          nextScreen(
+                            context,
+                            TimeRushGamePage(
+                              questModel: widget.quest,
+                              questionList: questionList,
+                              swapQuestionList: swapQuestionList,
+                            ),
+                          );
                         },
                         buttonColor: AppColors.kGameGreen,
                         buttonText: ' START ',

@@ -103,7 +103,7 @@ class _StartTeamBattleState extends State<StartTeamBattle> {
                 title: '2'), //${(game.gameSession?.players ?? []).length}'),
 
             SizedBox(height: d.pSH(30)),
-            const AvailalableKeysWidget(
+            const AvailableKeysWidget(
               showShop: false,
             ),
             SizedBox(height: d.pSH(30)),

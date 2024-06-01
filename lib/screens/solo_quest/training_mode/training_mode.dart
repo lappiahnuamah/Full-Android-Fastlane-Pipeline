@@ -209,7 +209,7 @@ class _TrainingModeState extends State<TrainingMode> {
                 SizedBox(
                   height: d.pSH(30),
                 ),
-                if (selectedCategory != null) const AvailalableKeysWidget(),
+                if (selectedCategory != null) const AvailableKeysWidget(),
                 SizedBox(
                   height: d.pSH(30),
                 ),
@@ -264,13 +264,14 @@ class _TrainingModeState extends State<TrainingMode> {
       questionsLoading = false;
     });
 
-    if (result.isNotEmpty) {
+    if (result.questions.isNotEmpty) {
       if (mounted) {
         nextScreen(
             context,
             TrainingModeGamePage(
                 category: selectedCategory!,
-                questionList: result,
+                questionList: result.questions,
+                swapQuestions: result.swapQuestions,
                 quest: widget.quest,
                 level: level));
       }

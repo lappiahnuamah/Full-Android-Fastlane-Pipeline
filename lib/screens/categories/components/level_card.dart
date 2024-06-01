@@ -13,7 +13,7 @@ class LevelCard extends StatelessWidget {
       {super.key,
       required this.level,
       required this.totalPoints,
-      this.animationDuration = 2500, 
+      this.animationDuration = 2500,
       this.pointsScored = 0});
   final LevelModel level;
   final num totalPoints;
@@ -43,23 +43,20 @@ class LevelCard extends StatelessWidget {
               ? layout.maxWidth
               : totalPoints < level.lowerboundary
                   ? 0
-                  : ((totalPoints -
-                              (pointsScored > 0 ? pointsScored : 0) -
-                              level.lowerboundary) /
-                          level.upperboundary) *
+                  : ((totalPoints + pointsScored) / level.upperboundary) *
                       layout.maxWidth;
 
           return Stack(
             children: [
               if (pointsScored > 0)
                 AnimatedContainer(
-                  duration:  Duration(milliseconds: animationDuration),
+                  duration: Duration(milliseconds: animationDuration),
                   width: colorWidth.toDouble(),
                   height: layout.maxHeight,
-                  color: Colors.yellow[700],
+                  color: level.color,
                 ),
               AnimatedContainer(
-                duration:  Duration(milliseconds: animationDuration),
+                duration: Duration(milliseconds: animationDuration),
                 width: colorWidthMinusIncrease.toDouble(),
                 height: layout.maxHeight,
                 color: level.color,
