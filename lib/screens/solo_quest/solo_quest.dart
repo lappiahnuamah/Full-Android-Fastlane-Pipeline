@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/data/shared_preference_values.dart';
@@ -120,9 +121,12 @@ class _SoloQuestState extends State<SoloQuest> {
                                 child: QuestCard(
                                   quest: quest,
                                   onTap: () {
-                                    // if (quest.isLocked) {
-                                    //   return;
-                                    // }
+                                    if (quest.isLocked) {
+                                      Fluttertoast.showToast(
+                                          msg:
+                                              'This contest will be opened soon');
+                                      return;
+                                    }
                                     if (quest.name == 'Time Rush') {
                                       nextScreen(
                                           context,
@@ -141,7 +145,8 @@ class _SoloQuestState extends State<SoloQuest> {
                                           SurvivalQuest(
                                             quest: quest,
                                           ));
-                                    } else if (quest.name == 'Challenge of the day') {
+                                    } else if (quest.name ==
+                                        'Challenge of the day') {
                                       nextScreen(
                                           context,
                                           ChallengeOfTheDay(

@@ -80,7 +80,7 @@ class _ContestState extends State<Contest> {
                               onTap: () {
                                 if (quest.isLocked) {
                                   Fluttertoast.showToast(
-                                      msg: 'This contest is locked');
+                                      msg: 'This contest will be opened soon');
                                 } else {
                                   if (quest.name == "Contest Mode") {
                                     nextScreen(
