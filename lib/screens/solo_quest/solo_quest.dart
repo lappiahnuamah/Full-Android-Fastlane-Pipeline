@@ -124,7 +124,7 @@ class _SoloQuestState extends State<SoloQuest> {
                                     if (quest.isLocked) {
                                       Fluttertoast.showToast(
                                           msg:
-                                              'This contest will be opened soon');
+                                              'This quest will be opened soon');
                                       return;
                                     }
                                     if (quest.name == 'Time Rush') {
