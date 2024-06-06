@@ -180,16 +180,16 @@ class _ProfileState extends State<Profile> {
 
                   SizedBox(height: d.pSH(30)),
 
-                  ///Achievemets
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CustomText(
-                          label: 'Achievements',
-                          fontWeight: FontWeight.w500,
-                          fontSize: getFontSize(23, size),
-                        ),
-                      ])
+                  // ///Achievemets
+                  // Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //     children: [
+                  //       CustomText(
+                  //         label: 'Achievements',
+                  //         fontWeight: FontWeight.w500,
+                  //         fontSize: getFontSize(23, size),
+                  //       ),
+                  //     ])
                 ],
               ),
             )

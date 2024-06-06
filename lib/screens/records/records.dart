@@ -37,9 +37,9 @@ class _RecordsState extends State<Records> {
                 ),
                 SizedBox(height: d.pSH(24)),
                 //Activities
-                const Expanded(
-                  child: RecordActivities(),
-                ),
+                // const Expanded(
+                //   child: RecordActivities(),
+                // ),
               ],
             ),
           )
