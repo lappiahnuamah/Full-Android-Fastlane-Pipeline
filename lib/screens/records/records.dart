@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:savyminds/constants.dart';
-import 'package:savyminds/screens/records/record_activities.dart';
 import 'package:savyminds/screens/records/record_ranks.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';

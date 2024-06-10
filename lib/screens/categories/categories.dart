@@ -25,8 +25,10 @@ class Categories extends StatefulWidget {
 
 class _CategoriesState extends State<Categories> {
   bool isLoading = false;
+  String searchText = "";
   final searchController = TextEditingController();
-  ValueNotifier<String> searchValue = ValueNotifier<String>('');
+  ValueNotifier<List<CategoryModel>> searchValue =
+      ValueNotifier<List<CategoryModel>>([]);
 
   @override
   void initState() {
@@ -87,7 +89,8 @@ class _CategoriesState extends State<Categories> {
                         controller: searchController,
                         hintText: 'Search Categories',
                         onChanged: (val) {
-                          searchValue.value = val ?? '';
+                          searchText = val ?? '';
+                          searchForCategory();
                           return val;
                         },
                       ),
@@ -106,7 +109,7 @@ class _CategoriesState extends State<Categories> {
                                       //Favorite Categories
                                       if (categoryProvider
                                               .favoriteCategories.isNotEmpty &&
-                                          search.isEmpty)
+                                          searchText.isEmpty)
                                         const CustomText(
                                           label: 'Favorites',
                                           fontWeight: FontWeight.w500,
@@ -114,43 +117,48 @@ class _CategoriesState extends State<Categories> {
                                         ),
                                       if (categoryProvider
                                               .favoriteCategories.isNotEmpty &&
-                                          search.isEmpty)
+                                          searchText.isEmpty)
                                         SizedBox(height: d.pSH(16)),
-                                      GridView(
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          gridDelegate:
-                                              SliverGridDelegateWithFixedCrossAxisCount(
-                                                  crossAxisCount: 2,
-                                                  crossAxisSpacing: d.pSH(24),
-                                                  mainAxisSpacing: d.pSH(10),
-                                                  childAspectRatio: 1.05),
-                                          children: [
-                                            ...List.generate(
-                                                categoryProvider
-                                                    .favoriteCategories
-                                                    .length, (index) {
-                                              final category = categoryProvider
-                                                  .favoriteCategories[index];
-                                              return Hero(
-                                                tag: "Category ${category.id}",
-                                                child: CategoryCard(
-                                                  category: category,
-                                                  index: index,
-                                                ),
-                                              );
-                                            }),
-                                          ]),
+
+                                      if (searchText.isEmpty)
+                                        GridView(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            gridDelegate:
+                                                SliverGridDelegateWithFixedCrossAxisCount(
+                                                    crossAxisCount: 2,
+                                                    crossAxisSpacing: d.pSH(24),
+                                                    mainAxisSpacing: d.pSH(10),
+                                                    childAspectRatio: 1.05),
+                                            children: [
+                                              ...List.generate(
+                                                  categoryProvider
+                                                      .favoriteCategories
+                                                      .length, (index) {
+                                                final category =
+                                                    categoryProvider
+                                                            .favoriteCategories[
+                                                        index];
+                                                return Hero(
+                                                  tag:
+                                                      "Category ${category.id}",
+                                                  child: CategoryCard(
+                                                    category: category,
+                                                    index: index,
+                                                  ),
+                                                );
+                                              }),
+                                            ]),
                                       if (categoryProvider
                                               .favoriteCategories.isNotEmpty &&
-                                          search.isEmpty)
+                                          searchText.isEmpty)
                                         SizedBox(height: d.pSH(16)),
 
                                       /// All Categories
                                       if (categoryProvider
                                               .favoriteCategories.isNotEmpty &&
-                                          search.isEmpty)
+                                          searchText.isEmpty)
                                         const CustomText(
                                           label: 'All Categories',
                                           fontWeight: FontWeight.w500,
@@ -171,19 +179,20 @@ class _CategoriesState extends State<Categories> {
                                                   childAspectRatio: 1.05),
                                           children: [
                                             ...List.generate(
-                                                categoryProvider.categories
-                                                    .length, (index) {
-                                              final category = categoryProvider
-                                                  .categories[index];
-                                              return category.name
-                                                      .toLowerCase()
-                                                      .contains(
-                                                          search.toLowerCase())
-                                                  ? CategoryCard(
-                                                      category: category,
-                                                      index: index,
-                                                    )
-                                                  : const SizedBox();
+                                                searchText.isEmpty
+                                                    ? categoryProvider
+                                                        .categories.length
+                                                    : searchValue.value.length,
+                                                (index) {
+                                              final category = searchText
+                                                      .isEmpty
+                                                  ? categoryProvider
+                                                      .categories[index]
+                                                  : searchValue.value[index];
+                                              return CategoryCard(
+                                                category: category,
+                                                index: index,
+                                              );
                                             }),
                                           ]),
                                     ],
@@ -212,6 +221,20 @@ class _CategoriesState extends State<Categories> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  searchForCategory() {
+    final categoryProvider = context.read<CategoryProvider>();
+    searchValue.value = [];
+    List<CategoryModel> searchCategories = [];
+    for (var category in categoryProvider.categories) {
+      if (category.name.contains(searchText)) {
+        searchCategories.add(category);
+      }
+    }
+
+    searchValue.value = searchCategories;
+    setState(() {});
   }
 
   @override
