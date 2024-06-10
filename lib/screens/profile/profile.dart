@@ -157,8 +157,8 @@ class _ProfileState extends State<Profile> {
                   GridView(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 4,
-                      crossAxisSpacing: d.pSW(10),
-                      mainAxisSpacing: d.pSH(10),
+                      crossAxisSpacing: d.pSW(8),
+                      mainAxisSpacing: d.pSH(8),
                       childAspectRatio: 1,
                     ),
                     shrinkWrap: true,
@@ -169,7 +169,7 @@ class _ProfileState extends State<Profile> {
                         final userKey =
                             gameItemsProvider.userKeys.values.elementAt(index);
                         return Padding(
-                            padding: EdgeInsets.symmetric(horizontal: d.pSW(8)),
+                            padding: EdgeInsets.symmetric(horizontal: d.pSW(6)),
                             child: KeyCard(
                               gameKey: userKey,
                               height: d.pSH(35),
