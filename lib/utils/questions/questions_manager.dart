@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:savyminds/constants.dart';
 import 'package:savyminds/database/new_game_db_functions.dart';
 import 'package:savyminds/functions/questions_functions.dart';
 import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/models/question_param_model.dart';
 import 'package:savyminds/models/questions/question_model.dart';
+
+import '../../models/games/game_type_level_matric.dart';
+import '../../models/games/game_type_matrice_model.dart';
+import '../../providers/game_metric_provider.dart';
 
 class QuestionsManager {
   static Future<QuestionsParamModel> getTrainingModeQuestions({
@@ -12,6 +18,11 @@ class QuestionsManager {
     required LevelName level,
     required int categoryId,
   }) async {
+    final gameMetricsProvider =
+        Provider.of<GameMetricsProvider>(context, listen: false);
+
+    GameTypeMatric? trainModeMetric = gameMetricsProvider.allMetric[1];
+
     // First get metric for the level
     int noOfEasyQuestions = 0;
     int noOfMediumQuestions = 0;
@@ -19,37 +30,103 @@ class QuestionsManager {
 
     ///Beginner
     if (level == LevelName.beginner) {
-      noOfEasyQuestions = 7;
-      noOfMediumQuestions = 3; //?TODO: Change
-      noOfHardQuestions = 0;
+      if (trainModeMetric != null) {
+        final levelMetric = getLevelMetrics(
+            levelName: "Beginner", levelMetrics: trainModeMetric.levelMatrix);
+
+        noOfEasyQuestions =
+            levelMetric != null ? levelMetric.numberOfEasyQeustions : 7;
+        noOfMediumQuestions = levelMetric != null
+            ? levelMetric.numberOfMediumQeustions
+            : 3; //?TODO: Change
+        noOfHardQuestions =
+            levelMetric != null ? levelMetric.numberOfHardQeustions : 0;
+      } else {
+        noOfEasyQuestions = 7;
+        noOfMediumQuestions = 3;
+        noOfHardQuestions = 0;
+      }
     }
 
     //Intermediate
     else if (level == LevelName.intermediate) {
-      noOfEasyQuestions = 5;
-      noOfMediumQuestions = 6;
-      noOfHardQuestions = 1;
+      if (trainModeMetric != null) {
+        final levelMetric = getLevelMetrics(
+            levelName: "Intermediate",
+            levelMetrics: trainModeMetric.levelMatrix);
+
+        noOfEasyQuestions =
+            levelMetric != null ? levelMetric.numberOfEasyQeustions : 5;
+        noOfMediumQuestions = levelMetric != null
+            ? levelMetric.numberOfMediumQeustions
+            : 6; //?TODO: Change
+        noOfHardQuestions =
+            levelMetric != null ? levelMetric.numberOfHardQeustions : 1;
+      } else {
+        noOfEasyQuestions = 5;
+        noOfMediumQuestions = 6;
+        noOfHardQuestions = 1;
+      }
     }
 
     //Advanced
     else if (level == LevelName.advanced) {
-      noOfEasyQuestions = 3;
-      noOfMediumQuestions = 6;
-      noOfHardQuestions = 3;
+      if (trainModeMetric != null) {
+        final levelMetric = getLevelMetrics(
+            levelName: "Advanced", levelMetrics: trainModeMetric.levelMatrix);
+
+        noOfEasyQuestions =
+            levelMetric != null ? levelMetric.numberOfEasyQeustions : 3;
+        noOfMediumQuestions = levelMetric != null
+            ? levelMetric.numberOfMediumQeustions
+            : 6; //?TODO: Change
+        noOfHardQuestions =
+            levelMetric != null ? levelMetric.numberOfHardQeustions : 3;
+      } else {
+        noOfEasyQuestions = 3;
+        noOfMediumQuestions = 6;
+        noOfHardQuestions = 3;
+      }
     }
 
     //Expert
     else if (level == LevelName.expert) {
-      noOfEasyQuestions = 2;
-      noOfMediumQuestions = 5;
-      noOfHardQuestions = 5;
+      if (trainModeMetric != null) {
+        final levelMetric = getLevelMetrics(
+            levelName: "Expert", levelMetrics: trainModeMetric.levelMatrix);
+
+        noOfEasyQuestions =
+            levelMetric != null ? levelMetric.numberOfEasyQeustions : 2;
+        noOfMediumQuestions = levelMetric != null
+            ? levelMetric.numberOfMediumQeustions
+            : 5; //?TODO: Change
+        noOfHardQuestions =
+            levelMetric != null ? levelMetric.numberOfHardQeustions : 5;
+      } else {
+        noOfEasyQuestions = 2;
+        noOfMediumQuestions = 5;
+        noOfHardQuestions = 5;
+      }
     }
 
     //Elite
     else if (level == LevelName.elite) {
-      noOfEasyQuestions = 1;
-      noOfMediumQuestions = 7;
-      noOfHardQuestions = 7;
+      if (trainModeMetric != null) {
+        final levelMetric = getLevelMetrics(
+            levelName: "Elite", levelMetrics: trainModeMetric.levelMatrix);
+
+        noOfEasyQuestions =
+            levelMetric != null ? levelMetric.numberOfEasyQeustions : 1;
+        noOfMediumQuestions = levelMetric != null
+            ? levelMetric.numberOfMediumQeustions
+            : 7; //?TODO: Change
+        noOfHardQuestions =
+            levelMetric != null ? levelMetric.numberOfHardQeustions : 7;
+      } else {
+        noOfEasyQuestions = 1;
+        noOfMediumQuestions = 7;
+        noOfHardQuestions = 7;
+      }
     }
 
     final result = await getQuestionBasedOnFactors(
@@ -62,6 +139,23 @@ class QuestionsManager {
         noOfHardQuestions: noOfHardQuestions);
 
     return result;
+  }
+}
+
+GameTypeLevelMatric? getLevelMetrics(
+    {required String levelName,
+    required List<GameTypeLevelMatric> levelMetrics}) {
+  try {
+    final l =
+        levelMetrics.where((element) => element.gameLevelName == levelName);
+    if (l.isNotEmpty) {
+      return l.first;
+    } else {
+      return null;
+    }
+  } catch (e) {
+    lg(e);
+    return null;
   }
 }
 
