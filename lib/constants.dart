@@ -56,7 +56,7 @@ const CHATROOM_NOT_FOUND_ERROR_MESSAGE =
 const HALLOA_HELP_URL = "https://bit.ly/terateck-support";
 
 //stage
-const halloaBaseUrl = 'https://api.stage.linklounge.dev';
+const halloaBaseUrl = 'https://savyminds.linklounge.dev';
 const halloaBaseTurnSeverUrl = 'turn:turn.stage.linklounge.dev:3478';
 const halloaBaseTurnSeverUrlHost = 'turn:turn.stage.linklounge.dev';
 const halloaBaseTurnSeverUrlUsername = 'halloa_user';
@@ -65,7 +65,7 @@ const halloaBaseTurnSeverUrlSharedSecret = 'pas123!(^BY';
 const halloaBaseTurnSeverUrlPort = '3478';
 const halloaSocketUrl = 'wss://api.stage.linklounge.dev';
 const halloaPushSocketUrl = 'wss://api.stage.linklounge.dev/ws/push/?token=';
-const videoBaseUrl = "https://api.stage.linklounge.dev/video/v1/";
+const videoBaseUrl = "https://savyminds.linklounge.dev/video/v1/";
 const INVITE_LINK_PREFIX_MINUS_CUSTOM_SCHEME =
     "https://web.stage.linklounge.dev/invite/";
 const INVITE_LINK_PREFIX_PLUS_CUSTOM_SCHEME =
@@ -73,7 +73,7 @@ const INVITE_LINK_PREFIX_PLUS_CUSTOM_SCHEME =
 const halloaGameSocketUrl =
     'wss://api.stage.linklounge.dev/ws/game-session/?token=';
 const halloaAppleRedirectUrl =
-    "https://api.stage.linklounge.dev/accounts/apple/login/callback/";
+    "https://savyminds.linklounge.dev/accounts/apple/login/callback/";
 const halloaAppleClientId = "com.terateck.halloaOauth";  //TODD:Change
 
 

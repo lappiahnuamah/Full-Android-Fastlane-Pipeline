@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:savyminds/animations/bouncing_animation.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/game_key_model.dart';
 import 'package:savyminds/providers/game_items_provider.dart';
@@ -10,6 +11,7 @@ import 'package:savyminds/resources/app_enums.dart';
 import 'package:savyminds/screens/profile/components/key_card.dart';
 import 'package:savyminds/screens/records/components/record_rank_header.dart';
 import 'package:savyminds/screens/settings/personalization.dart';
+import 'package:savyminds/utils/cache/content_mgt.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
@@ -52,6 +54,7 @@ class _ProfileState extends State<Profile> {
                 InkWell(
                   onTap: () {
                     nextScreen(context, const Personalization());
+                    //  ContentManagement().clearAll();
                   },
                   child: const Icon(
                     Icons.settings,
@@ -190,6 +193,14 @@ class _ProfileState extends State<Profile> {
                   //         fontSize: getFontSize(23, size),
                   //       ),
                   //     ])
+
+                  IconButton(
+                    onPressed: () {
+                      nextScreen(context, BouncingBallDemo());
+                    },
+                    icon: const Icon(Icons.animation),
+                    iconSize: 60,
+                  ),
                 ],
               ),
             )

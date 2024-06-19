@@ -1,6 +1,8 @@
 class AppImages {
   static String quizWhizSvg = "assets/icons/QuizWhiz.svg";
   static String gameLogoSvg = "assets/icons/game_logo.svg";
+  static String gameLogoPng = "assets/images/game_logo.png";
+
   static String gameBackgroundSvg = "assets/icons/game_background.svg";
 
   static String closedLock = "assets/icons/closed_lock.svg";

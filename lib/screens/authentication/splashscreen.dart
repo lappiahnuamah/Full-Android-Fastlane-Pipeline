@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -46,7 +47,9 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   startTimer() async {
-    navigatorPage(context);
+    Future.delayed(const Duration(seconds: 2), () {
+      navigatorPage(context);
+    });
   }
 
   @override

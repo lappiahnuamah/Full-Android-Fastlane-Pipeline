@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -509,6 +510,7 @@ class Authentications {
         return ErrorResponse.fromJson(jsonDecode(response.body));
       }
     } catch (e) {
+      log('error:$e');
       return ErrorResponse(errorMsg: 'Unexpected error, try again');
     }
   }
@@ -549,7 +551,7 @@ class Authentications {
           ],
           serverClientId: Platform.isAndroid
               ? null
-              : "188741208230-5jp6mg3qc9l9150ml6rhog47h4j8pqv5.apps.googleusercontent.com");
+              : "670046940015-eoksd7p6fgg7i9vsusgu16mdgh4hjp2c.apps.googleusercontent.com");
       final GoogleSignInAccount? googleAccount = await googleSignIn.signIn();
 
       final GoogleSignInAuthentication? gAuth =
@@ -570,10 +572,13 @@ class Authentications {
 
         return false;
       } else {
+        log('google error: google account is null');
+
         Fluttertoast.showToast(msg: 'An unexpected error occured');
         return false;
       }
     } catch (e) {
+      log('catch error : $e');
       Fluttertoast.showToast(msg: 'An unexpected error occured');
       return false;
     }
