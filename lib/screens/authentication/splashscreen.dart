@@ -2,14 +2,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:savyminds/animations/bouncing_animation.dart';
+import 'package:savyminds/animations/lightening_animation.dart';
+import 'package:savyminds/animations/shake_animations.dart';
 import 'package:savyminds/constants.dart';
-import 'package:savyminds/database/game_db_function.dart';
 import 'package:savyminds/database/new_game_db_functions.dart';
 import 'package:savyminds/functions/auth/auth_functions.dart';
 import 'package:savyminds/functions/games/game_function.dart';
@@ -89,7 +90,36 @@ class _SplashScreenState extends State<SplashScreen> {
                       fontWeight: FontWeight.w300,
                       letterSpacing: 1.8,
                       height: 1.5),
-                )
+                ),
+                SizedBox(
+                  height: d.pSH(10),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        nextScreen(context, BouncingBallDemo());
+                      },
+                      icon: const Icon(Icons.animation),
+                      iconSize: 60,
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        nextScreen(context, QuizScreen());
+                      },
+                      icon: Icon(Icons.vibration),
+                      iconSize: 60,
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        nextScreen(context, StageLightingDemo());
+                      },
+                      icon: Icon(Icons.light),
+                      iconSize: 60,
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

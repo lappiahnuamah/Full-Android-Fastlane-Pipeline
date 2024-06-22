@@ -247,6 +247,8 @@ class _SignUpStep3State extends State<SignUpStep3>
         otp: _otpText!,
       );
 
+      
+
       if (activateResponse is ErrorResponse) {
         Fluttertoast.showToast(msg: activateResponse.errorMsg ?? '');
         setState(() {

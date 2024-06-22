@@ -1,7 +1,7 @@
 import '../constants.dart';
 
 class AuthUrl {
-  static const baseUrl = "$halloaBaseUrl/auth/v1/";
+  static const baseUrl = "$halloaBaseUrl/accounts/v1/";
 
   static const String register = "${baseUrl}register/";
   static const String login = "${baseUrl}login/";
@@ -14,8 +14,8 @@ class AuthUrl {
   static const String resendActivationOtp = "${baseUrl}resend-activation-otp/";
   static const String resetPassword = "${baseUrl}password-reset/";
 
-  static const String sendRegisterOTP = "${register}send-otp/";
-  static const String verifyRegisterOTP = "${register}verify-otp/";
+  static const String sendRegisterOTP = "${baseUrl}send-otp/";
+  static const String verifyRegisterOTP = "${baseUrl}verify-otp/";
 
   ////// Get Access Token From Refresh Token ////////////
   static const String tokenRefresh = "${baseUrl}token/refresh/";

@@ -307,6 +307,7 @@ class Authentications {
         headers: apiHeader,
         body: json.encode({"email": email, "username": username}),
       );
+      log('otp response: ${response.body}');
       if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: "OTP sent");
         return 200;
@@ -333,6 +334,8 @@ class Authentications {
           'phone_number': registerUser.phoneNumber
         }),
       );
+      log('otp response: ${response.body}');
+
       if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: "OTP sent");
         return 200;
@@ -345,21 +348,25 @@ class Authentications {
   }
 
   ////////////////////////////////////////////////////////
-  //////////////(- Get OTP for  Account Registration -)//////
+  /////////////(- Get OTP for  Account Registration -)//////
   Future verifyRegisterOTP(
       {required BuildContext context, required String otp}) async {
     final registerUser =
         Provider.of<RegistrationProvider>(context, listen: false).getUser();
+
+    log('email: ${registerUser.email} otp: $otp  phone: ${registerUser.phoneNumber}');
     try {
       http.Response response = await http.post(
         Uri.parse(AuthUrl.verifyRegisterOTP),
         headers: apiHeader,
         body: json.encode({
-          "email": registerUser.email,
+          "username_email": registerUser.email,
           "otp": otp,
-          'phone_number': registerUser.phoneNumber
+          // 'phone_number': registerUser.phoneNumber
         }),
       );
+
+      log('otp verify response: ${response.body}');
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
@@ -497,6 +504,7 @@ class Authentications {
     required String email,
   }) async {
     try {
+      log(AuthUrl.checkPassword);
       http.Response response = await http.post(Uri.parse(AuthUrl.checkPassword),
           headers: {
             "content-type": "application/json",
