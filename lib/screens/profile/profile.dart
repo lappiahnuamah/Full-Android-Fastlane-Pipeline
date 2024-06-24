@@ -193,14 +193,6 @@ class _ProfileState extends State<Profile> {
                   //         fontSize: getFontSize(23, size),
                   //       ),
                   //     ])
-
-                  IconButton(
-                    onPressed: () {
-                      nextScreen(context, BouncingBallDemo());
-                    },
-                    icon: const Icon(Icons.animation),
-                    iconSize: 60,
-                  ),
                 ],
               ),
             )

@@ -44,7 +44,6 @@ class Authentications {
           headers: apiHeader,
           body: json.encode(user.toMap()),
         );
-
         log('register response: ${response.body}');
         if (response.statusCode == 200) {
           Fluttertoast.showToast(msg: "Account created successfully");
@@ -362,9 +361,9 @@ class Authentications {
         Uri.parse(AuthUrl.verifyRegisterOTP),
         headers: apiHeader,
         body: json.encode({
-          "username_email": registerUser.email,
+          "email": registerUser.email,
           "otp": otp,
-          // 'phone_number': registerUser.phoneNumber
+          'phone_number': registerUser.phoneNumber
         }),
       );
 

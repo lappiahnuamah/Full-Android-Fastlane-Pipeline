@@ -228,7 +228,7 @@ class _SignUpStep3State extends State<SignUpStep3>
       sendingOTP = true;
     });
 
-    //await Authentications().getRegisterOTP(context);
+    await Authentications().getRegisterOTP(context);
   }
 
   ////////////////////////////////////////
@@ -244,7 +244,7 @@ class _SignUpStep3State extends State<SignUpStep3>
 
       final activateResponse = await Authentications().verifyRegisterOTP(
         context: context,
-        otp: _otpText!,
+        otp: _otpText ?? '',
       );
 
       if (activateResponse is ErrorResponse) {
@@ -253,7 +253,7 @@ class _SignUpStep3State extends State<SignUpStep3>
           isLoading = false;
         });
       } else {
-        String registrationToken = activateResponse['registration_token'];
+        String? registrationToken = activateResponse['registration_token'];
 
         regProvider.updateUserDetails(UserRegisterModel(
           registrationToken: registrationToken,

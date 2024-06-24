@@ -91,35 +91,6 @@ class _SplashScreenState extends State<SplashScreen> {
                       letterSpacing: 1.8,
                       height: 1.5),
                 ),
-                SizedBox(
-                  height: d.pSH(10),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        nextScreen(context, BouncingBallDemo());
-                      },
-                      icon: const Icon(Icons.animation),
-                      iconSize: 60,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        nextScreen(context, QuizScreen());
-                      },
-                      icon: Icon(Icons.vibration),
-                      iconSize: 60,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        nextScreen(context, StageLightingDemo());
-                      },
-                      icon: Icon(Icons.light),
-                      iconSize: 60,
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
