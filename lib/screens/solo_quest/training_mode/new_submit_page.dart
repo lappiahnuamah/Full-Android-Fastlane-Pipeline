@@ -118,8 +118,8 @@ class _NewSubmitPageState extends State<NewSubmitPage> {
                       ),
                       SizedBox(height: d.pSH(15)),
                       SizedBox(
-                        width: d.pSW(115),
-                        height: d.pSH(120),
+                        width: d.pSW(125),
+                        height: d.pSH(130),
                         child: CategoryCard(
                           category: widget.categoryModel!,
                           borderRadius: d.pSH(10),

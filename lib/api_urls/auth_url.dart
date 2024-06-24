@@ -24,8 +24,7 @@ class AuthUrl {
   static const String emailChangeOTP = "${baseUrl}email-change-otp/";
   static const String confirmEmailChange = "${baseUrl}email-change/";
 
-  static const String validateInfo =
-      "$halloaBaseUrl/user/user_accounts/validate-info/";
+  static const String validateInfo = "$baseUrl/validate-info/";
 
   static const String checkPassword = "${baseUrl}check-password";
 

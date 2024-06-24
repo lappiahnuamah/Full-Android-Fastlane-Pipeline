@@ -43,7 +43,8 @@ class GameTopKeysList extends StatelessWidget {
                 ..shimmer(duration: 1000.ms)
                 ..scale(duration: 1000.ms),
             SizedBox(height: d.pSH(10)),
-            if (showMysteryBox && showHint) SizedBox(width: d.pSH(34)),
+            if ((showMysteryBox || showTimesTwo) && showHint)
+              SizedBox(width: d.pSH(34)),
             if (showMysteryBox)
               InkWell(
                   onTap: onMysteryBoxPressed,

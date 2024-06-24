@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
-class BouncingBallDemo extends StatefulWidget {
+class BouncingAnimation extends StatefulWidget {
+  const BouncingAnimation({Key? key, required this.child}) : super(key: key);
+  final Widget child;
   @override
-  _BouncingBallDemoState createState() => _BouncingBallDemoState();
+  _BouncingAnimationState createState() => _BouncingAnimationState();
 }
 
-class _BouncingBallDemoState extends State<BouncingBallDemo>
+class _BouncingAnimationState extends State<BouncingAnimation>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -33,29 +35,15 @@ class _BouncingBallDemoState extends State<BouncingBallDemo>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Bouncing Ball Animation'),
-      ),
-      body: Center(
-        child: AnimatedBuilder(
-          animation: _animation,
-          builder: (context, child) {
-            return Transform.translate(
-              offset: Offset(0, 200 * (1 - _animation.value)),
-              child: child,
-            );
-          },
-          child: Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              shape: BoxShape.circle,
-            ),
-          ),
-        ),
-      ),
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Transform.translate(
+          offset: Offset(0, 250 * (1 - _animation.value)),
+          child: child,
+        );
+      },
+      child: widget.child,
     );
   }
 }

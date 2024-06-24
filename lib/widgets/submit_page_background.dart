@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:savyminds/animations/bouncing_animation.dart';
 import 'package:savyminds/constants.dart';
 
 class SubmitPageBackground extends StatelessWidget {
@@ -80,6 +81,26 @@ class SubmitPageBackground extends StatelessWidget {
                   height: d.pSH(70),
                 ),
               ).toList()),
+        ),
+
+//Bouncing
+        Positioned(
+          top: d.pSH(190),
+          right: -40,
+          child: Opacity(
+            opacity: 0.8,
+            child: BouncingAnimation(
+              child: RotationTransition(
+                turns: const AlwaysStoppedAnimation(135 / 360),
+                child: SvgPicture.network(
+                  gameIcon,
+                  height: d.pSH(150),
+                  colorFilter:
+                      const ColorFilter.mode(Colors.black54, BlendMode.srcIn),
+                ),
+              ),
+            ),
+          ),
         ),
 
         //Background Design

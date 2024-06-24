@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:savyminds/screens/game/game/components/game_background.dart';
 
 class StageLightingDemo extends StatefulWidget {
+  const StageLightingDemo({Key? key, required this.child}) : super(key: key);
+  final Widget child;
   @override
   _StageLightingDemoState createState() => _StageLightingDemoState();
 }
@@ -31,26 +33,13 @@ class _StageLightingDemoState extends State<StageLightingDemo>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Stage Lighting Animation'),
-      ),
-      body: Stack(
-        children: [
-          GameBackground(),
-          AnimatedBuilder(
-            animation: _animation,
-            builder: (context, child) {
-              return CustomPaint(
-                painter: StageLightingPainter(_animation.value),
-                child: Container(
-                  color: Colors.transparent,
-                ),
-              );
-            },
-          ),
-        ],
-      ),
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return CustomPaint(
+            painter: StageLightingPainter(_animation.value), child: child);
+      },
+      child: widget.child,
     );
   }
 }
