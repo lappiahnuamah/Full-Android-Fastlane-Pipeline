@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:savyminds/screens/game/game/components/game_background.dart';
 
 class StageLightingDemo extends StatefulWidget {
   const StageLightingDemo({Key? key, required this.child}) : super(key: key);

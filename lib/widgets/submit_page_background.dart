@@ -13,58 +13,6 @@ class SubmitPageBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        //Icons
-        Positioned(
-          top: -d.pSH(90),
-          left: -d.pSH(90),
-          child: Opacity(
-            opacity: 0.5,
-            child: RotationTransition(
-              turns: const AlwaysStoppedAnimation(135 / 360),
-              child: SvgPicture.network(
-                icon,
-                height: d.pSH(400),
-                colorFilter:
-                    const ColorFilter.mode(Colors.black54, BlendMode.srcIn),
-              ),
-            ),
-          ),
-        ),
-
-        Positioned(
-          top: d.pSH(379),
-          left: d.pSH(198),
-          child: Opacity(
-            opacity: 0.5,
-            child: RotationTransition(
-              turns: const AlwaysStoppedAnimation(315 / 360),
-              child: SvgPicture.network(
-                icon,
-                height: d.pSH(180),
-                colorFilter:
-                    const ColorFilter.mode(Colors.black54, BlendMode.srcIn),
-              ),
-            ),
-          ),
-        ),
-
-        Positioned(
-          bottom: d.pSH(0),
-          left: -d.pSH(30),
-          child: Opacity(
-            opacity: 0.5,
-            child: RotationTransition(
-              turns: const AlwaysStoppedAnimation(25 / 360),
-              child: SvgPicture.network(
-                icon,
-                height: d.pSH(210),
-                colorFilter:
-                    const ColorFilter.mode(Colors.black54, BlendMode.srcIn),
-              ),
-            ),
-          ),
-        ),
-
         Positioned(
           top: -d.pSH(5),
           bottom: -d.pSH(60),
@@ -93,7 +41,7 @@ class SubmitPageBackground extends StatelessWidget {
               child: RotationTransition(
                 turns: const AlwaysStoppedAnimation(135 / 360),
                 child: SvgPicture.network(
-                  gameIcon,
+                  icon,
                   height: d.pSH(150),
                   colorFilter:
                       const ColorFilter.mode(Colors.black54, BlendMode.srcIn),
