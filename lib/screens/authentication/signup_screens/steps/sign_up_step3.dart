@@ -228,7 +228,7 @@ class _SignUpStep3State extends State<SignUpStep3>
       sendingOTP = true;
     });
 
-    await Authentications().getRegisterOTP(context);
+    //await Authentications().getRegisterOTP(context);
   }
 
   ////////////////////////////////////////
@@ -246,8 +246,6 @@ class _SignUpStep3State extends State<SignUpStep3>
         context: context,
         otp: _otpText!,
       );
-
-      
 
       if (activateResponse is ErrorResponse) {
         Fluttertoast.showToast(msg: activateResponse.errorMsg ?? '');

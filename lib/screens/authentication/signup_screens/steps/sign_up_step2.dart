@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/auth/auth_functions.dart';
-import 'package:savyminds/models/error_response.dart';
 import 'package:savyminds/models/user_register_model.dart';
 import 'package:savyminds/providers/registration_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
@@ -291,48 +289,7 @@ class _SignUpStep2State extends State<SignUpStep2> {
                                           : () async {
                                               FocusManager.instance.primaryFocus
                                                   ?.unfocus();
-                                              if (_secondSignUpFormKey
-                                                  .currentState!
-                                                  .validate()) {
-                                                _secondSignUpFormKey
-                                                    .currentState!
-                                                    .save();
-                                                setState(() {
-                                                  isLoading = true;
-                                                });
-                                                // check
-                                                userRegister.updateUserDetails(
-                                                  UserRegisterModel(
-                                                    password: passwordController
-                                                        .text
-                                                        .trim(),
-                                                  ),
-                                                );
-                                                var response =
-                                                    await Authentications()
-                                                        .checkPassword(
-                                                  context: context,
-                                                  email: userRegister
-                                                          .registerUser.email ??
-                                                      '',
-                                                  password: passwordController
-                                                      .text
-                                                      .trim(),
-                                                );
-                                                if (response is ErrorResponse) {
-                                                  setState(() {
-                                                    isLoading = false;
-                                                  });
-                                                  Fluttertoast.showToast(
-                                                      msg: response.errorMsg ??
-                                                          '');
-                                                } else {
-                                                  setState(() {
-                                                    isLoading = false;
-                                                  });
-                                                  widget.nextStep();
-                                                }
-                                              }
+                                              await next(userRegister, context);
                                             },
                                       child: Text(
                                         'NEXT',
@@ -358,7 +315,7 @@ class _SignUpStep2State extends State<SignUpStep2> {
                     ? LoadIndicator(
                         child: appDialog(
                             context: context,
-                            loadingMessage: "Checking password acceptance"))
+                            loadingMessage: "Registering user ..."))
                     : const SizedBox()
               ],
             ),
@@ -366,5 +323,36 @@ class _SignUpStep2State extends State<SignUpStep2> {
         ),
       ),
     );
+  }
+
+  Future<void> next(
+      RegistrationProvider userRegister, BuildContext context) async {
+    if (_secondSignUpFormKey.currentState!.validate()) {
+      _secondSignUpFormKey.currentState!.save();
+      setState(() {
+        isLoading = true;
+      });
+      // check
+      userRegister.updateUserDetails(
+        UserRegisterModel(
+          password: passwordController.text.trim(),
+        ),
+      );
+
+      final registerSuccess = await Authentications().registerUser(context);
+      if (registerSuccess) {
+        setState(() {
+          isLoading = false;
+        });
+        // Fluttertoast.showToast(msg: "Activated successfully");
+        if (context.mounted) {
+          widget.nextStep();
+        }
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 }

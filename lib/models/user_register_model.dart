@@ -46,7 +46,7 @@ class UserRegisterModel {
   Map<String, dynamic> toMap() {
     return {
       'fullname': fullname ?? "",
-      'registration_token': registrationToken,
+      //  'registration_token': registrationToken,
       'username': username ?? "",
       'email': email ?? "",
       'phone_number': phoneNumber ?? "",

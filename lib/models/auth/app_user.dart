@@ -5,19 +5,13 @@ class AppUser {
   final int? outerId;
   final String? fullname;
   final String? username;
-  final String? nickname;
-  final int? school;
-  final int? hall;
   final String? email;
-  final String? about;
   final String? phoneNumber;
-  final ContactModel? emailContact;
-  final ContactModel? phone1;
-  final ContactModel? secondPhoneNumber;
   final String? dob;
   final String? gender;
+  final String? country;
+  final String? countryCode;
   final String? status;
-  final ContactModel? twitterHandle;
   final int? role;
   String? accessToken;
   String? refreshToken;
@@ -57,16 +51,12 @@ class AppUser {
       this.fullname,
       this.email,
       this.phoneNumber,
-      this.hall,
       this.username,
-      this.nickname,
-      this.school,
-      this.about,
-      this.secondPhoneNumber,
       this.dob,
       this.gender,
       this.status,
-      this.twitterHandle,
+      this.country,
+      this.countryCode,
       this.role,
       this.accessToken,
       this.refreshToken,
@@ -87,8 +77,6 @@ class AppUser {
       this.personalInfoPrivacy,
       this.partOfCircle,
       this.isUserBlocked,
-      this.phone1,
-      this.emailContact,
       this.hallName,
       this.admirersCount,
       this.newConnections,
@@ -104,39 +92,27 @@ class AppUser {
 
 // Receive from login
   static AppUser fromJson(Map<String, dynamic> json) => AppUser(
-        id: json['user']['user']['id'],
+        id: json['user']['profile']['id'],
         outerId: json['user']['id'],
-        fullname: json['user']['user']['fullname'],
+        fullname: json['user']['profile']['fullname'],
         username: json['user']['username'],
-        nickname: json['user']['user']['nickname'],
         email: json['user']['email'],
-        about: json['user']['user']['about'],
-        emailContact:
-            getContact(((json['user']['contacts'] ?? []) as List), 'email'),
-        phone1:
-            getContact(((json['user']['contacts'] ?? []) as List), 'phone1'),
-        secondPhoneNumber:
-            getContact(((json['user']['contacts'] ?? []) as List), 'phone2'),
-        dob: json['user']['user']['dob'],
-        gender: json['user']['user']['gender'],
-        status: json['user']['user']['status'],
-        twitterHandle: getContact(
-            ((json['user']['contacts'] ?? []) as List), 'twitter handle'),
-        hall: json['user']['user']['hall'],
-        school: json['user']['user']['school'],
-        accessToken: json['access_token'],
-        refreshToken: json['refresh_token'],
-        city: json['user']['user']['city'],
-        profileImage: json['user']['user']['image'],
-        coverImage: json['user']['user']['cover_image'],
-        rTokenExpireDate: json['refresh_token_expiration'],
-        aTokenExpireDate: json['access_token_expiration'],
-        hallName: json['user']['user']['hall_name'],
+        dob: json['user']['profile']['dob'],
+        gender: json['user']['profile']['gender'],
+        status: json['user']['profile']['status'],
+        accessToken: json['access'],
+        refreshToken: json['refresh'],
+        city: json['user']['profile']['city'],
+        profileImage: json['user']['profile']['image'],
+        coverImage: json['user']['profile']['cover_image'],
+        rTokenExpireDate: json['refresh_expiration'],
+        aTokenExpireDate: json['access_expiration'],
+        hallName: json['user']['profile']['hall_name'],
         isActive: json['user']['is_active'] ?? false,
         isOnline: json['user']['is_online'] ?? false,
         isApproved: json['user']['is_approved'] ?? false,
         isAssociatedToHalloa:
-            json['user']['is_associated_to_linklounge'] ?? false,
+            json['user']['is_associated_to_savvyminds'] ?? false,
         isBlocked: json['user']['is_blocked'] ?? false,
         isBlockedUntil: json['user']['is_blocked_until'],
         blockReason: json['user']['block_reason'] ?? '',
@@ -149,23 +125,13 @@ class AppUser {
         chatroomId: json['chatroom_id'],
         fullname: json['user']['fullname'],
         username: json['username'],
-        nickname: json['user']['nickname'],
         email: json['email'],
-        about: json['user']['about'],
-        phone1:
-            getContact(((json['user']['contacts'] ?? []) as List), 'phone1'),
-        secondPhoneNumber:
-            getContact(((json['user']['contacts'] ?? []) as List), 'phone2'),
-        emailContact:
-            getContact(((json['user']['contacts'] ?? []) as List), 'email'),
+        country: json['user']['profile']['country'],
+        countryCode: json['user']['profile']['country_code'],
         dob: json['user']['dob'],
         gender: json['user']['gender'],
         status: json['user']['status'],
-        twitterHandle: getContact(
-            ((json['user']['contacts'] ?? []) as List), 'twitter handle'),
-        hall: json['user']['hall'],
         hallName: json['user']['hall_name'],
-        school: json['user']['school'],
         city: json['user']['city'],
         profileImage: json['user']['image'],
         coverImage: json['user']['cover_image'],
@@ -203,15 +169,11 @@ class AppUser {
       outerId: json['user_account'],
       fullname: json['fullname'],
       username: json['username'],
-      nickname: json['nickname'],
       email: json['email'],
-      about: json['about'],
       dob: json['dob'],
       gender: json['gender'],
       status: json['status'],
-      hall: json['hall'],
       hallName: json['hall_name'],
-      school: json['school'],
       city: json['city'],
       profileImage: json['image'],
       coverImage: json['cover_image'],
@@ -242,16 +204,11 @@ class AppUser {
       "email": email,
       "user": {
         "fullname": fullname,
-        "nickname": nickname,
-        "about": about,
         "phone_number": phoneNumber,
-        "second_phone_number": secondPhoneNumber,
         "dob": dob,
         "gender": gender,
         "status": status,
         "city": city,
-        "hall": hall,
-        "twitter_handle": twitterHandle,
         "role": role,
         'cover_image': coverImage,
       }
@@ -260,16 +217,12 @@ class AppUser {
 
   static AppUser fromSecureStorage(allValues) => AppUser(
         id: allValues['id'],
-        nickname: allValues['nickname'],
         fullname: allValues['fullname'],
         username: allValues['username'],
         email: allValues['email'],
-        about: allValues['about'],
         dob: allValues['dob'],
         gender: allValues['gender'],
         status: allValues['status'],
-        hall: allValues['hall'],
-        school: allValues['school'],
         accessToken: allValues['access_token'],
         coverImage: allValues['cover_image'],
         refreshToken: allValues['refresh_token'],
@@ -284,11 +237,9 @@ class AppUser {
         username: map['username'],
         email: map['email'],
         fullname: map['user']['fullname'],
-        nickname: map['user']['nickname'],
         gender: map['user']['gender'],
         status: map['user']['status'],
         city: map['user']['city'],
-        hall: map['user']['hall'],
         role: map['user']['role'],
         coverImage: map['user']['cover_image'],
         accessToken: map['user']['access_token'],

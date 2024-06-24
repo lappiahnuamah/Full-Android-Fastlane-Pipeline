@@ -3,7 +3,7 @@ import '../constants.dart';
 class AuthUrl {
   static const baseUrl = "$halloaBaseUrl/accounts/v1/";
 
-  static const String register = "${baseUrl}register/";
+  static const String register = "${baseUrl}signup/";
   static const String login = "${baseUrl}login/";
   static const String logout = "${baseUrl}logout/";
 
