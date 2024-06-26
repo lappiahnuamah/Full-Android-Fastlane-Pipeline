@@ -118,6 +118,30 @@ class AppUser {
         blockReason: json['user']['block_reason'] ?? '',
       );
 
+  static AppUser fromSecureJson(Map<String, dynamic> json) => AppUser(
+        id: json['profile']['id'],
+        outerId: json['id'],
+        fullname: json['profile']['fullname'],
+        username: json['username'],
+        email: json['email'],
+        dob: json['profile']['dob'],
+        gender: json['profile']['gender'],
+        status: json['profile']['status'],
+        city: json['profile']['city'],
+        profileImage: json['profile']['image'],
+        coverImage: json['profile']['cover_image'],
+        rTokenExpireDate: json['refresh_expiration'],
+        aTokenExpireDate: json['access_expiration'],
+        hallName: json['profile']['hall_name'],
+        isActive: json['is_active'] ?? false,
+        isOnline: json['is_online'] ?? false,
+        isApproved: json['is_approved'] ?? false,
+        isAssociatedToHalloa: json['is_associated_to_savvyminds'] ?? false,
+        isBlocked: json['is_blocked'] ?? false,
+        isBlockedUntil: json['is_blocked_until'],
+        blockReason: json['block_reason'] ?? '',
+      );
+
 // Receive from profile page
   static AppUser fromUserDetails(Map<String, dynamic> json) => AppUser(
         id: json['user']['id'],

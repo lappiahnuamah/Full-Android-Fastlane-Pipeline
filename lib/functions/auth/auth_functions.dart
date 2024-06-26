@@ -566,6 +566,8 @@ class Authentications {
       final GoogleSignInAuthentication? gAuth =
           await googleAccount?.authentication;
 
+      log('${gAuth?.accessToken}  : ${gAuth?.idToken} : ${googleAccount?.serverAuthCode}');
+
       if (googleAccount != null) {
         debugPrint('not null');
         if (context.mounted) {
@@ -583,12 +585,12 @@ class Authentications {
       } else {
         log('google error: google account is null');
 
-        Fluttertoast.showToast(msg: 'An unexpected error occured');
+        Fluttertoast.showToast(msg: 'An unexpected error occurred');
         return false;
       }
     } catch (e) {
       log('catch error : $e');
-      Fluttertoast.showToast(msg: 'An unexpected error occured');
+      Fluttertoast.showToast(msg: 'An unexpected error occurred');
       return false;
     }
   }
@@ -660,9 +662,7 @@ class Authentications {
         FirebaseMessaging.instance
             .getToken(vapidKey: FcmData.webTOken)
             .then((value) async {
-          value != null
-              ? await FCMFunctions().setFCMToken(value, user.outerId!)
-              : null;
+          value != null ? await FCMFunctions().setFCMToken(value) : null;
         });
 
         return true;
@@ -728,9 +728,7 @@ class Authentications {
         FirebaseMessaging.instance
             .getToken(vapidKey: FcmData.webTOken)
             .then((value) async {
-          value != null
-              ? await FCMFunctions().setFCMToken(value, user.outerId!)
-              : null;
+          value != null ? await FCMFunctions().setFCMToken(value) : null;
         });
 
         return true;

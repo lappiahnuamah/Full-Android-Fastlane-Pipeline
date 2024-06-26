@@ -33,9 +33,7 @@ class UserDetailsProvider extends ChangeNotifier {
     FirebaseMessaging.instance
         .getToken(vapidKey: FcmData.webTOken)
         .then((value) async {
-      value != null
-          ? await FCMFunctions().setFCMToken(value, user.outerId!)
-          : null;
+      value != null ? await FCMFunctions().setFCMToken(value) : null;
     });
   }
 }

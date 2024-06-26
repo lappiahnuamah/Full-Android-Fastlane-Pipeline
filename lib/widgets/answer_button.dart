@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/questions/option_model.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/resources/app_fonts.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
 
 class AnswerButton extends StatefulWidget {
@@ -95,6 +96,7 @@ class _AnswerButtonState extends State<AnswerButton>
                               _handleAnswer(widget.answer.isCorrect);
                               widget.onTap.call();
                             },
+                            fontFamily: AppFonts.inter,
                             buttonColor: widget.isSelected
                                 ? widget.answer.isCorrect
                                     ? AppColors.everGreen

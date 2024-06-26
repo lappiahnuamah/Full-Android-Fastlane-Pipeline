@@ -255,9 +255,7 @@ class _LoginState extends State<Login> {
                                                         value != null
                                                             ? await FCMFunctions()
                                                                 .setFCMToken(
-                                                                    value,
-                                                                    loginResponse
-                                                                        .outerId!)
+                                                                    value)
                                                             : null;
                                                       });
 

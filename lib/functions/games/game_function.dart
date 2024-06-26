@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:savyminds/api_urls/auth_url.dart';
 import 'package:savyminds/api_urls/game_url.dart';
 import 'package:savyminds/api_urls/user_url.dart';
 import 'package:savyminds/models/auth/app_user.dart';
@@ -121,9 +122,6 @@ class GameFunction {
     try {
       if (hasConnection) {
         if (context.mounted) {
-          AppUser user =
-              Provider.of<UserDetailsProvider>(context, listen: false)
-                  .getUserDetails();
           String accessToken =
               Provider.of<UserDetailsProvider>(context, listen: false)
                   .getAccessToken();
@@ -132,7 +130,7 @@ class GameFunction {
               Provider.of<GameProvider>(context, listen: false);
 
           final response = await http.get(
-            Uri.parse('${UserUrl.userUser}${user.id}/get-game-streaks/'),
+            Uri.parse('${AuthUrl.baseUrl}game-streaks/my-streak/'),
             headers: {
               "content-type": "application/json",
               "accept": "application/json",

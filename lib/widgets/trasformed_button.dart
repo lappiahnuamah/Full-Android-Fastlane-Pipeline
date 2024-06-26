@@ -18,6 +18,7 @@ class TransformedButton extends StatelessWidget {
       this.keepBlue,
       this.width,
       this.padding,
+      this.fontFamily,
       super.key});
 
   final Function()? onTap;
@@ -31,6 +32,7 @@ class TransformedButton extends StatelessWidget {
   final double? width;
   final bool? keepBlue;
   final EdgeInsets? padding;
+  final String? fontFamily;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +64,7 @@ class TransformedButton extends StatelessWidget {
                       maxLines: 3,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontFamily: AppFonts.caveat,
+                          fontFamily: fontFamily ?? AppFonts.caveat,
                           color: textColor ?? Colors.white,
                           fontSize: getFontSize(fontSize ?? 22, size),
                           fontWeight: textWeight,

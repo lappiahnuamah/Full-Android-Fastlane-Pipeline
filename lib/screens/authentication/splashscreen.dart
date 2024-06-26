@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -115,6 +116,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 .isBefore(DateTime.now())
             : true;
 
+        log('token has expired: ${tokenHasExpired}');
         // Check is token has expired
         if (tokenHasExpired) {
           getNewApiAccessToken(allValues);
@@ -128,19 +130,22 @@ class _SplashScreenState extends State<SplashScreen> {
         nextScreen(context, const LoginOptionsScreen());
       }
     } catch (e) {
+      log('error: $e');
       nextScreen(context, const LoginOptionsScreen());
     }
   }
 
   void loadAndSendUserHome(context, Map<String, String> allValues) {
+    log('access token: ${allValues['accessToken']}');
+    log('credentials: ${allValues['credentials']}');
     Provider.of<UserDetailsProvider>(context, listen: false)
         .setAccessToken(allValues['accessToken']!);
     AppUser user =
-        AppUser.fromUserDetails(json.decode(allValues['credentials']!));
+        AppUser.fromSecureJson(json.decode(allValues['credentials'] ?? ''));
     Provider.of<UserDetailsProvider>(context, listen: false)
         .setUserDetails(user);
     if (context.mounted) {
-      GameFunction().getGameStreaks(context: context);
+      //  GameFunction().getGameStreaks(context: context);
     }
 
     /////////////////// Navigate to HomePage////////////

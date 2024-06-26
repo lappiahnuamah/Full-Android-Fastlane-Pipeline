@@ -3,17 +3,17 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:savyminds/api_urls/user_url.dart';
+import 'package:savyminds/api_urls/auth_url.dart';
 import 'package:savyminds/utils/cache/save_secure.dart';
 
 class FCMFunctions {
-  Future setFCMToken(String ?token, int id) async {
+  Future setFCMToken(String? token) async {
     Map<String, String> allValues = await allSecureStorage();
     String accessToken = allValues['accessToken'] ?? '';
 
     try {
-      final response = await http.patch(
-        Uri.parse('${UserUrl.userDetails}$id/set-fcm-token/'),
+      final response = await http.post(
+        Uri.parse('${AuthUrl.baseUrl}set-fcm-token/'),
         headers: {
           "content-type": "application/json",
           "accept": "application/json",
