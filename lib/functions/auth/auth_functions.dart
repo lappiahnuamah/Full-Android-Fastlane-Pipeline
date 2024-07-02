@@ -552,6 +552,9 @@ class Authentications {
   Future<bool> googleSignIn(BuildContext context) async {
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn(
+          clientId: Platform.isAndroid
+              ? "642728101123-j64hbdcp1k4dsnhp5tl4aqfms8k72knn.apps.googleusercontent.com"
+              : null,
           scopes: <String>[
             'email',
             'profile',
@@ -560,13 +563,13 @@ class Authentications {
           ],
           serverClientId: Platform.isAndroid
               ? null
-              : "670046940015-eoksd7p6fgg7i9vsusgu16mdgh4hjp2c.apps.googleusercontent.com");
+              : "642728101123-j64hbdcp1k4dsnhp5tl4aqfms8k72knn.apps.googleusercontent.com");
       final GoogleSignInAccount? googleAccount = await googleSignIn.signIn();
 
       final GoogleSignInAuthentication? gAuth =
           await googleAccount?.authentication;
 
-      log('${gAuth?.accessToken}  : ${gAuth?.idToken} : ${googleAccount?.serverAuthCode}');
+      log('accessToken: ${gAuth?.accessToken} \n idToken: ${gAuth?.idToken} \n authCode ${googleAccount?.serverAuthCode}');
 
       if (googleAccount != null) {
         debugPrint('not null');
@@ -610,6 +613,10 @@ class Authentications {
                 ))
             : null,
       );
+
+      log('credential identityToken: ${credential.identityToken}');
+      log('credential authorizationCode: ${credential.authorizationCode}');
+      log('credential userIdentifier: ${credential.userIdentifier}');
 
       if (context.mounted) {
         final result = await oauthApple(

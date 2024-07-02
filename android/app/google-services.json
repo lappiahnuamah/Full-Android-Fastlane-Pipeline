@@ -12,7 +12,20 @@
           "package_name": "com.terateck.games.savyminds"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "642728101123-spb0t4evivosoq2l9a29u1or3cn8ri1c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.terateck.games.savyminds",
+            "certificate_hash": "b19728e94e2dd71c89365384420969fa576bfa14"
+          }
+        },
+        {
+          "client_id": "642728101123-j64hbdcp1k4dsnhp5tl4aqfms8k72knn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAaP1V39X9-KDPLWOOhAI2zEUR3EDqoiz4"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "642728101123-j64hbdcp1k4dsnhp5tl4aqfms8k72knn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "642728101123-8j74rq7lvbm20ok30f7j1us977sdo93n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.terateck.games.savyminds"
+              }
+            }
+          ]
         }
       }
     }

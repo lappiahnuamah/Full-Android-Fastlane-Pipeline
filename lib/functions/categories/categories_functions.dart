@@ -11,7 +11,9 @@ import 'package:savyminds/data/shared_preference_values.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:savyminds/models/categories/category_level_model.dart';
+import 'package:savyminds/models/categories/category_rank_model.dart';
 import 'package:savyminds/models/categories/user_category_points.dart';
+import 'package:savyminds/models/games/game_rank_model.dart';
 import 'package:savyminds/models/games/question_model.dart';
 import 'package:savyminds/models/http_response_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
@@ -255,6 +257,39 @@ class CategoryFunctions {
       log('e: $e');
       return [];
     }
+  }
+
+  Future<List<CategoryRankModel>> getCategoryRanks(
+      {required BuildContext context, int? page, int? limit}) async {
+    final hasConnection = await ConnectionCheck().hasConnection();
+
+    if (hasConnection) {
+      if (context.mounted) {
+        String accessToken =
+            Provider.of<UserDetailsProvider>(context, listen: false)
+                .getAccessToken();
+
+        final response = await http.get(
+          Uri.parse(CategoryUrl.categoryPointsRank),
+          headers: {
+            "content-type": "application/json",
+            "accept": "application/json",
+            "Authorization": "Bearer $accessToken"
+          },
+        );
+        log('streak get: ${response.body}');
+        if (response.statusCode == 200) {
+          return (jsonDecode(response.body) ?? [])
+              .map((e) => CategoryRankModel.fromJson(e))
+              .toList();
+        } else {
+          return [];
+        }
+      }
+    } else {
+      return [];
+    }
+    return [];
   }
 
   static String listToString(List<int> list) {

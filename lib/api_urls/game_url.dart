@@ -17,6 +17,5 @@ class GameUrl {
   static const joinSession = "$baseUrl/game-session/join-session/";
 
   //type level
-    static getGameTypeLevel(int id) => "$baseUrl/game-types/$id/get-my-level/";
-
+  static getGameTypeLevel(int id) => "$baseUrl/game-types/$id/get-my-level/";
 }
