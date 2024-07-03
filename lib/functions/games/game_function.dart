@@ -174,14 +174,15 @@ class GameFunction {
 
         final userKeys = gameItemsProvider.userKeys;
         Map data = {};
-        data['fifty_fifty_points'] = userKeys[GameKeyType.fiftyFifty]!.amount;
-        data['golden_badges'] = userKeys[GameKeyType.goldenKey]!.amount;
-        data['swap_question'] = userKeys[GameKeyType.swapKey]!.amount;
-        data['freeze_time'] = userKeys[GameKeyType.freezeTimeKey]!.amount;
-        data['retake_question'] = userKeys[GameKeyType.retakeKey]!.amount;
+        data['user'] = user.id;
+        data['fifty_fifty_points'] = userKeys[GameKeyType.fiftyFifty]?.amount;
+        data['golden_badges'] = userKeys[GameKeyType.goldenKey]?.amount;
+        data['swap_question'] = userKeys[GameKeyType.swapKey]?.amount;
+        data['freeze_time'] = userKeys[GameKeyType.freezeTimeKey]?.amount;
+        data['retake_question'] = userKeys[GameKeyType.retakeKey]?.amount;
 
         final response = await http.patch(
-          Uri.parse('${UserUrl.userUser}${user.id}/update-game-streaks/'),
+          Uri.parse('${AuthUrl.baseUrl}game-streaks/${user.outerId}/'),
           headers: {
             "content-type": "application/json",
             "accept": "application/json",

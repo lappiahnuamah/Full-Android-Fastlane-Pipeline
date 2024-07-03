@@ -13,7 +13,6 @@ import 'package:http/http.dart' as http;
 import 'package:savyminds/models/categories/category_level_model.dart';
 import 'package:savyminds/models/categories/category_rank_model.dart';
 import 'package:savyminds/models/categories/user_category_points.dart';
-import 'package:savyminds/models/games/game_rank_model.dart';
 import 'package:savyminds/models/games/question_model.dart';
 import 'package:savyminds/models/http_response_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
@@ -260,36 +259,39 @@ class CategoryFunctions {
   }
 
   Future<List<CategoryRankModel>> getCategoryRanks(
-      {required BuildContext context, int? page, int? limit}) async {
+      {required BuildContext context}) async {
     final hasConnection = await ConnectionCheck().hasConnection();
+    try {
+      if (hasConnection) {
+        if (context.mounted) {
+          String accessToken =
+              Provider.of<UserDetailsProvider>(context, listen: false)
+                  .getAccessToken();
 
-    if (hasConnection) {
-      if (context.mounted) {
-        String accessToken =
-            Provider.of<UserDetailsProvider>(context, listen: false)
-                .getAccessToken();
-
-        final response = await http.get(
-          Uri.parse(CategoryUrl.categoryPointsRank),
-          headers: {
-            "content-type": "application/json",
-            "accept": "application/json",
-            "Authorization": "Bearer $accessToken"
-          },
-        );
-        log('streak get: ${response.body}');
-        if (response.statusCode == 200) {
-          return (jsonDecode(response.body) ?? [])
-              .map((e) => CategoryRankModel.fromJson(e))
-              .toList();
-        } else {
-          return [];
+          final response = await http.get(
+            Uri.parse(CategoryUrl.categoryPointsRank),
+            headers: {
+              "content-type": "application/json",
+              "accept": "application/json",
+              "Authorization": "Bearer $accessToken"
+            },
+          );
+          if (response.statusCode == 200) {
+            return ((jsonDecode(response.body) ?? []) as List)
+                .map((e) => CategoryRankModel.fromJson(e))
+                .toList();
+          } else {
+            return [];
+          }
         }
+      } else {
+        return [];
       }
-    } else {
+      return [];
+    } catch (e) {
+      log("message: $e");
       return [];
     }
-    return [];
   }
 
   static String listToString(List<int> list) {

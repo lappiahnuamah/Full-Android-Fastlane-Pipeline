@@ -19,7 +19,7 @@ class CategoryRankModel {
     return CategoryRankModel(
       id: json['id'] ?? 0,
       category: json['category'] ?? 0,
-      categoryName: json['category_name'],
+      categoryName: json['category_name'] ?? '',
       numberOfPlays: json['number_of_plays'] ?? 0,
       totalPoints: json['total_points'] ?? 0,
       rank: json['rank'] ?? 0,

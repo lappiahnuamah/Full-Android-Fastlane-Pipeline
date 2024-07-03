@@ -3,6 +3,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/records/components/record_rank_header.dart';
+import 'package:savyminds/screens/records/record_pages/category_ranks.dart';
+import 'package:savyminds/screens/records/record_pages/contest_ranks.dart';
+import 'package:savyminds/screens/records/record_pages/solo_quest_ranks.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
@@ -80,79 +83,13 @@ class _RecordRanksState extends State<RecordRanks> {
         SizedBox(height: d.pSH(15)),
 
         //// //Categories
-        if (_selectedRankIndex == 0)
-          Expanded(
-            child: Column(
-              children: [
-                CategoryRankTableHeader(size: size),
-                SizedBox(height: d.pSH(10)),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ...List.generate(
-                            4,
-                            (index) => Padding(
-                                  padding: EdgeInsets.only(bottom: d.pSH(10.0)),
-                                  child: categoryRankList[index % 4],
-                                )),
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
 
-        ////// Contest
-        if (_selectedRankIndex == 2)
-          Expanded(
-            child: Column(
-              children: [
-                ContestRankTableHeader(size: size),
-                SizedBox(height: d.pSH(10)),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ...List.generate(
-                            4,
-                            (index) => Padding(
-                                  padding: EdgeInsets.only(bottom: d.pSH(10.0)),
-                                  child: contestRankList[index % 4],
-                                )),
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-
-        ////// Solo Quest
-        if (_selectedRankIndex == 4)
-          Expanded(
-            child: Column(
-              children: [
-                SoloQuestRankTableHeader(size: size),
-                SizedBox(height: d.pSH(10)),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ...List.generate(
-                            4,
-                            (index) => Padding(
-                                  padding: EdgeInsets.only(bottom: d.pSH(10.0)),
-                                  child: soloQuestRankList[index % 4],
-                                )),
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
-          )
+        Expanded(
+            child: (_selectedRankIndex == 0)
+                ? CategoryRanks()
+                : (_selectedRankIndex == 2)
+                    ? ContestRanks()
+                    : SoloQuestRanks())
       ],
     );
   }

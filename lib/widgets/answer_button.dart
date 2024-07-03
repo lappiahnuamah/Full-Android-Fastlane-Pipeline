@@ -104,11 +104,11 @@ class _AnswerButtonState extends State<AnswerButton>
                                 : null,
                             buttonText: widget.answer.text, // answer.text,
                             fontSize: widget.answer.text.length > 40
-                                ? 18
+                                ? 15
                                 : widget.answer.text.length > 25
-                                    ? 20
-                                    : 22,
-                            textWeight: FontWeight.w700,
+                                    ? 17
+                                    : 19,
+                            textWeight: FontWeight.w500,
                             isReversed: !widget.isReversed,
                             padding: EdgeInsets.symmetric(
                                 horizontal: d.pSH(10), vertical: d.pSH(5)),
