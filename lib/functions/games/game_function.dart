@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:savyminds/api_urls/auth_url.dart';
 import 'package:savyminds/api_urls/game_url.dart';
-import 'package:savyminds/api_urls/user_url.dart';
 import 'package:savyminds/models/auth/app_user.dart';
 import 'package:savyminds/models/error_response.dart';
 import 'package:savyminds/models/games/game_rank_model.dart';
@@ -18,10 +17,8 @@ import 'package:savyminds/models/questions/option_model.dart';
 import 'package:savyminds/models/games/start_game.dart';
 import 'package:savyminds/models/http_response_model.dart';
 import 'package:savyminds/providers/game_items_provider.dart';
-import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/utils/connection_check.dart';
-import 'package:uuid/uuid.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
 import '../../resources/app_enums.dart';
@@ -62,56 +59,6 @@ class GameFunction {
     }
   }
 
-  Future submitAnswers(
-      {required BuildContext context,
-      required Map<int, dynamic> resultList,
-      required int totalPoints}) async {
-    List questionsList = [];
-    final hasConnection = await ConnectionCheck().hasConnection();
-    if (hasConnection) {
-      if (context.mounted) {
-        var uuid = const Uuid();
-        //get correct answers
-        for (var element in resultList.entries) {
-          questionsList.add(element.value);
-        }
-        String accessToken =
-            Provider.of<UserDetailsProvider>(context, listen: false)
-                .getAccessToken();
-        final gameProvider = Provider.of<GameProvider>(context, listen: false);
-
-        final response = await http.post(Uri.parse(GameUrl.submitAnswers),
-            headers: {
-              "content-type": "application/json",
-              "accept": "application/json",
-              "Authorization": "Bearer $accessToken"
-            },
-            body: jsonEncode({
-              "game": uuid.v4(),
-              "game_mode": "Single Player",
-              "questions": questionsList,
-              'total_points': totalPoints
-            }));
-        log(response.body);
-        if (response.statusCode == 200) {
-          final result = jsonDecode(response.body);
-          gameProvider.setRank(result['rank'] ?? 0);
-          gameProvider.myRank?.rank = result['rank'];
-          if (result["total_game_points"] != null) {
-            gameProvider.setTotalPoints(result["total_game_points"]);
-          }
-          return result;
-        } else {
-          return ErrorResponse.fromJson(jsonDecode(response.body));
-        }
-      }
-    } else {
-      //print('error');
-
-      return null;
-    }
-  }
-
   //////
   //////
   Future getGameStreaks({
@@ -126,9 +73,6 @@ class GameFunction {
               Provider.of<UserDetailsProvider>(context, listen: false)
                   .getAccessToken();
 
-          final gameProvider =
-              Provider.of<GameProvider>(context, listen: false);
-
           final response = await http.get(
             Uri.parse('${AuthUrl.baseUrl}game-streaks/my-streak/'),
             headers: {
@@ -140,7 +84,7 @@ class GameFunction {
           log('streak get: ${response.body}');
           if (response.statusCode == 200) {
             final streaks = GameStreakModel.fromJson(jsonDecode(response.body));
-            gameProvider.setUserStreaks(streaks);
+            gameItemsProvider.setUserStreaks(streaks);
             gameItemsProvider.setKeyItems(streaks);
 
             return true;
@@ -163,8 +107,6 @@ class GameFunction {
 
     if (hasConnection) {
       if (context.mounted) {
-        AppUser user = Provider.of<UserDetailsProvider>(context, listen: false)
-            .getUserDetails();
         String accessToken =
             Provider.of<UserDetailsProvider>(context, listen: false)
                 .getAccessToken();
@@ -174,7 +116,6 @@ class GameFunction {
 
         final userKeys = gameItemsProvider.userKeys;
         Map data = {};
-        data['user'] = user.id;
         data['fifty_fifty_points'] = userKeys[GameKeyType.fiftyFifty]?.amount;
         data['golden_badges'] = userKeys[GameKeyType.goldenKey]?.amount;
         data['swap_question'] = userKeys[GameKeyType.swapKey]?.amount;
@@ -182,7 +123,8 @@ class GameFunction {
         data['retake_question'] = userKeys[GameKeyType.retakeKey]?.amount;
 
         final response = await http.patch(
-          Uri.parse('${AuthUrl.baseUrl}game-streaks/${user.outerId}/'),
+          Uri.parse(
+              '${AuthUrl.baseUrl}game-streaks/${gameItemsProvider.gameStreaks.id}/'),
           headers: {
             "content-type": "application/json",
             "accept": "application/json",

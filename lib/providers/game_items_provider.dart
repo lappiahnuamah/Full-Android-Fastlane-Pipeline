@@ -1,15 +1,27 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:savyminds/models/game_key_model.dart';
 import 'package:savyminds/models/games/game_streak_model.dart';
 import 'package:savyminds/resources/app_enums.dart';
 
 class GameItemsProvider extends ChangeNotifier {
+  GameStreakModel gameStreaks = GameStreakModel(
+      fiftyFifty: 0,
+      goldenBadges: 0,
+      totalPoints: 0,
+      swapQuestion: 0,
+      freezeTime: 0,
+      retakeQuestion: 0,
+      gamesPlayed: 0,
+      streaks: 0);
+
+  setUserStreaks(GameStreakModel streak) {
+    gameStreaks = streak;
+    notifyListeners();
+  }
+
   List<GameKeyType> keyTypes = [
     GameKeyType.goldenKey,
     GameKeyType.fiftyFifty,
-    GameKeyType.hintKey,
     GameKeyType.freezeTimeKey,
     GameKeyType.retakeKey,
     GameKeyType.swapKey
@@ -102,7 +114,6 @@ class GameItemsProvider extends ChangeNotifier {
 
   ////Set Key Items
   setKeyItems(GameStreakModel keys) {
-    log('5050 keys: ${keys.fiftyFifty}');
     setKeyAmount(GameKeyType.fiftyFifty, keys.fiftyFifty);
     setKeyAmount(GameKeyType.goldenKey, keys.goldenBadges);
     setKeyAmount(GameKeyType.swapKey, keys.swapQuestion);

@@ -18,4 +18,8 @@ class GameUrl {
 
   //type level
   static getGameTypeLevel(int id) => "$baseUrl/game-types/$id/get-my-level/";
+
+  /// type rank
+  static const gameTypePoints = "$baseUrl/game-type-points/";
+  static const gameTypePointsMyRank = "${baseUrl}/game-type-rank/";
 }

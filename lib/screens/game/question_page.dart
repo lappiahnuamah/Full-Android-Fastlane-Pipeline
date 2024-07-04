@@ -15,7 +15,6 @@ import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/game/game/animation/game_comments.dart';
 import 'package:savyminds/screens/game/players.dart';
-import 'package:savyminds/screens/game/submit_page.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
@@ -67,11 +66,11 @@ class _QuestionPageState extends State<QuestionPage>
           timer.cancel();
           FlameAudio.bgm.stop();
           FlameAudio.play('outro_game_over.mp3');
-          nextScreen(
-              context,
-              SubmitPage(
-                questionList: questionList,
-              ));
+          // nextScreen(
+          //     context,
+          //     SubmitPage(
+          //       questionList: questionList,
+          //     ));
         }
       }
       if (seconds.value == 5) {
@@ -843,11 +842,11 @@ class _QuestionPageState extends State<QuestionPage>
     } else {
       gameProvider.addSelectedAnswer(
           option: selectedAnswer, questioinId: questionList[index].id);
-      nextScreen(
-          context, 
-          SubmitPage(
-            questionList: questionList,
-          ));
+      // nextScreen(
+      //     context,
+      //     SubmitPage(
+      //       questionList: questionList,
+      //     ));
     }
     GameLocalDatabase.deleteQuestion(questionId);
   }

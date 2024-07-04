@@ -19,7 +19,7 @@ class RecordRanks extends StatefulWidget {
 }
 
 class _RecordRanksState extends State<RecordRanks> {
-  List rankHeaders = ['Categories', 'Solo Quest', 'Contest'];
+  List<String> rankHeaders = ['Categories', '', 'Solo Quest', '', 'Contest'];
 
   int _selectedRankIndex = 0;
   @override
@@ -41,13 +41,13 @@ class _RecordRanksState extends State<RecordRanks> {
           children: [
             ...List.generate(
               5,
-              (index) => index.isOdd
+              (index) => rankHeaders[index].isEmpty
                   ? SizedBox(
                       width: d.pSW(10),
                     )
                   : Expanded(
                       child: RecordRankHeader(
-                          title: rankHeaders[index % 3],
+                          title: rankHeaders[index],
                           onTapped: () {
                             setState(() {
                               _selectedRankIndex = index;
@@ -87,7 +87,7 @@ class _RecordRanksState extends State<RecordRanks> {
         Expanded(
             child: (_selectedRankIndex == 0)
                 ? CategoryRanks()
-                : (_selectedRankIndex == 2)
+                : (_selectedRankIndex == 4)
                     ? ContestRanks()
                     : SoloQuestRanks())
       ],
@@ -237,13 +237,15 @@ class CustomRankRow extends StatelessWidget {
           flex: 3,
           child: Row(
             children: [
-              SvgPicture.asset(
-                'assets/icons/math.svg',
-                height: d.pSH(15),
-                colorFilter: const ColorFilter.mode(
-                    AppColors.hintTextBlack, BlendMode.srcIn),
-              ),
-              SizedBox(width: d.pSW(10)),
+              //TODO:add rank
+
+              // SvgPicture.asset(
+              //   'assets/icons/math.svg',
+              //   height: d.pSH(15),
+              //   colorFilter: const ColorFilter.mode(
+              //       AppColors.hintTextBlack, BlendMode.srcIn),
+              // ),
+              // SizedBox(width: d.pSW(10)),
               Expanded(
                 child: CustomText(
                   label: name,
@@ -274,63 +276,6 @@ class CustomRankRow extends StatelessWidget {
           child: CustomText(
             label: rank,
             fontSize: getFontSize(16, size),
-            textAlign: TextAlign.end,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class ContestRankRow extends StatelessWidget {
-  const ContestRankRow(
-      {super.key, required this.rank, required this.name, required this.level});
-  final String rank;
-  final String name;
-  final String level;
-
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
-    return Row(
-      children: [
-        Expanded(
-          flex: 5,
-          child: Row(
-            children: [
-              SvgPicture.asset(
-                'assets/icons/learner.svg',
-                height: d.pSH(15),
-                colorFilter: const ColorFilter.mode(
-                    AppColors.hintTextBlack, BlendMode.srcIn),
-              ),
-              SizedBox(width: d.pSW(10)),
-              Expanded(
-                child: CustomText(
-                  label: name,
-                  fontSize: getFontSize(15, size),
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: CustomText(
-            label: level,
-            fontSize: getFontSize(15, size),
-            textAlign: TextAlign.end,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: CustomText(
-            label: rank,
-            fontSize: getFontSize(15, size),
             textAlign: TextAlign.end,
             fontWeight: FontWeight.w400,
           ),
@@ -399,76 +344,3 @@ class SoloQuestRankRow extends StatelessWidget {
     );
   }
 }
-
-List categoryRankList = const [
-  CustomRankRow(
-    rank: '58.98%',
-    name: 'Mathematics',
-    points: '1467',
-    gamesPlayed: '20',
-  ),
-  CustomRankRow(
-    rank: '78.76%',
-    name: 'Languages',
-    points: '3554',
-    gamesPlayed: '23',
-  ),
-  CustomRankRow(
-    rank: '44.67%',
-    name: 'Music',
-    points: '2234',
-    gamesPlayed: '14',
-  ),
-  CustomRankRow(
-    rank: '24.60%',
-    name: 'Sports',
-    points: '13227',
-    gamesPlayed: '8',
-  ),
-];
-
-List contestRankList = const [
-  ContestRankRow(
-    rank: '58.98%',
-    name: 'Learner Mode',
-    level: '20',
-  ),
-  ContestRankRow(
-    rank: '78.76%',
-    name: 'Pro Learner',
-    level: '8',
-  ),
-  ContestRankRow(
-    rank: '44.67%',
-    name: 'Timed Challenge',
-    level: '90',
-  ),
-  ContestRankRow(
-    rank: '24.60%',
-    name: 'Survival',
-    level: '17',
-  ),
-];
-
-List soloQuestRankList = const [
-  SoloQuestRankRow(
-    rank: '58.98%',
-    name: 'Learner Mode',
-    sessions: '20',
-  ),
-  SoloQuestRankRow(
-    rank: '78.76%',
-    name: 'Pro Learner',
-    sessions: '8',
-  ),
-  SoloQuestRankRow(
-    rank: '44.67%',
-    name: 'Timed Challenge',
-    sessions: '90',
-  ),
-  SoloQuestRankRow(
-    rank: '24.60%',
-    name: 'Survival',
-    sessions: '20',
-  ),
-];

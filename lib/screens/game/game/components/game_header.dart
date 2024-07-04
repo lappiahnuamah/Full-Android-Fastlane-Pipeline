@@ -86,12 +86,7 @@ class GameHeader extends StatelessWidget {
                       }
                     },
                     child: Text(
-                      (isTotal ?? false)
-                          ? NumberUtils().formatNumberToKAndM(
-                              game.gameStreaks.overallGamePoints)
-                          : (isMultiPlayer ?? false)
-                              ? '${NumberUtils().formatNumberToKAndM(game.gameStreaks.multiTotalPoints)} ${game.gameStreaks.multiTotalPoints != 0 ? '(${GameUtils.numberToRank(game.gameStreaks.multiPlayerRank)})' : ""}'
-                              : '${NumberUtils().formatNumberToKAndM(game.gameStreaks.totalPoints)} ${game.gameStreaks.totalPoints != 0 ? '(${GameUtils.numberToRank(game.gameStreaks.rank)})' : ""}',
+                      '',
                       style: TextStyle(
                           color: bright == Brightness.dark
                               ? AppColors.kGameDarkTextColor

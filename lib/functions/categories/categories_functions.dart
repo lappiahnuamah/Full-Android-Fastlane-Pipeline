@@ -8,6 +8,7 @@ import 'package:savyminds/api_urls/category_url.dart';
 import 'package:savyminds/api_urls/game_url.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/data/shared_preference_values.dart';
+import 'package:savyminds/functions/contests/contests_functions.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:savyminds/models/categories/category_level_model.dart';
@@ -65,6 +66,7 @@ class CategoryFunctions {
   Future<UserCategoryPoint?> submitCategoryPoints(
       {required BuildContext context,
       required int category,
+      required int gameTypeId,
       required int totalPoints}) async {
     final String accessToken =
         Provider.of<UserDetailsProvider>(context, listen: false)
@@ -80,6 +82,10 @@ class CategoryFunctions {
           body:
               jsonEncode({'category': category, 'total_points': totalPoints}));
       lg('point submit: ${response.body} : points: $totalPoints');
+
+      // Add type points
+      await ContestFunctions().submitGameTypePoints(
+          context: context, gameType: gameTypeId, totalPoints: totalPoints);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);

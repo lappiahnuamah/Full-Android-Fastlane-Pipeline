@@ -51,6 +51,7 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
           CategoryFunctions().submitCategoryPoints(
               context: context,
               category: widget.categoryModel!.id,
+              gameTypeId: widget.quest.id,
               totalPoints: widget.pointsScored);
         }
         getCategoryLevel();

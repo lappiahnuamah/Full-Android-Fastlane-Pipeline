@@ -9,6 +9,7 @@ import 'package:savyminds/constants.dart';
 import 'package:savyminds/data/shared_preference_values.dart';
 import 'package:savyminds/functions/solo_quest/solo_quest_functions.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
+import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/providers/solo_quest_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/solo_quest/challlenge_of_the_day/challenge_of_day.dart';
@@ -69,11 +70,14 @@ class _SoloQuestState extends State<SoloQuest> {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const CustomText(
-                          label: '100',
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.hintTextBlack,
-                        ),
+                        Consumer<GameItemsProvider>(
+                            builder: (context, itemProvider, child) {
+                          return CustomText(
+                            label: '${itemProvider.gameStreaks.streaks}',
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.hintTextBlack,
+                          );
+                        }),
                         const SizedBox(width: 10),
                         SvgPicture.asset("assets/icons/flame.svg")
                       ],

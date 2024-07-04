@@ -50,23 +50,6 @@ class GameProvider extends ChangeNotifier {
 
   bool isAdmin = false;
 
-  GameStreakModel gameStreaks = GameStreakModel(
-      fiftyFifty: 0,
-      goldenBadges: 0,
-      totalPoints: 0,
-      rank: 0,
-      multiPlayerRank: 0,
-      multiTotalPoints: 0,
-      overallGamePoints: 0,
-      swapQuestion: 0,
-      freezeTime: 0,
-      retakeQuestion: 0);
-
-  setUserStreaks(GameStreakModel streak) {
-    gameStreaks = streak;
-    notifyListeners();
-  }
-
   //// Game Stuffs ///
   //fifty
   addFiftyfifty() {
@@ -177,17 +160,6 @@ class GameProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  addCurrentPointsToTotal() {
-    gameStreaks.totalPoints += currentGamePoints;
-    cacheTotalPoints();
-  }
-
-  setTotalPoints(int number) {
-    gameStreaks.totalPoints = number;
-    notifyListeners();
-    cacheTotalPoints();
-  }
-
   ///reset
   resetGames() {
     currentGamePoints = 0;
@@ -250,7 +222,6 @@ class GameProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-
 
   void addSelectedAnswer(
       {required int questioinId, required OptionModel? option}) {
@@ -317,10 +288,6 @@ class GameProvider extends ChangeNotifier {
 
 /////////////////
 ///// Cache data
-  cacheTotalPoints() {
-    SharedPreferencesHelper()
-        .setInt(key: 'totalPoints', value: gameStreaks.totalPoints);
-  }
 
   cacheGoldenBadges() {
     SharedPreferencesHelper()
@@ -341,15 +308,6 @@ class GameProvider extends ChangeNotifier {
       SharedPreferencesHelper()
           .setInt(key: 'longestStreaks', value: longestStreaks);
     }
-  }
-
-  loadCachedData() {
-    goldenChances = SharedPreferencesHelper.getInt('goldenChances') ?? 0;
-    fiftyFifty = SharedPreferencesHelper.getInt('fiftyFifty') ?? 3;
-    gameStreaks.totalPoints =
-        SharedPreferencesHelper.getInt('totalPoints') ?? 0;
-    nextUrl = SharedPreferencesHelper.getString('nextUrl') ?? '';
-    notifyListeners();
   }
 
   /////////////////// /////////////////// /////////////////// /////////////////// ///////////////////

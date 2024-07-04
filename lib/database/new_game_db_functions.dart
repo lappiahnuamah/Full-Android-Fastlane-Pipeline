@@ -78,12 +78,12 @@ class NewGameLocalDatabase {
   }
 
   static Future<List<NewQuestionModel>> getLevelQuestions(
-      {required String difficulty, required int limit, int? categoryId}) async {
+      {required String difficulty, required int limit, String? categoryName}) async {
     final db = await NewGameLocalDatabase.db();
 
     List<Map<String, Object?>> result = [];
-    log('categoryId: $categoryId' 'difficulty: $difficulty limit: $limit');
-    if (categoryId == null) {
+    log('categoryId: $categoryName' 'difficulty: $difficulty limit: $limit');
+    if (categoryName == null) {
       result = await db.query(questionDB,
           orderBy: 'RANDOM()',
           where: 'difficulty = ?',
@@ -93,7 +93,7 @@ class NewGameLocalDatabase {
       result = await db.query(questionDB,
           orderBy: 'RANDOM()',
           where: 'categories LIKE ? AND difficulty = ?',
-          whereArgs: ['%$categoryId%', difficulty],
+          whereArgs: ['%$categoryName%', difficulty],
           limit: limit);
     }
     log('Result: ${result.length}');

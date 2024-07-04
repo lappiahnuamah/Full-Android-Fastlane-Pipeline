@@ -145,7 +145,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Provider.of<UserDetailsProvider>(context, listen: false)
         .setUserDetails(user);
     if (context.mounted) {
-      //  GameFunction().getGameStreaks(context: context);
+      GameFunction().getGameStreaks(context: context);
     }
 
     /////////////////// Navigate to HomePage////////////

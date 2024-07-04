@@ -260,7 +260,7 @@ class _TrainingModeState extends State<TrainingMode> {
       context: context,
       questId: widget.quest.id,
       level: level,
-      categoryId: selectedCategory?.id ?? 0,
+      categoryModel: selectedCategory,
     );
 
     setState(() {

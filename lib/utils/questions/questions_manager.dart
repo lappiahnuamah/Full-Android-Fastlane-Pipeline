@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/database/new_game_db_functions.dart';
 import 'package:savyminds/functions/questions_functions.dart';
+import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/models/question_param_model.dart';
 import 'package:savyminds/models/questions/question_model.dart';
@@ -16,7 +17,7 @@ class QuestionsManager {
     required BuildContext context,
     required int questId,
     required LevelName level,
-    required int categoryId,
+    required CategoryModel? categoryModel,
   }) async {
     final gameMetricsProvider =
         Provider.of<GameMetricsProvider>(context, listen: false);
@@ -133,7 +134,7 @@ class QuestionsManager {
         context: context,
         questId: questId,
         level: level,
-        categoryId: categoryId,
+        categoryModel: categoryModel,
         noOfEasyQuestions: noOfEasyQuestions,
         noOfMediumQuestions: noOfMediumQuestions,
         noOfHardQuestions: noOfHardQuestions);
@@ -163,7 +164,7 @@ Future<QuestionsParamModel> getQuestionBasedOnFactors({
   required BuildContext context,
   required int questId,
   required LevelName level,
-  required int categoryId,
+  required CategoryModel? categoryModel,
   required int noOfEasyQuestions,
   required int noOfMediumQuestions,
   required int noOfHardQuestions,
@@ -176,17 +177,23 @@ Future<QuestionsParamModel> getQuestionBasedOnFactors({
 /////   First fetch from the local database   ////
   if (noOfEasyQuestions > 0) {
     easyQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
-        limit: noOfEasyQuestions * 2, difficulty: 'Easy', categoryId: 1);
+        limit: noOfEasyQuestions * 2,
+        difficulty: 'Easy',
+        categoryName: categoryModel?.name);
   }
 
   if (noOfMediumQuestions > 0) {
     mediumQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
-        limit: noOfMediumQuestions * 2, difficulty: 'Medium', categoryId: 1);
+        limit: noOfMediumQuestions * 2,
+        difficulty: 'Medium',
+        categoryName: categoryModel?.name);
   }
 
   if (noOfHardQuestions > 0) {
     hardQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
-        limit: noOfHardQuestions * 2, difficulty: 'Hard', categoryId: 1);
+        limit: noOfHardQuestions * 2,
+        difficulty: 'Hard',
+        categoryName: categoryModel?.name);
   }
 
   if (easyQuestionsList.length >= noOfEasyQuestions * 2 &&
@@ -220,26 +227,30 @@ Future<QuestionsParamModel> getQuestionBasedOnFactors({
         context: context,
         nextUrl: null,
         gameLevel: level.name,
-        categories: [categoryId],
+        categories: [categoryModel?.id ?? 0],
         gameType: questId);
 
     if (questionListResponse != null) {
       //IF success fetch from database
       if (noOfEasyQuestions > 0) {
         easyQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
-            limit: noOfEasyQuestions * 2, difficulty: 'Easy', categoryId: 1);
+            limit: noOfEasyQuestions * 2,
+            difficulty: 'Easy',
+            categoryName: categoryModel?.name);
       }
 
       if (noOfMediumQuestions > 0) {
         mediumQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
             limit: noOfMediumQuestions * 2,
             difficulty: 'Medium',
-            categoryId: 1);
+            categoryName: categoryModel?.name);
       }
 
       if (noOfHardQuestions > 0) {
         hardQuestionsList = await NewGameLocalDatabase.getLevelQuestions(
-            limit: noOfHardQuestions * 2, difficulty: 'Hard', categoryId: 1);
+            limit: noOfHardQuestions * 2,
+            difficulty: 'Hard',
+            categoryName: categoryModel?.name);
       }
 
       if (easyQuestionsList.length >= noOfEasyQuestions * 2 &&

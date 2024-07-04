@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:savyminds/constants.dart';
-import 'package:savyminds/functions/categories/categories_functions.dart';
-import 'package:savyminds/models/categories/category_rank_model.dart';
+import 'package:savyminds/functions/contests/contests_functions.dart';
+import 'package:savyminds/models/solo_quest/game_type_rank_model.dart';
 import 'package:savyminds/screens/records/record_ranks.dart';
 
 class SoloQuestRanks extends StatefulWidget {
@@ -12,7 +12,7 @@ class SoloQuestRanks extends StatefulWidget {
 }
 
 class _SoloQuestRanksState extends State<SoloQuestRanks> {
-  List<CategoryRankModel> categoryRanks = [];
+  List<GameTypeRankModel> categoryRanks = [];
   bool isLoading = true;
 
   @override
@@ -22,7 +22,8 @@ class _SoloQuestRanksState extends State<SoloQuestRanks> {
   }
 
   loadCategoryRanks() async {
-    final result = await CategoryFunctions().getCategoryRanks(context: context);
+    final result = await ContestFunctions()
+        .getGameTypeRank(context: context, gameType: "Single Player");
     if (!mounted) return;
 
     setState(() {
@@ -66,7 +67,7 @@ class _SoloQuestRanksState extends State<SoloQuestRanks> {
                             gamesPlayed: rank.numberOfPlays.toString(),
                             rank: rank.rank.toString(),
                             points: rank.totalPoints.toString(),
-                            name: rank.categoryName,
+                            name: rank.gameTypeName,
                           ),
                         );
                       }),

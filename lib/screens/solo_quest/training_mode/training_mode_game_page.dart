@@ -118,18 +118,12 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                 milliseconds: 400,
               ),
               curve: Curves.easeIn);
-          // gameProvider.addSelectedAnswer(
-          //     option: selectedAnswer,
-          //     questioinId: questionList[selectedIndex].id);
           if (selectedAnswer == null) {
             answerStreak = 0;
           }
           timer.cancel();
           FlameAudio.bgm.stop();
         } else {
-          // gameProvider.addSelectedAnswer(
-          //     option: selectedAnswer,
-          //     questioinId: questionList[selectedIndex].id);
           if (selectedAnswer == null) {
             answerStreak = 0;
           }
@@ -147,7 +141,6 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
         }
       }
       if (seconds.value == 5) {
-        // shakeFiftyFiftyIcon();
         FlameAudio.bgm.play('five_sec_more.mp3');
       }
       if (seconds.value == 3) {
@@ -734,9 +727,13 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
   }) {
     correctAnswers++;
 
-    gamePoints = questionPoints;
+    dev.log('question points: ${questionPoints}');
+
+    gamePoints = timesTwoActivated ? questionPoints * 2 : questionPoints;
+
+    dev.log('game points: ${gamePoints}');
+
     if (timesTwoActivated) {
-      gamePoints = gamePoints * 2;
       setState(() {
         timesTwoActivated = false;
       });

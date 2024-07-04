@@ -3,14 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/game_key_model.dart';
 import 'package:savyminds/providers/game_items_provider.dart';
-import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_enums.dart';
 import 'package:savyminds/screens/profile/components/key_card.dart';
 import 'package:savyminds/screens/records/components/record_rank_header.dart';
 import 'package:savyminds/screens/settings/personalization.dart';
-import 'package:savyminds/utils/cache/content_mgt.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
@@ -35,8 +33,8 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Consumer2<GameProvider, UserDetailsProvider>(
-        builder: (context, gameProvider, userDetailsProvider, child) {
+    return Consumer2<GameItemsProvider, UserDetailsProvider>(
+        builder: (context, gameItemsProvider, userDetailsProvider, child) {
       return Padding(
         padding: EdgeInsets.all(d.pSH(16)),
         child: Column(
@@ -52,8 +50,8 @@ class _ProfileState extends State<Profile> {
                 ),
                 InkWell(
                   onTap: () {
-                    // nextScreen(context, const Personalization());
-                    ContentManagement().clearAll();
+                    nextScreen(context, const Personalization());
+                    //ƒ().clearAll();
                   },
                   child: const Icon(
                     Icons.settings,
@@ -68,10 +66,9 @@ class _ProfileState extends State<Profile> {
                 children: [
                   //Name
                   CustomText(
-                    label:
-                        '${userDetailsProvider.getUserDetails().fullname?.split(" ").first}',
+                    label: '${userDetailsProvider.getUserDetails().username}',
                     fontWeight: FontWeight.w500,
-                    fontSize: getFontSize(30, size),
+                    fontSize: getFontSize(25, size),
                   ),
                   SizedBox(height: d.pSH(12)),
 
@@ -86,7 +83,8 @@ class _ProfileState extends State<Profile> {
                         fontSize: getFontSize(16, size),
                       ),
                       CustomText(
-                        label: '30 Days',
+                        label:
+                            '${gameItemsProvider.gameStreaks.streaks} ${gameItemsProvider.gameStreaks.streaks > 1 ? "Days" : "Day"}',
                         fontWeight: FontWeight.w500,
                         fontSize: getFontSize(16, size),
                       ),
@@ -103,7 +101,7 @@ class _ProfileState extends State<Profile> {
                         fontSize: getFontSize(16, size),
                       ),
                       CustomText(
-                        label: '200',
+                        label: '${gameItemsProvider.gameStreaks.gamesPlayed}',
                         fontWeight: FontWeight.w500,
                         fontSize: getFontSize(16, size),
                       ),

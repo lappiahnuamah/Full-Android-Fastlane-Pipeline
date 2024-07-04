@@ -12,6 +12,7 @@ import 'package:savyminds/api_urls/auth_url.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/data/fcm_data.dart';
 import 'package:savyminds/functions/auth/fcm_functions.dart';
+import 'package:savyminds/functions/games/game_function.dart';
 import 'package:savyminds/models/auth/app_user.dart';
 import 'package:savyminds/models/error_response.dart';
 import 'package:savyminds/providers/registration_provider.dart';
@@ -267,7 +268,7 @@ class Authentications {
             return null;
           } else {
             if (context.mounted) {
-              // GameFunction().getGameStreaks(context: context);
+              GameFunction().getGameStreaks(context: context);
             }
             //Successful login
             userSecureStorage(
