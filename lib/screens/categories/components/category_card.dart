@@ -92,7 +92,8 @@ class _CategoryCardState extends State<CategoryCard> {
         //Align
         Align(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding:
+                EdgeInsets.fromLTRB(d.pSH(12), d.pSH(10), d.pSH(12), d.pSH(16)),
             child: Column(
               children: [
                 SizedBox(height: d.pSH(5)),
@@ -101,18 +102,21 @@ class _CategoryCardState extends State<CategoryCard> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       if (widget.category.icon.isNotEmpty)
-                        SvgPicture.network(
-                          widget.category.icon,
-                          fit: BoxFit.cover,
-                          height: widget.iconSize,
+                        SizedBox(
+                          height: widget.iconSize ?? d.pSH(45),
+                          child: SvgPicture.network(
+                            widget.category.icon,
+                            fit: BoxFit.fitHeight,
+                            height: widget.iconSize,
+                          ),
                         ),
-                      SizedBox(height: d.pSH(5)),
+                      SizedBox(height: d.pSH(6)),
                       CustomText(
                         label: widget.category.name,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         textAlign: TextAlign.center,
-                        fontSize: widget.fontSize ?? 15,
+                        fontSize: widget.fontSize ?? d.pSH(14),
                       )
                     ],
                   ),
