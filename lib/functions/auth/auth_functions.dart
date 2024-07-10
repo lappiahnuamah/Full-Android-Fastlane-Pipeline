@@ -111,7 +111,7 @@ class Authentications {
     }
   }
 
-  Future checkUsername(
+  Future<bool> checkUsername(
       {required BuildContext context, required String username}) async {
     try {
       http.Response response = await http.post(Uri.parse(AuthUrl.validateInfo),
@@ -122,12 +122,15 @@ class Authentications {
           body: json.encode({
             "username": username,
           }));
+
+      log('username: ${response.body}');
       if (response.statusCode == 200) {
+        return true;
       } else {
-        if (context.mounted) getErrorValues(response.body, context);
+        return false;
       }
     } catch (e) {
-      return null;
+      return false;
     }
   }
 

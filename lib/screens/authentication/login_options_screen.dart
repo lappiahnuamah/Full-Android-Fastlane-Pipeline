@@ -6,8 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/auth/auth_functions.dart';
 import 'package:savyminds/providers/dark_theme_provider.dart';
+import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_images.dart';
+import 'package:savyminds/screens/authentication/change_display_name.dart';
 import 'package:savyminds/screens/authentication/login.dart';
 import 'package:savyminds/screens/authentication/signup_screens/sign_up.dart';
 import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
@@ -119,11 +121,20 @@ class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
 
                         if (result) {
                           if (mounted) {
-                            Navigator.of(context).push(
-                              PageRouteBuilder(
-                                  pageBuilder: (_, __, ___) =>
-                                      const CustomBottomNav()),
-                            );
+                            final user = Provider.of<UserDetailsProvider>(
+                                    context,
+                                    listen: false)
+                                .getUserDetails();
+
+                            if ((user.displayName ?? "").isEmpty) {
+                              nextScreen(
+                                  context,
+                                  ChangeDisplayName(
+                                    username: user.username ?? '',
+                                  ));
+                            } else {
+                              nextScreen(context, CustomBottomNav());
+                            }
                           }
                         }
                       },
@@ -144,11 +155,20 @@ class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
                           });
                           if (result) {
                             if (mounted) {
-                              Navigator.of(context).push(
-                                PageRouteBuilder(
-                                    pageBuilder: (_, __, ___) =>
-                                        const CustomBottomNav()),
-                              );
+                              final user = Provider.of<UserDetailsProvider>(
+                                      context,
+                                      listen: false)
+                                  .getUserDetails();
+
+                              if ((user.displayName ?? "").isEmpty) {
+                                nextScreen(
+                                    context,
+                                    ChangeDisplayName(
+                                      username: user.username ?? '',
+                                    ));
+                              } else {
+                                nextScreen(context, CustomBottomNav());
+                              }
                             }
                           }
                         },
@@ -232,7 +252,7 @@ class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
               )
             ],
           ),
-        )); 
+        ));
   }
 
   //////////  Create line horizontal

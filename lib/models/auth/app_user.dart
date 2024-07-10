@@ -5,6 +5,7 @@ class AppUser {
   final int? outerId;
   final String? fullname;
   final String? username;
+  final String? displayName;
   final String? email;
   final String? phoneNumber;
   final String? dob;
@@ -20,18 +21,6 @@ class AppUser {
   String? coverImage;
   String? aTokenExpireDate;
   String? rTokenExpireDate;
-  final bool? partOfCircle;
-  bool? followed;
-  int? followersCount;
-  int? circleCount;
-  int? admirersCount;
-  int? newConnections;
-  String? connectionState;
-  int? connectionStateId;
-  String? aboutPrivacy;
-  String? fullnamePrivacy;
-  String? contactInfoPrivacy;
-  String? personalInfoPrivacy;
   bool? isUserBlocked;
   final String? hallName;
   bool? isNotificationOff;
@@ -64,22 +53,11 @@ class AppUser {
       this.profileImage,
       this.coverImage,
       this.outerId,
-      this.followed,
-      this.followersCount,
+      this.displayName,
       this.rTokenExpireDate,
       this.aTokenExpireDate,
-      this.circleCount,
-      this.connectionState,
-      this.connectionStateId,
-      this.aboutPrivacy,
-      this.contactInfoPrivacy,
-      this.fullnamePrivacy,
-      this.personalInfoPrivacy,
-      this.partOfCircle,
       this.isUserBlocked,
       this.hallName,
-      this.admirersCount,
-      this.newConnections,
       this.isNotificationOff,
       this.isActive,
       this.isOnline,
@@ -116,12 +94,14 @@ class AppUser {
         isBlocked: json['user']['is_blocked'] ?? false,
         isBlockedUntil: json['user']['is_blocked_until'],
         blockReason: json['user']['block_reason'] ?? '',
+        displayName: json['user']['profile']['display_name'],
       );
 
   static AppUser fromSecureJson(Map<String, dynamic> json) => AppUser(
         id: json['profile']['id'],
         outerId: json['id'],
         fullname: json['profile']['fullname'],
+        displayName: json['profile']['display_name'],
         username: json['username'],
         email: json['email'],
         dob: json['profile']['dob'],
@@ -159,22 +139,6 @@ class AppUser {
         city: json['user']['city'],
         profileImage: json['user']['image'],
         coverImage: json['user']['cover_image'],
-        followed: json['user']['followed'],
-        followersCount: json['user']['followers_count'],
-        circleCount: json['user']['circle_count'],
-        admirersCount: json['user']['connections_count'],
-        newConnections: json['user']["new_connections"],
-        connectionState: (json['user']['connection_state'] is Map)
-            ? json['user']['connection_state']['state']
-            : json['user']['connection_state'],
-        connectionStateId: (json['user']['connection_state'] is Map)
-            ? json['user']['connection_state']['id']
-            : null,
-        aboutPrivacy: json['user']['about_privacy'] ?? "",
-        fullnamePrivacy: json['user']['fullname_privacy'] ?? "",
-        contactInfoPrivacy: json['user']['contact_info_privacy'] ?? "",
-        personalInfoPrivacy: json['user']['personal_info_privacy'] ?? "",
-        partOfCircle: json['user']['in_circle'],
         isUserBlocked: json['is_user_blocked'],
         isActive: json['is_active'] ?? false,
         isOnline: json['is_online'] ?? false,
@@ -192,6 +156,7 @@ class AppUser {
       id: json['id'],
       outerId: json['user_account'],
       fullname: json['fullname'],
+      displayName: json['display_name'],
       username: json['username'],
       email: json['email'],
       dob: json['dob'],
@@ -201,17 +166,6 @@ class AppUser {
       city: json['city'],
       profileImage: json['image'],
       coverImage: json['cover_image'],
-      followed: json['followed'],
-      followersCount: json['followers_count'],
-      circleCount: json['circle_count'],
-      admirersCount: json['connections_count'],
-      newConnections: json["new_connections"],
-      connectionState: (json['connection_state'] is Map)
-          ? json['connection_state']['state']
-          : json['connection_state'],
-      connectionStateId: (json['connection_state'] is Map)
-          ? json['connection_state']['id']
-          : null,
       isNotificationOff: json['is_notification_off']);
 
   // User Registration
@@ -235,71 +189,8 @@ class AppUser {
         "city": city,
         "role": role,
         'cover_image': coverImage,
+        'display_name': displayName,
       }
     };
   }
-
-  static AppUser fromSecureStorage(allValues) => AppUser(
-        id: allValues['id'],
-        fullname: allValues['fullname'],
-        username: allValues['username'],
-        email: allValues['email'],
-        dob: allValues['dob'],
-        gender: allValues['gender'],
-        status: allValues['status'],
-        accessToken: allValues['access_token'],
-        coverImage: allValues['cover_image'],
-        refreshToken: allValues['refresh_token'],
-        city: allValues['city'],
-        profileImage: allValues['profileImage'],
-        outerId: allValues['outerId'],
-        rTokenExpireDate: allValues['rTokenExpireDate'],
-        aTokenExpireDate: allValues['aTokenExpireDate'],
-      );
-
-  static AppUser fromAppUserMap(Map<String, dynamic> map) => AppUser(
-        username: map['username'],
-        email: map['email'],
-        fullname: map['user']['fullname'],
-        gender: map['user']['gender'],
-        status: map['user']['status'],
-        city: map['user']['city'],
-        role: map['user']['role'],
-        coverImage: map['user']['cover_image'],
-        accessToken: map['user']['access_token'],
-        refreshToken: map['user']['refresh_token'],
-        profileImage: map['user']['profileImage'],
-        rTokenExpireDate: map['user']['rTokenExpireDate'],
-        aTokenExpireDate: map['user']['aTokenExpireDate'],
-      );
-  static ContactModel? getContact(
-    List json,
-    String getType,
-  ) {
-    ContactModel contact = ContactModel();
-    for (var value in json) {
-      final newValue = value as Map;
-      if (newValue['contact_type'] == getType) {
-        contact.contactText = newValue['contact_text'];
-        contact.contactType = newValue['contact_type'];
-        contact.id = newValue['id'];
-        contact.verified = newValue['verified'] ?? false;
-      }
-    }
-    return contact;
-  }
-}
-
-class ContactModel {
-  int? id;
-  String? contactType;
-  String? contactText;
-  bool? verified;
-
-  ContactModel({
-    this.contactText,
-    this.contactType,
-    this.id,
-    this.verified,
-  });
 }

@@ -59,14 +59,16 @@ class MyApp extends StatelessWidget {
         builder: (BuildContext context, value, child) {
       return OverlaySupport.global(
           child: MaterialApp(
-        title: 'Savy Minds',
+        title: 'SavvyMinds',
         theme: CustomTheme().lightTheme,
         darkTheme: CustomTheme().darkTheme,
-        themeMode: value.theme == 0
-            ? ThemeMode.system
-            : value.theme == 2
-                ? ThemeMode.dark
-                : ThemeMode.light,
+        themeMode:
+            // value.theme == 0
+            //     ? ThemeMode.system
+            //     : value.theme == 2
+            //         ? ThemeMode.dark
+            //         :
+            ThemeMode.light,
         debugShowCheckedModeBanner: false,
         home: const SplashScreen(),
       ));

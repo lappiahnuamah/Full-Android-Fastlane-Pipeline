@@ -41,152 +41,166 @@ class _CategoryCardState extends State<CategoryCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: d.pSH(4)),
-          child: Transform(
-            alignment: Alignment.center,
-            transform: Matrix4.identity()
-              ..setEntry(3, 2, 0.002)
-              ..rotateX(0.5)
-              ..rotateY(0.05),
-            child: Container(
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.circular(widget.borderRadius ?? d.pSH(25)),
-              ),
-              child: Stack(
-                children: [
-                  Container(
-                    color: widget.category.isLocked
-                        ? const Color(0xFF717582)
-                        : widget.category.color,
-                    width: double.infinity,
-                    height: double.maxFinite,
-                  ),
-                  if (widget.category.icon.isNotEmpty)
-                    Positioned(
-                      left: -d.pSH(50),
-                      top: d.pSH(20),
-                      child: RotationTransition(
-                        turns: const AlwaysStoppedAnimation(40 / 360),
-                        child: SvgPicture.network(
-                          widget.category.icon,
-                          fit: BoxFit.cover,
-                          height: d.pSH(130),
-                          colorFilter: ColorFilter.mode(
-                            Colors.black.withOpacity(0.1),
-                            BlendMode.srcIn,
+    return InkWell(
+      onTap: !widget.hidePlay
+          ? () {
+              if (!widget.category.isLocked) {
+                nextScreen(
+                    context,
+                    TrainingMode(
+                      category: widget.category,
+                      quest: soloQuestProvider.getQuestByName('Training Mode'),
+                    ));
+              } else {}
+            }
+          : null,
+      child: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: d.pSH(4)),
+            child: Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.identity()
+                ..setEntry(3, 2, 0.002)
+                ..rotateX(0.5)
+                ..rotateY(0.05),
+              child: Container(
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.circular(widget.borderRadius ?? d.pSH(25)),
+                ),
+                child: Stack(
+                  children: [
+                    Container(
+                      color: widget.category.isLocked
+                          ? const Color(0xFF717582)
+                          : widget.category.color,
+                      width: double.infinity,
+                      height: double.maxFinite,
+                    ),
+                    if (widget.category.icon.isNotEmpty)
+                      Positioned(
+                        left: -d.pSH(50),
+                        top: d.pSH(20),
+                        child: RotationTransition(
+                          turns: const AlwaysStoppedAnimation(40 / 360),
+                          child: SvgPicture.network(
+                            widget.category.icon,
+                            fit: BoxFit.cover,
+                            height: d.pSH(130),
+                            colorFilter: ColorFilter.mode(
+                              Colors.black.withOpacity(0.1),
+                              BlendMode.srcIn,
+                            ),
                           ),
                         ),
                       ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          //Align
+          Align(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(
+                  d.pSH(12), d.pSH(10), d.pSH(12), d.pSH(16)),
+              child: Column(
+                children: [
+                  SizedBox(height: d.pSH(5)),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (widget.category.icon.isNotEmpty)
+                          SizedBox(
+                            height: widget.iconSize ?? d.pSH(45),
+                            child: SvgPicture.network(
+                              widget.category.icon,
+                              fit: BoxFit.fitHeight,
+                              height: widget.iconSize,
+                            ),
+                          ),
+                        SizedBox(height: d.pSH(6)),
+                        CustomText(
+                          label: widget.category.name,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          textAlign: TextAlign.center,
+                          fontSize: widget.fontSize ?? d.pSH(14),
+                        )
+                      ],
                     ),
+                  ),
+
+                  //Play or Unlock
+                  if (!widget.hidePlay)
+                    Align(
+                        alignment: Alignment.bottomRight,
+                        child: InkWell(
+                          onTap: () {
+                            if (!widget.category.isLocked) {
+                              nextScreen(
+                                  context,
+                                  TrainingMode(
+                                    category: widget.category,
+                                    quest: soloQuestProvider
+                                        .getQuestByName('Training Mode'),
+                                  ));
+                            } else {}
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(d.pSH(8)),
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: d.pSH(3), horizontal: d.pSW(5)),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(d.pSH(5)),
+                                border:
+                                    Border.all(color: Colors.white, width: 0.5),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SvgPicture.asset(
+                                    widget.category.isLocked
+                                        ? AppImages.openedLock
+                                        : AppImages.playCategoryIcon,
+                                    fit: BoxFit.cover,
+                                    height: d.pSH(10),
+                                  ),
+                                  SizedBox(width: d.pSW(5)),
+                                  CustomText(
+                                    label: widget.category.isLocked
+                                        ? 'Unlock'
+                                        : 'Play',
+                                    color: Colors.white,
+                                    fontSize: 12.5,
+                                    textAlign: TextAlign.center,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ))
                 ],
               ),
             ),
           ),
-        ),
 
-        //Align
-        Align(
-          child: Padding(
-            padding:
-                EdgeInsets.fromLTRB(d.pSH(12), d.pSH(10), d.pSH(12), d.pSH(16)),
-            child: Column(
-              children: [
-                SizedBox(height: d.pSH(5)),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (widget.category.icon.isNotEmpty)
-                        SizedBox(
-                          height: widget.iconSize ?? d.pSH(45),
-                          child: SvgPicture.network(
-                            widget.category.icon,
-                            fit: BoxFit.fitHeight,
-                            height: widget.iconSize,
-                          ),
-                        ),
-                      SizedBox(height: d.pSH(6)),
-                      CustomText(
-                        label: widget.category.name,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        textAlign: TextAlign.center,
-                        fontSize: widget.fontSize ?? d.pSH(14),
-                      )
-                    ],
-                  ),
-                ),
-
-                //Play or Unlock
-                if (!widget.hidePlay)
-                  Align(
-                      alignment: Alignment.bottomRight,
-                      child: InkWell(
-                        onTap: () {
-                          if (!widget.category.isLocked) {
-                            nextScreen(
-                                context,
-                                TrainingMode(
-                                  category: widget.category,
-                                  quest: soloQuestProvider
-                                      .getQuestByName('Training Mode'),
-                                ));
-                          } else {}
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(d.pSH(8)),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: d.pSH(3), horizontal: d.pSW(5)),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(d.pSH(5)),
-                              border:
-                                  Border.all(color: Colors.white, width: 0.5),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SvgPicture.asset(
-                                  widget.category.isLocked
-                                      ? AppImages.openedLock
-                                      : AppImages.playCategoryIcon,
-                                  fit: BoxFit.cover,
-                                  height: d.pSH(10),
-                                ),
-                                SizedBox(width: d.pSW(5)),
-                                CustomText(
-                                  label: widget.category.isLocked
-                                      ? 'Unlock'
-                                      : 'Play',
-                                  color: Colors.white,
-                                  fontSize: 12.5,
-                                  textAlign: TextAlign.center,
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ))
-              ],
+          //Lock
+          if (widget.category.isLocked)
+            Padding(
+              padding: EdgeInsets.all(d.pSH(12)),
+              child: SvgPicture.asset(
+                AppImages.closedLock,
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-        ),
-
-        //Lock
-        if (widget.category.isLocked)
-          Padding(
-            padding: EdgeInsets.all(d.pSH(12)),
-            child: SvgPicture.asset(
-              AppImages.closedLock,
-              fit: BoxFit.cover,
-            ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }

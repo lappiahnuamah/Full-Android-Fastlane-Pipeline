@@ -24,10 +24,13 @@ class AuthUrl {
   static const String emailChangeOTP = "${baseUrl}email-change-otp/";
   static const String confirmEmailChange = "${baseUrl}email-change/";
 
-  static const String validateInfo = "$baseUrl/validate-info/";
+  static const String validateInfo = "${baseUrl}validate-info/";
 
   static const String checkPassword = "${baseUrl}check-password";
 
   static const String oauthGoogle = "$halloaBaseUrl/oauth/google/";
   static const String oauthApple = "$halloaBaseUrl/oauth/apple/";
+
+///////////////// Profile /
+  static const String profile = "${baseUrl}profile/";
 }

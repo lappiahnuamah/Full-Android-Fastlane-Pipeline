@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
-import 'package:savyminds/models/game_key_model.dart';
 import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
-import 'package:savyminds/resources/app_enums.dart';
+import 'package:savyminds/screens/authentication/splashscreen.dart';
 import 'package:savyminds/screens/profile/components/key_card.dart';
 import 'package:savyminds/screens/records/components/record_rank_header.dart';
 import 'package:savyminds/screens/settings/personalization.dart';
+import 'package:savyminds/utils/cache/content_mgt.dart';
+import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
@@ -48,6 +49,20 @@ class _ProfileState extends State<Profile> {
                   fontWeight: FontWeight.w700,
                   fontSize: getFontSize(24, size),
                 ),
+                // InkWell(
+                //   onTap: () {
+                //     nextScreen(
+                //         context,
+                //         const ChangeDisplayName(
+                //           username: 'Username',
+                //         ));
+                //     //ƒ().clearAll();
+                //   },
+                //   child: const Icon(
+                //     Icons.person,
+                //     color: AppColors.hintTextBlack,
+                //   ),
+                // ),
                 InkWell(
                   onTap: () {
                     nextScreen(context, const Personalization());
@@ -107,7 +122,33 @@ class _ProfileState extends State<Profile> {
                       ),
                     ],
                   ),
-                  SizedBox(height: d.pSH(30)),
+                  SizedBox(height: d.pSH(20)),
+
+                  InkWell(
+                    onTap: () {
+                      showLogoutDialog();
+                    },
+                    child: Container(
+                      width: size.width * 0.3,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: d.pSW(10), vertical: d.pSH(4)),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: AppColors.kGameRed,
+                        ),
+                      ),
+                      child: Center(
+                        child: CustomText(
+                          label: 'Log Out',
+                          fontSize: getFontSize(13, size),
+                          color: AppColors.kGameRed,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: d.pSH(35)),
 
                   ///Savvy Store
                   Row(
@@ -198,71 +239,42 @@ class _ProfileState extends State<Profile> {
       );
     });
   }
-}
 
-List gameKeyList = const [
-  GameKeyModel(
-    id: 1,
-    name: 'Golden Key',
-    amount: 3,
-    icon: 'assets/icons/game_keys/golden_key.svg',
-    isLocked: false,
-    type: GameKeyType.goldenKey,
-  ),
-  GameKeyModel(
-    id: 1,
-    name: 'Fifty fity Key',
-    amount: 3,
-    icon: 'assets/icons/game_keys/fifty_fifty.svg',
-    isLocked: false,
-    type: GameKeyType.goldenKey,
-  ),
-  GameKeyModel(
-    id: 1,
-    name: 'Hint Key',
-    amount: 2,
-    icon: 'assets/icons/game_keys/hint_key.svg',
-    isLocked: false,
-    type: GameKeyType.goldenKey,
-  ),
-  GameKeyModel(
-    id: 1,
-    name: 'Freeze Time Key',
-    amount: 3,
-    icon: 'assets/icons/game_keys/freeze_time_key.svg',
-    isLocked: false,
-    type: GameKeyType.goldenKey,
-  ),
-  GameKeyModel(
-    id: 1,
-    name: 'Retake Key',
-    amount: 3,
-    icon: 'assets/icons/game_keys/retake_key.svg',
-    isLocked: false,
-    type: GameKeyType.goldenKey,
-  ),
-  GameKeyModel(
-    id: 1,
-    name: 'Swap Key',
-    amount: 3,
-    icon: 'assets/icons/game_keys/swap_key.svg',
-    isLocked: true,
-    type: GameKeyType.goldenKey,
-  ),
-  GameKeyModel(
-    id: 1,
-    name: 'Double Points Key',
-    amount: 3,
-    icon: 'assets/icons/game_keys/double_points.svg',
-    isLocked: true,
-    type: GameKeyType.goldenKey,
-  ),
-  GameKeyModel(
-    id: 1,
-    name: 'Mystery Box Key',
-    amount: 3,
-    icon: 'assets/icons/game_keys/mystery_box.svg',
-    isLocked: true,
-    type: GameKeyType.goldenKey,
-  ),
-];
+  Future<void> showLogoutDialog() async {
+    await showAdaptiveDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Log Out'),
+          content: const Text('Are you sure you want to log out?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child:
+                  const Text('Cancel', style: TextStyle(color: Colors.black)),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                logout();
+              },
+              child: const Text(
+                'Log Out',
+                style: TextStyle(color: AppColors.kGameRed),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> logout() async {
+    gameItemsProvider.clearStreaks();
+    ContentManagement().clearAll();
+    SharedPreferencesHelper.clearCache();
+    nextScreenCloseOthers(context, const SplashScreen());
+  }
+}

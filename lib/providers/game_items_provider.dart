@@ -121,4 +121,16 @@ class GameItemsProvider extends ChangeNotifier {
     setKeyAmount(GameKeyType.retakeKey, keys.retakeQuestion);
     notifyListeners();
   }
+
+  clearStreaks() {
+    gameStreaks = GameStreakModel(
+        fiftyFifty: 0,
+        goldenBadges: 0,
+        totalPoints: 0,
+        swapQuestion: 0,
+        freezeTime: 0,
+        retakeQuestion: 0,
+        gamesPlayed: 0,
+        streaks: 0);
+  }
 }

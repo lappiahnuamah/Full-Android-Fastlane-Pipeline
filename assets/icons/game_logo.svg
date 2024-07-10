@@ -17,7 +17,7 @@
 <stop offset="0.89" stop-color="#DCDCDC"/>
 <stop offset="1" stop-color="white"/>
 </linearGradient>
-<linearGradient id="paint1_linear_170_1453" x1="93.2786" y1="80.3552" x2="53.6535" y2="80.3552" gradientUnits="userSpaceOnUse">
+<linearGradient id="paint1_linear_170_1453" x1="93.2786" y1s="80.3552" x2="53.6535" y2="80.3552" gradientUnits="userSpaceOnUse">
 <stop/>
 <stop offset="1" stop-color="white"/>
 </linearGradient>
