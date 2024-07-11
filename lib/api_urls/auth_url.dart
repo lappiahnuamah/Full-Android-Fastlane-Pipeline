@@ -33,4 +33,7 @@ class AuthUrl {
 
 ///////////////// Profile /
   static const String profile = "${baseUrl}profile/";
+
+  ///
+  static const String changeDisplayName = "${baseUrl}check-display-name/";
 }

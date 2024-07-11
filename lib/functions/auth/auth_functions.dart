@@ -134,6 +134,30 @@ class Authentications {
     }
   }
 
+  Future<bool> checkDisplayName(
+      {required BuildContext context, required String username}) async {
+    try {
+      http.Response response =
+          await http.post(Uri.parse(AuthUrl.changeDisplayName),
+              headers: {
+                "content-type": "application/json",
+                "accept": "application/json",
+              },
+              body: json.encode({
+                "display_name": username,
+              }));
+
+      log('username: ${response.body}');
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<String?> checkAllCredentials(
       {required BuildContext context,
       required String email,

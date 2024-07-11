@@ -125,8 +125,8 @@ class _ChangeDisplayNameState extends State<ChangeDisplayName> {
         isLoading = true;
       });
 
-      final result = await Authentications()
-          .checkUsername(context: context, username: usernameController.text);
+      final result = await Authentications().checkDisplayName(
+          context: context, username: usernameController.text);
 
       if (result) {
         final response = await ProfileFunctions().updateDisplayName(
