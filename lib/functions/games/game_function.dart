@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:savyminds/api_urls/auth_url.dart';
 import 'package:savyminds/api_urls/game_url.dart';
-import 'package:savyminds/models/auth/app_user.dart';
 import 'package:savyminds/models/error_response.dart';
 import 'package:savyminds/models/games/game_rank_model.dart';
 import 'package:savyminds/models/games/game_session.dart';

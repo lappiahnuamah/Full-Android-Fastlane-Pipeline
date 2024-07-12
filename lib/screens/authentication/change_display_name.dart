@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/auth/auth_functions.dart';
 import 'package:savyminds/functions/auth/profile_functions.dart';
+import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
 import 'package:savyminds/utils/validator.dart';
@@ -133,6 +135,8 @@ class _ChangeDisplayNameState extends State<ChangeDisplayName> {
             context: context, displayName: usernameController.text);
         if (response) {
           Fluttertoast.showToast(msg: 'Display name updated successfully');
+          final userProvider = context.read<UserDetailsProvider>();
+          userProvider.setDisplayName(usernameController.text);
 
           Navigator.of(context).push(
             PageRouteBuilder(

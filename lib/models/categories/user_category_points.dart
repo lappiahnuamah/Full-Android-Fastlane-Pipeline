@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 class UserCategoryPoint {
   int id;
   int user;

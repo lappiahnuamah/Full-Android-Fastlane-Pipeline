@@ -18,6 +18,11 @@ class UserDetailsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setDisplayName(String name) {
+    _user?.displayName = name;
+    notifyListeners();
+  }
+
   ///////////////////////////////////////////////////////////
   /////////////////// Access Token Functions  ///////////////
   String getAccessToken() {

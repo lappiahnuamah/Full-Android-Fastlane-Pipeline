@@ -5,7 +5,7 @@ class AppUser {
   final int? outerId;
   final String? fullname;
   final String? username;
-  final String? displayName;
+  String? displayName;
   final String? email;
   final String? phoneNumber;
   final String? dob;

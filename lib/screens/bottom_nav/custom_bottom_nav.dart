@@ -1,6 +1,8 @@
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/categories/categories.dart';
@@ -35,25 +37,31 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        bottomNavigationBar: bottomNavigationBar(),
-        body: Stack(
-          children: [
-            const GameBackground(),
-            SafeArea(
-              child: IndexedStack(
-                index: currentIndex,
-                children: const [
-                  Categories(),
-                  SoloQuest(),
-                  Contest(),
-                  Records(),
-                  Profile()
-                ],
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        onWillPop();
+      },
+      child: Scaffold(
+          bottomNavigationBar: bottomNavigationBar(),
+          body: Stack(
+            children: [
+              const GameBackground(),
+              SafeArea(
+                child: IndexedStack(
+                  index: currentIndex,
+                  children: const [
+                    Categories(),
+                    SoloQuest(),
+                    Contest(),
+                    Records(),
+                    Profile()
+                  ],
+                ),
               ),
-            ),
-          ],
-        ));
+            ],
+          )),
+    );
   }
 
   Widget bottomNavigationBar() {
@@ -130,5 +138,19 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
         ),
       ),
     );
+  }
+
+  DateTime? currentBackPressTime;
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      Fluttertoast.showToast(msg: 'Double tap to exit app');
+      return Future.value(false);
+    } else {
+      SystemNavigator.pop();
+      return Future.value(true);
+    }
   }
 }

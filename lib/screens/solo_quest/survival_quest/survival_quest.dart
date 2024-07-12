@@ -13,7 +13,6 @@ import 'package:savyminds/resources/app_fonts.dart';
 import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/screens/categories/components/category_placeholder.dart';
-import 'package:savyminds/screens/categories/components/level_card.dart';
 import 'package:savyminds/screens/categories/select_categoiries.dart';
 import 'package:savyminds/screens/solo_quest/survival_quest/survival_quest_game_page.dart';
 import 'package:savyminds/utils/func.dart';

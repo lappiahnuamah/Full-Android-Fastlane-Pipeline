@@ -7,7 +7,6 @@ import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/screens/categories/components/category_placeholder.dart';
-import 'package:savyminds/screens/categories/components/level_card.dart';
 import 'package:savyminds/screens/solo_quest/challlenge_of_the_day/start_challenge_of_day.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/page_template.dart';

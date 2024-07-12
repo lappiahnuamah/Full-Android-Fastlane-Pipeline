@@ -686,6 +686,8 @@ class Authentications {
         }),
       );
 
+      log('google response: ${response.body}');
+
       if (response.statusCode == 200) {
         Fluttertoast.showToast(msg: "Login successful");
         AppUser user = AppUser.fromJson(jsonDecode(response.body));

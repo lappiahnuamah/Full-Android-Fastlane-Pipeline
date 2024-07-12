@@ -183,6 +183,9 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
     Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: PopScope(
+      onPopInvoked: (didPop) {
+        goBack();
+      },
       canPop: false,
       child: Stack(
         children: [
@@ -964,6 +967,8 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
             ),
             TextButton(
               onPressed: () {
+                timer?.cancel();
+                FlameAudio.bgm.stop();
                 Navigator.of(context)
                   ..pop()
                   ..pop();

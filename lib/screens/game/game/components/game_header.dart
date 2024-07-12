@@ -8,9 +8,7 @@ import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/game/ranking/game_ranking.dart';
 import 'package:savyminds/utils/enums/game_enums.dart';
 import 'package:savyminds/utils/func.dart';
-import 'package:savyminds/utils/game_utils.dart';
 import 'package:savyminds/utils/next_screen.dart';
-import 'package:savyminds/utils/number_utils.dart';
 
 class GameHeader extends StatelessWidget {
   const GameHeader(

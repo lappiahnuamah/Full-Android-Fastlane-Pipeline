@@ -11,7 +11,6 @@ import 'package:savyminds/resources/app_fonts.dart';
 import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/screens/categories/components/category_placeholder.dart';
-import 'package:savyminds/screens/categories/components/level_card.dart';
 import 'package:savyminds/screens/solo_quest/time_rush/select_three_categories.dart';
 import 'package:savyminds/screens/solo_quest/time_rush/time_rush_game_page.dart';
 import 'package:savyminds/utils/func.dart';

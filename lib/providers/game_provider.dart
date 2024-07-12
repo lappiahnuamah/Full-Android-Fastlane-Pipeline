@@ -17,7 +17,6 @@ import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/default_snackbar.dart';
 import 'package:savyminds/widgets/two_images.dart';
 import '../models/games/game_session.dart';
-import '../models/games/game_streak_model.dart';
 import '../models/http_response_model.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 

@@ -7,7 +7,6 @@ import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/authentication/splashscreen.dart';
 import 'package:savyminds/screens/profile/components/key_card.dart';
 import 'package:savyminds/screens/records/components/record_rank_header.dart';
-import 'package:savyminds/screens/settings/personalization.dart';
 import 'package:savyminds/utils/cache/content_mgt.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/func.dart';
@@ -49,30 +48,17 @@ class _ProfileState extends State<Profile> {
                   fontWeight: FontWeight.w700,
                   fontSize: getFontSize(24, size),
                 ),
+
                 // InkWell(
                 //   onTap: () {
-                //     nextScreen(
-                //         context,
-                //         const ChangeDisplayName(
-                //           username: 'Username',
-                //         ));
+                //     nextScreen(context, const Personalization());
                 //     //ƒ().clearAll();
                 //   },
                 //   child: const Icon(
-                //     Icons.person,
+                //     Icons.settings,
                 //     color: AppColors.hintTextBlack,
                 //   ),
                 // ),
-                InkWell(
-                  onTap: () {
-                    nextScreen(context, const Personalization());
-                    //ƒ().clearAll();
-                  },
-                  child: const Icon(
-                    Icons.settings,
-                    color: AppColors.hintTextBlack,
-                  ),
-                ),
               ],
             ),
             SizedBox(height: d.pSH(22)),
@@ -81,7 +67,8 @@ class _ProfileState extends State<Profile> {
                 children: [
                   //Name
                   CustomText(
-                    label: '${userDetailsProvider.getUserDetails().username}',
+                    label:
+                        '${userDetailsProvider.getUserDetails().displayName ?? userDetailsProvider.getUserDetails().username}',
                     fontWeight: FontWeight.w500,
                     fontSize: getFontSize(25, size),
                   ),

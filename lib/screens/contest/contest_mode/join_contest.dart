@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:savyminds/constants.dart';
-import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_fonts.dart';
 import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/screens/contest/contest_mode/create_contest.dart';
-import 'package:savyminds/screens/contest/contest_mode/start_contest_mode.dart';
 import 'package:savyminds/screens/game/game/components/game_text_feild.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
