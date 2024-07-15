@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/utils/extensions/extensions.dart';
 
 class CategoryModel extends Equatable {
   final int id;
@@ -9,7 +10,7 @@ class CategoryModel extends Equatable {
   final int noOfQuestion;
   final String icon;
   final bool isLocked;
-  final num categoryWeight ;
+  final num categoryWeight;
 
   const CategoryModel({
     required this.id,
@@ -31,6 +32,18 @@ class CategoryModel extends Equatable {
       icon: json['icon'] ?? "",
       isLocked: json['is_locked'] ?? true,
     );
+  }
+
+  toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'color': color.toHex(),
+      'no_of_questions': noOfQuestion,
+      'category_weight': categoryWeight,
+      'icon': icon,
+      'is_locked': isLocked,
+    };
   }
 
   static Color _parseColor(String colorString) {

@@ -33,7 +33,7 @@ class GameMatricFunction {
       );
       lg('Game Matrics: ${response.body}');
       if (response.statusCode == 200) {
-        SharedPreferencesHelper().setString(
+        SharedPreferencesHelper.setString(
             key: SharedPreferenceValues.allMetrics, value: response.body);
 
         final data = jsonDecode(response.body);

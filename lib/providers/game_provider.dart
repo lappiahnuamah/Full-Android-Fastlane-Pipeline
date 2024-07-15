@@ -289,23 +289,22 @@ class GameProvider extends ChangeNotifier {
 ///// Cache data
 
   cacheGoldenBadges() {
-    SharedPreferencesHelper()
-        .setInt(key: 'goldenChances', value: goldenChances);
+    SharedPreferencesHelper.setInt(key: 'goldenChances', value: goldenChances);
   }
 
   cacheFiftyfifty() async {
-    SharedPreferencesHelper().setInt(key: 'fiftyFifty', value: fiftyFifty);
+    SharedPreferencesHelper.setInt(key: 'fiftyFifty', value: fiftyFifty);
   }
 
   cacheNextUrl() async {
-    SharedPreferencesHelper().setString(key: 'nextUrl', value: nextUrl);
+    SharedPreferencesHelper.setString(key: 'nextUrl', value: nextUrl);
   }
 
   cacheLongestAnswerStreaks() {
     final int oldStreak = SharedPreferencesHelper.getInt('longestStreaks') ?? 0;
     if (longestStreaks > oldStreak) {
-      SharedPreferencesHelper()
-          .setInt(key: 'longestStreaks', value: longestStreaks);
+      SharedPreferencesHelper.setInt(
+          key: 'longestStreaks', value: longestStreaks);
     }
   }
 

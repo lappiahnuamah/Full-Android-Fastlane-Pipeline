@@ -32,12 +32,13 @@ class SharedPreferencesHelper {
 
   //////////////////////////////////////
 /////////////////   SET  /////////////
-   Future<bool?> setInt({required String key, required int value}) async {
+  static Future<bool?> setInt({required String key, required int value}) async {
     return _prefs?.setInt(key, value);
   }
 
-   Future<bool?> setString({required String key, required String value}) async {
-    return _prefs?.setString(key, value);
+  static Future<bool?> setString(
+      {required String key, required String? value}) async {
+    return _prefs?.setString(key, value ?? '');
   }
 
   static Future<bool?> setStringList(String key, List<String> list) async {
@@ -80,9 +81,8 @@ class SharedPreferencesHelper {
     return json.decode(data!);
   }
 
-
   // Clear cache
- static clearCache(){
+  static clearCache() {
     _prefs?.clear();
   }
 }

@@ -658,7 +658,7 @@ class Authentications {
       }
       return false;
     } catch (e) {
-      Fluttertoast.showToast(msg: 'An unexpected error occured');
+      Fluttertoast.showToast(msg: 'An unexpected error occurred');
       return false;
     }
   }
