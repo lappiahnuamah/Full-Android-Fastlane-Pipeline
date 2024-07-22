@@ -57,11 +57,6 @@ class QuestionsUtils {
 
       final levelWeight = double.parse(levelMatrix.levelWeight);
 
-      lg("Level Weight: $levelWeight");
-      lg("Complexity Weight: $complexityWeight");
-      lg("Difficulty Weight: $difficultyWeight");
-
-      lg("Question Time: ${(complexityWeight * difficultyWeight * (1 / levelWeight) * 20).round()}");
       return (complexityWeight * difficultyWeight * (1 / levelWeight) * 20)
           .round();
     } catch (e) {

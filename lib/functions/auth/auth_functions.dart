@@ -680,9 +680,9 @@ class Authentications {
           "accept": "application/json",
         },
         body: json.encode({
-          "access_token": accessToken,
-          "code": code,
-          "id_token": idToken,
+          // "access_token": accessToken,
+          // "code": code,
+          "auth_token": idToken
         }),
       );
 
@@ -701,6 +701,10 @@ class Authentications {
             .then((value) async {
           value != null ? await FCMFunctions().setFCMToken(value) : null;
         });
+
+        if (context.mounted) {
+          GameFunction().getGameStreaks(context: context);
+        }
 
         return true;
       } else {
@@ -767,6 +771,10 @@ class Authentications {
             .then((value) async {
           value != null ? await FCMFunctions().setFCMToken(value) : null;
         });
+
+        if (context.mounted) {
+          GameFunction().getGameStreaks(context: context);
+        }
 
         return true;
       } else {

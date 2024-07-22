@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -30,9 +32,14 @@ import 'package:savyminds/widgets/quest_icon_desc_card.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
 
 class TrainingMode extends StatefulWidget {
-  const TrainingMode({super.key, required this.quest, this.category});
+  const TrainingMode(
+      {super.key,
+      required this.quest,
+      this.category,
+      this.isDailyTraining = false});
   final QuestModel quest;
   final CategoryModel? category;
+  final bool isDailyTraining;
 
   @override
   State<TrainingMode> createState() => _TrainingModeState();
@@ -269,6 +276,8 @@ class _TrainingModeState extends State<TrainingMode> {
 
     if (result.questions.isNotEmpty) {
       if (mounted) {
+        log('is daily training on init page: ${widget.isDailyTraining}');
+
         nextScreen(
             context,
             TrainingModeGamePage(
@@ -276,7 +285,8 @@ class _TrainingModeState extends State<TrainingMode> {
                 questionList: result.questions,
                 swapQuestions: result.swapQuestions,
                 quest: widget.quest,
-                level: level));
+                level: level,
+                isDailyTraining: widget.isDailyTraining));
       }
     } else {
       Fluttertoast.showToast(

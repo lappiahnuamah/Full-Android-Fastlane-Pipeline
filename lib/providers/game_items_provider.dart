@@ -1,7 +1,12 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/game_key_model.dart';
 import 'package:savyminds/models/games/game_streak_model.dart';
 import 'package:savyminds/resources/app_enums.dart';
+import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 
 class GameItemsProvider extends ChangeNotifier {
   GameStreakModel gameStreaks = GameStreakModel(
@@ -27,7 +32,7 @@ class GameItemsProvider extends ChangeNotifier {
     GameKeyType.swapKey
   ];
 
-  Map<GameKeyType, GameKeyModel> userKeys = {
+  static Map<GameKeyType, GameKeyModel> initialKeyMap = {
     GameKeyType.goldenKey: const GameKeyModel(
       id: 1,
       name: 'Golden Key',
@@ -47,7 +52,7 @@ class GameItemsProvider extends ChangeNotifier {
     GameKeyType.swapKey: const GameKeyModel(
       id: 1,
       name: 'Swap Key',
-      amount: 10,
+      amount: 0,
       icon: 'assets/icons/game_keys/swap_key.svg',
       isLocked: false,
       type: GameKeyType.swapKey,
@@ -69,6 +74,78 @@ class GameItemsProvider extends ChangeNotifier {
       type: GameKeyType.retakeKey,
     )
   };
+
+  Map<GameKeyType, GameKeyModel> userKeys = initialKeyMap;
+
+  /// daily training ////
+  Map<int, dynamic> dailyTrainingCategories = {};
+
+  setDailyTrainingCategories(List<CategoryModel> categories) {
+    if (dailyTrainingCategories.isEmpty) {
+      for (var category in categories) {
+        dailyTrainingCategories[category.id] = {
+          'category': category,
+          'isPlayed': false,
+        };
+      }
+      notifyListeners();
+    }
+  }
+
+  setDailyTrainingPlayInstanceFromCache(
+      {required Map<int, dynamic> categories}) {
+    dailyTrainingCategories.forEach((key, value) {
+      log(('keyValue: ${key},${value} , in cache: ${categories.containsKey(key)}'));
+      if (categories.containsKey(key)) {
+        dailyTrainingCategories[key] = {
+          'category': value['category'],
+          'isPlayed': categories[key] ??
+              value['isPlayed'], //use cached play state or use current state
+        };
+      }
+    });
+    notifyListeners();
+  }
+
+  setDailyCategoryToPlayed({required int id}) {
+    final category = dailyTrainingCategories[id];
+    if (category != null) {
+      dailyTrainingCategories[id] = {
+        'category': category['category'],
+        'isPlayed': true,
+      };
+    }
+
+    cacheDailyChallengeCategoriesPlayedInstance();
+  }
+
+  cacheDailyChallengeCategoriesPlayedInstance() {
+    Map<int, bool> categories = {};
+    try {
+      log('dailyTrainingCategories: $dailyTrainingCategories');
+      dailyTrainingCategories.forEach((key, value) {
+        categories.addAll({
+          key: value['isPlayed'],
+        });
+        log('categories: $categories');
+      });
+    } catch (e) {
+      log('error: $e');
+    }
+    log('categoriesInstances to cache: $categories');
+    try {
+      SharedPreferencesHelper.setString(
+        key: 'dailyChallengesInstance',
+        value: jsonEncode(categories, toEncodable: (nonEncodable) {
+          log('nonEncodable: $nonEncodable');
+          return null;
+        }),
+      );
+    } catch (e) {
+      log('encode error: $e');
+    }
+  }
+  ////////////////////////////////////////
 
   void addKey(GameKeyModel key) {
     userKeys[key.type] = key;
@@ -132,5 +209,7 @@ class GameItemsProvider extends ChangeNotifier {
         retakeQuestion: 0,
         gamesPlayed: 0,
         streaks: 0);
+
+    userKeys = initialKeyMap;
   }
 }

@@ -98,107 +98,91 @@ class _CategoriesState extends State<Categories> {
 
                       //
                       Expanded(
-                          child: ValueListenableBuilder(
-                              valueListenable: searchValue,
-                              builder: (context, search, child) {
-                                return SingleChildScrollView(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      //Favorite Categories
-                                      if (categoryProvider
-                                              .favoriteCategories.isNotEmpty &&
-                                          searchText.isEmpty)
-                                        const CustomText(
-                                          label: 'Favorites',
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.hintTextBlack,
-                                        ),
-                                      if (categoryProvider
-                                              .favoriteCategories.isNotEmpty &&
-                                          searchText.isEmpty)
-                                        SizedBox(height: d.pSH(16)),
+                          child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            //Favorite Categories
+                            if (categoryProvider
+                                    .favoriteCategories.isNotEmpty &&
+                                searchText.isEmpty)
+                              const CustomText(
+                                label: 'Favorites',
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.hintTextBlack,
+                              ),
+                            if (categoryProvider
+                                    .favoriteCategories.isNotEmpty &&
+                                searchText.isEmpty)
+                              SizedBox(height: d.pSH(16)),
 
-                                      if (searchText.isEmpty)
-                                        GridView(
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            gridDelegate:
-                                                SliverGridDelegateWithFixedCrossAxisCount(
-                                                    crossAxisCount: 2,
-                                                    crossAxisSpacing: d.pSH(24),
-                                                    mainAxisSpacing: d.pSH(10),
-                                                    childAspectRatio: 1.05),
-                                            children: [
-                                              ...List.generate(
-                                                  categoryProvider
-                                                      .favoriteCategories
-                                                      .length, (index) {
-                                                final category =
-                                                    categoryProvider
-                                                            .favoriteCategories[
-                                                        index];
-                                                return Hero(
-                                                  tag:
-                                                      "Category ${category.id}",
-                                                  child: CategoryCard(
-                                                    category: category,
-                                                    index: index,
-                                                  ),
-                                                );
-                                              }),
-                                            ]),
-                                      if (categoryProvider
-                                              .favoriteCategories.isNotEmpty &&
-                                          searchText.isEmpty)
-                                        SizedBox(height: d.pSH(16)),
-
-                                      /// All Categories
-                                      if (categoryProvider
-                                              .favoriteCategories.isNotEmpty &&
-                                          searchText.isEmpty)
-                                        const CustomText(
-                                          label: 'All Categories',
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.hintTextBlack,
+                            if (searchText.isEmpty)
+                              GridView(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          crossAxisSpacing: d.pSH(24),
+                                          mainAxisSpacing: d.pSH(10),
+                                          childAspectRatio: 1.05),
+                                  children: [
+                                    ...List.generate(
+                                        categoryProvider.favoriteCategories
+                                            .length, (index) {
+                                      final category = categoryProvider
+                                          .favoriteCategories[index];
+                                      return Hero(
+                                        tag: "Category ${category.id}",
+                                        child: CategoryCard(
+                                          category: category,
+                                          index: index,
                                         ),
-                                      if (categoryProvider
-                                          .favoriteCategories.isNotEmpty)
-                                        SizedBox(height: d.pSH(16)),
-                                      GridView(
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          gridDelegate:
-                                              SliverGridDelegateWithFixedCrossAxisCount(
-                                                  crossAxisCount: 2,
-                                                  crossAxisSpacing: d.pSH(24),
-                                                  mainAxisSpacing: d.pSH(10),
-                                                  childAspectRatio: 1.05),
-                                          children: [
-                                            ...List.generate(
-                                                searchText.isEmpty
-                                                    ? categoryProvider
-                                                        .categories.length
-                                                    : searchValue.value.length,
-                                                (index) {
-                                              final category = searchText
-                                                      .isEmpty
-                                                  ? categoryProvider
-                                                      .categories[index]
-                                                  : searchValue.value[index];
-                                              return CategoryCard(
-                                                category: category,
-                                                index: index,
-                                              );
-                                            }),
-                                          ]),
-                                    ],
-                                  ),
-                                );
-                              }))
+                                      );
+                                    }),
+                                  ]),
+                            if (categoryProvider
+                                    .favoriteCategories.isNotEmpty &&
+                                searchText.isEmpty)
+                              SizedBox(height: d.pSH(16)),
+
+                            /// All Categories
+                            if (categoryProvider
+                                    .favoriteCategories.isNotEmpty &&
+                                searchText.isEmpty)
+                              const CustomText(
+                                label: 'All Categories',
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.hintTextBlack,
+                              ),
+                            if (categoryProvider.favoriteCategories.isNotEmpty)
+                              SizedBox(height: d.pSH(16)),
+                            GridView(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                        crossAxisSpacing: d.pSH(24),
+                                        mainAxisSpacing: d.pSH(10),
+                                        childAspectRatio: 1.05),
+                                children: [
+                                  ...List.generate(
+                                      searchText.isEmpty
+                                          ? categoryProvider.categories.length
+                                          : searchValue.value.length, (index) {
+                                    final category = searchText.isEmpty
+                                        ? categoryProvider.categories[index]
+                                        : searchValue.value[index];
+                                    return CategoryCard(
+                                      category: category,
+                                      index: index,
+                                    );
+                                  }),
+                                ]),
+                          ],
+                        ),
+                      ))
                     ],
                   ));
     });
@@ -228,7 +212,7 @@ class _CategoriesState extends State<Categories> {
     searchValue.value = [];
     List<CategoryModel> searchCategories = [];
     for (var category in categoryProvider.categories) {
-      if (category.name.contains(searchText)) {
+      if (category.name.toLowerCase().contains(searchText.toLowerCase())) {
         searchCategories.add(category);
       }
     }

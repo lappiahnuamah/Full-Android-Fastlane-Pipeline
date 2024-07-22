@@ -8,11 +8,13 @@ import 'package:savyminds/models/categories/category_level_model.dart';
 import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
+import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_fonts.dart';
 import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
 import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/screens/categories/components/level_card.dart';
+import 'package:savyminds/screens/solo_quest/daily_training/daily_training.dart';
 import 'package:savyminds/screens/solo_quest/training_mode/training_mode.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
@@ -20,8 +22,8 @@ import 'package:savyminds/widgets/availalble_keys_widget.dart';
 import 'package:savyminds/widgets/submit_page_background.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
 
-class TrainingModeSubmitPage extends StatefulWidget {
-  const TrainingModeSubmitPage(
+class DailyTrainingSubmitPage extends StatefulWidget {
+  const DailyTrainingSubmitPage(
       {super.key,
       required this.categoryModel,
       required this.pointsScored,
@@ -33,18 +35,22 @@ class TrainingModeSubmitPage extends StatefulWidget {
   final QuestModel quest;
 
   @override
-  State<TrainingModeSubmitPage> createState() => _TrainingModeSubmitPageState();
+  State<DailyTrainingSubmitPage> createState() =>
+      _DailyTrainingSubmitPageState();
 }
 
-class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
+class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
   LevelName levelName = LevelName.beginner;
   int levelUpperBound = 1999;
   int levelLowerBound = 0;
   bool isLoading = false;
   CategoryLevelModel? categoryLevelModel;
+  late GameItemsProvider gameItemsProvider;
 
   @override
   void initState() {
+    gameItemsProvider = context.read<GameItemsProvider>();
+    gameItemsProvider.setDailyCategoryToPlayed(id: widget.categoryModel!.id);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (widget.categoryModel != null) {
         if (widget.categoryModel != null) {
@@ -96,6 +102,41 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Consumer<GameItemsProvider>(
+                          builder: (context, itemProvider, child) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: d.pSW(16)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              //Categories
+
+                              ...itemProvider.dailyTrainingCategories.entries
+                                  .map((e) {
+                                final category = e.value['category'];
+                                return Expanded(
+                                    child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 2.0),
+                                    child: AspectRatio(
+                                      aspectRatio: 0.99,
+                                      child: CategoryCard(
+                                        category: category,
+                                        hidePlay: true,
+                                        greyedOut: e.value['isPlayed'],
+                                        fontSize: 12,
+                                        iconSize: d.pSH(26),
+                                        borderRadius: d.pSH(18),
+                                      ),
+                                    ),
+                                  ),
+                                ));
+                              }),
+                            ],
+                          ),
+                        );
+                      }),
                       Text(
                         "Points Scored",
                         textAlign: TextAlign.center,
@@ -119,16 +160,16 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      SizedBox(height: d.pSH(15)),
-                      SizedBox(
-                        width: d.pSW(135),
-                        height: d.pSH(125),
-                        child: CategoryCard(
-                          category: widget.categoryModel!,
-                          borderRadius: d.pSH(10),
-                          fontSize: d.pSH(16),
-                          hidePlay: true,
-                          iconSize: 35,
+                      SizedBox(height: d.pSH(5)),
+                      Text(
+                        widget.categoryModel?.name ?? '',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: AppColors.textBlack,
+                          fontSize: getFontSize(24, size),
+                          fontFamily: AppFonts.inter,
+                          height: 1.5,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                       SizedBox(height: d.pSH(25)),
@@ -357,31 +398,33 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                       SizedBox(
                         height: d.pSH(40),
                       ),
-                      TransformedButton(
-                        onTap: () {
-                          nextScreen(context, const CustomBottomNav());
-                          nextScreen(
-                              context,
-                              TrainingMode(
-                                quest: widget.quest,
-                                category: widget.categoryModel,
-                              ));
-                        },
-                        buttonText: 'PLAY AGAIN',
-                        fontSize: getFontSize(22, size),
-                        isReversed: true,
-                        height: d.pSH(70),
-                        width: d.getPhoneScreenWidth() * 0.55,
-                        buttonColor: AppColors.kGameGreen,
-                      ),
+                      Consumer<GameItemsProvider>(
+                          builder: (context, itemProvider, child) {
+                        return (itemProvider.dailyTrainingCategories.entries
+                                .any((element) =>
+                                    element.value['isPlayed'] == false))
+                            ? TransformedButton(
+                                onTap: () {
+                                  playNextCategory(context);
+                                },
+                                buttonText: 'PLAY NEXT',
+                                fontSize: getFontSize(22, size),
+                                isReversed: true,
+                                height: d.pSH(70),
+                                width: d.getPhoneScreenWidth() * 0.55,
+                                buttonColor: AppColors.kGameGreen,
+                              )
+                            : const SizedBox();
+                      }),
                       SizedBox(
                         height: d.pSH(30),
                       ),
                       TransformedButton(
                         onTap: () {
                           nextScreen(context, const CustomBottomNav());
+                          nextScreen(context, const DailyTraining());
                         },
-                        buttonText: 'Return Home',
+                        buttonText: 'RETURN TO TRAINING',
                         fontSize: getFontSize(22, size),
                         height: d.pSH(80),
                         buttonColor: AppColors.kGameRed,
@@ -396,6 +439,23 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
         ),
       ),
     );
+  }
+
+  void playNextCategory(BuildContext context) {
+    final gameItemsProvider = context.read<GameItemsProvider>();
+
+    final nextCategory = gameItemsProvider.dailyTrainingCategories.entries
+        .firstWhere((element) => element.value['isPlayed'] == false)
+        .value['category'];
+
+    nextScreen(context, const CustomBottomNav());
+    nextScreen(
+        context,
+        TrainingMode(
+          quest: widget.quest,
+          category: nextCategory,
+          isDailyTraining: true,
+        ));
   }
 
   String getCategoryRankMessage({required int rank}) {

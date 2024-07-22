@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -24,11 +25,12 @@ class DailyTraining extends StatefulWidget {
 class _DailyTrainingState extends State<DailyTraining> {
   late CategoryProvider categoryProvider;
   bool isLoading = true;
-  List<CategoryModel> categories = [];
+  late GameItemsProvider gameItemsProvider;
 
   @override
   void initState() {
     categoryProvider = context.read<CategoryProvider>();
+    gameItemsProvider = context.read<GameItemsProvider>();
     getThreeCategoriesForDailyChallenge();
 
     super.initState();
@@ -87,7 +89,7 @@ class _DailyTrainingState extends State<DailyTraining> {
                   fontWeight: FontWeight.w400,
                   fontSize: 13,
                   label:
-                      'Categories are selected at random based on your favourites or your frequently played games. You will need to play in  3 categories. ',
+                      'Categories are selected at random based on your favorites or your frequently played games. You will need to play in  3 categories. ',
                 ))
               ],
             ),
@@ -97,24 +99,34 @@ class _DailyTrainingState extends State<DailyTraining> {
                     ? Center(
                         child: CircularProgressIndicator(),
                       )
-                    : SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            //Categories
-                            ...List.generate(categories.length, (index) {
-                              return Container(
-                                height: d.pSH(156.5),
-                                width: d.pSW(160.2),
-                                margin: EdgeInsets.only(bottom: d.pSH(8)),
-                                child: CategoryCard(
-                                  category: categories[index],
-                                ),
-                              );
-                            }),
-                            SizedBox(height: d.pSH(16)),
-                          ],
-                        ),
-                      ))
+                    : Consumer<GameItemsProvider>(
+                        builder: (context, itemProvider, child) {
+                        return SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              //Categories
+
+                              ...itemProvider.dailyTrainingCategories.entries
+                                  .map((e) {
+                                final category = e.value['category'];
+                                return Container(
+                                  height: d.pSH(156.5),
+                                  width: d.pSW(160.2),
+                                  margin: EdgeInsets.only(bottom: d.pSH(8)),
+                                  child: CategoryCard(
+                                    category: category,
+                                    hidePlay: e.value['isPlayed'],
+                                    greyedOut: e.value['isPlayed'],
+                                    isDailyTraining: true,
+                                  ),
+                                );
+                              }),
+
+                              SizedBox(height: d.pSH(16)),
+                            ],
+                          ),
+                        );
+                      }))
           ],
         ),
       ),
@@ -125,6 +137,8 @@ class _DailyTrainingState extends State<DailyTraining> {
     final prefs = await SharedPreferences.getInstance();
     final String? storedDate = prefs.getString('dailyChallengeDate');
     final result = SharedPreferencesHelper.getStringList('dailyChallenges');
+    final instanceProviderData =
+        SharedPreferencesHelper.getString('dailyChallengesInstance');
 
     List<CategoryModel> storedChallenges = [];
     if (result != null) {
@@ -141,7 +155,15 @@ class _DailyTrainingState extends State<DailyTraining> {
       setState(() {
         isLoading = false;
       });
-      categories = storedChallenges;
+
+      gameItemsProvider.setDailyTrainingCategories(storedChallenges);
+
+      if (instanceProviderData.isNotEmpty) {
+        log('providerData: $instanceProviderData');
+        final newProviderData = jsonDecode(instanceProviderData);
+        gameItemsProvider.setDailyTrainingPlayInstanceFromCache(
+            categories: newProviderData);
+      }
       return storedChallenges;
     }
 
@@ -157,7 +179,7 @@ class _DailyTrainingState extends State<DailyTraining> {
       isLoading = false;
     });
 
-    categories = selectedCategories;
+    gameItemsProvider.setDailyTrainingCategories(selectedCategories);
 
     return selectedCategories;
   }

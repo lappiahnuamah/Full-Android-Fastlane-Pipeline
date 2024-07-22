@@ -60,8 +60,8 @@ class SharedPreferencesHelper {
   //////////////////////////////////////
 /////////////////   Get  /////////////
 
-  static String? getString(String key) {
-    return _prefs?.getString(key);
+  static String getString(String key) {
+    return _prefs?.getString(key) ?? '';
   }
 
   static List<String>? getStringList(String key) {

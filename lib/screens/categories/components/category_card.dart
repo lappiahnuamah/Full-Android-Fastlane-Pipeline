@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +20,8 @@ class CategoryCard extends StatefulWidget {
     this.fontSize,
     this.iconSize,
     this.borderRadius,
+    this.greyedOut = false,
+    this.isDailyTraining = false,
   });
   final CategoryModel category;
   final int? index;
@@ -25,6 +29,8 @@ class CategoryCard extends StatefulWidget {
   final double? fontSize;
   final double? iconSize;
   final double? borderRadius;
+  final bool greyedOut;
+  final bool isDailyTraining;
 
   @override
   State<CategoryCard> createState() => _CategoryCardState();
@@ -44,12 +50,15 @@ class _CategoryCardState extends State<CategoryCard> {
     return InkWell(
       onTap: !widget.hidePlay
           ? () {
-              if (!widget.category.isLocked) {
+              if (!(widget.category.isLocked || widget.greyedOut)) {
+                log('is daily training on card: ${widget.isDailyTraining}');
+
                 nextScreen(
                     context,
                     TrainingMode(
                       category: widget.category,
                       quest: soloQuestProvider.getQuestByName('Training Mode'),
+                      isDailyTraining: widget.isDailyTraining,
                     ));
               } else {}
             }
@@ -73,7 +82,7 @@ class _CategoryCardState extends State<CategoryCard> {
                 child: Stack(
                   children: [
                     Container(
-                      color: widget.category.isLocked
+                      color: (widget.category.isLocked || widget.greyedOut)
                           ? const Color(0xFF717582)
                           : widget.category.color,
                       width: double.infinity,
@@ -141,13 +150,15 @@ class _CategoryCardState extends State<CategoryCard> {
                         alignment: Alignment.bottomRight,
                         child: InkWell(
                           onTap: () {
-                            if (!widget.category.isLocked) {
+                            if (!(widget.category.isLocked ||
+                                widget.greyedOut)) {
                               nextScreen(
                                   context,
                                   TrainingMode(
                                     category: widget.category,
                                     quest: soloQuestProvider
                                         .getQuestByName('Training Mode'),
+                                    isDailyTraining: widget.isDailyTraining,
                                   ));
                             } else {}
                           },
@@ -165,7 +176,8 @@ class _CategoryCardState extends State<CategoryCard> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   SvgPicture.asset(
-                                    widget.category.isLocked
+                                    (widget.category.isLocked ||
+                                            widget.greyedOut)
                                         ? AppImages.openedLock
                                         : AppImages.playCategoryIcon,
                                     fit: BoxFit.cover,
@@ -173,11 +185,14 @@ class _CategoryCardState extends State<CategoryCard> {
                                   ),
                                   SizedBox(width: d.pSW(5)),
                                   CustomText(
-                                    label: widget.category.isLocked
+                                    label: (widget.category.isLocked ||
+                                            widget.greyedOut)
                                         ? 'Unlock'
                                         : 'Play',
                                     color: Colors.white,
-                                    fontSize: 12.5,
+                                    fontSize: widget.fontSize != null
+                                        ? (widget.fontSize! * 0.7)
+                                        : 12.5,
                                     textAlign: TextAlign.center,
                                   )
                                 ],
@@ -191,7 +206,7 @@ class _CategoryCardState extends State<CategoryCard> {
           ),
 
           //Lock
-          if (widget.category.isLocked)
+          if ((widget.category.isLocked))
             Padding(
               padding: EdgeInsets.all(d.pSH(12)),
               child: SvgPicture.asset(

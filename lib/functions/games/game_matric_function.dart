@@ -31,7 +31,6 @@ class GameMatricFunction {
           "Authorization": "Bearer $accessToken"
         },
       );
-      lg('Game Matrics: ${response.body}');
       if (response.statusCode == 200) {
         SharedPreferencesHelper.setString(
             key: SharedPreferenceValues.allMetrics, value: response.body);

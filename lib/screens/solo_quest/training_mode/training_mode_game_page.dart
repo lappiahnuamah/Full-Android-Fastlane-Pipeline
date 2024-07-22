@@ -19,6 +19,7 @@ import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_enums.dart';
 import 'package:savyminds/resources/app_fonts.dart';
+import 'package:savyminds/screens/solo_quest/daily_training/daily_training_submit_page.dart';
 import 'package:savyminds/screens/solo_quest/training_mode/training_mode_submit_page.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
@@ -44,12 +45,14 @@ class TrainingModeGamePage extends StatefulWidget {
       required this.questionList,
       required this.swapQuestions,
       required this.level,
-      required this.quest});
+      required this.quest,
+      this.isDailyTraining = false});
   final CategoryModel category;
   final QuestModel quest;
   final LevelName level;
   final List<NewQuestionModel> questionList;
   final Map<String, List<NewQuestionModel>> swapQuestions;
+  final bool isDailyTraining;
 
   @override
   State<TrainingModeGamePage> createState() => _TrainingModeGamePageState();
@@ -130,14 +133,25 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
           timer.cancel();
           FlameAudio.bgm.stop();
           FlameAudio.play('outro_game_over.mp3');
-          nextScreen(
-              context,
-              TrainingModeSubmitPage(
-                categoryModel: widget.category,
-                quest: widget.quest,
-                pointsScored: totalPoints,
-                correctAnswers: correctAnswers,
-              ));
+          if (widget.isDailyTraining) {
+            nextScreen(
+                context,
+                DailyTrainingSubmitPage(
+                  categoryModel: widget.category,
+                  quest: widget.quest,
+                  pointsScored: totalPoints,
+                  correctAnswers: correctAnswers,
+                ));
+          } else {
+            nextScreen(
+                context,
+                TrainingModeSubmitPage(
+                  categoryModel: widget.category,
+                  quest: widget.quest,
+                  pointsScored: totalPoints,
+                  correctAnswers: correctAnswers,
+                ));
+          }
         }
       }
       if (seconds.value == 5) {
@@ -923,14 +937,24 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
           ),
           curve: Curves.easeIn);
     } else {
-      nextScreen(
-          context,
-          TrainingModeSubmitPage(
-            categoryModel: widget.category,
-            quest: widget.quest,
-            pointsScored: totalPoints,
-            correctAnswers: correctAnswers,
-          ));
+      dev.log('is daily training on game: ${widget.isDailyTraining}');
+      widget.isDailyTraining
+          ? nextScreen(
+              context,
+              DailyTrainingSubmitPage(
+                categoryModel: widget.category,
+                quest: widget.quest,
+                pointsScored: totalPoints,
+                correctAnswers: correctAnswers,
+              ))
+          : nextScreen(
+              context,
+              TrainingModeSubmitPage(
+                categoryModel: widget.category,
+                quest: widget.quest,
+                pointsScored: totalPoints,
+                correctAnswers: correctAnswers,
+              ));
     }
   }
 

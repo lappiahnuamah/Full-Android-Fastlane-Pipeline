@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
+import 'package:savyminds/functions/games/game_function.dart';
 import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
@@ -26,6 +27,8 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     gameItemsProvider = context.read<GameItemsProvider>();
+    GameFunction().getGameStreaks(context: context);
+
     super.initState();
   }
 
