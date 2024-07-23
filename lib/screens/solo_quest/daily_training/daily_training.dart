@@ -11,6 +11,7 @@ import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
+import 'package:savyminds/utils/extensions/extensions.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 import 'package:savyminds/widgets/page_template.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -137,9 +138,9 @@ class _DailyTrainingState extends State<DailyTraining> {
     final prefs = await SharedPreferences.getInstance();
     final String? storedDate = prefs.getString('dailyChallengeDate');
     final result = SharedPreferencesHelper.getStringList('dailyChallenges');
-    final instanceProviderData =
-        SharedPreferencesHelper.getString('dailyChallengesInstance');
+    final instanceProviderData = prefs.getString('dailyChallengesInstance');
 
+    log('providerData 1: ${prefs.getString('dailyChallengesInstance')}');
     List<CategoryModel> storedChallenges = [];
     if (result != null) {
       List<CategoryModel> categories = result.map((value) {
@@ -157,10 +158,11 @@ class _DailyTrainingState extends State<DailyTraining> {
       });
 
       gameItemsProvider.setDailyTrainingCategories(storedChallenges);
+      log('providerData 2: $instanceProviderData');
 
-      if (instanceProviderData.isNotEmpty) {
-        log('providerData: $instanceProviderData');
-        final newProviderData = jsonDecode(instanceProviderData);
+      if (instanceProviderData != null && instanceProviderData != 'null') {
+        log('providerData 3: $instanceProviderData');
+        final newProviderData = instanceProviderData.stringToMap();
         gameItemsProvider.setDailyTrainingPlayInstanceFromCache(
             categories: newProviderData);
       }

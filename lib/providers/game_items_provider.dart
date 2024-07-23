@@ -7,6 +7,7 @@ import 'package:savyminds/models/game_key_model.dart';
 import 'package:savyminds/models/games/game_streak_model.dart';
 import 'package:savyminds/resources/app_enums.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
+import 'package:savyminds/utils/extensions/extensions.dart';
 
 class GameItemsProvider extends ChangeNotifier {
   GameStreakModel gameStreaks = GameStreakModel(
@@ -136,10 +137,9 @@ class GameItemsProvider extends ChangeNotifier {
     try {
       SharedPreferencesHelper.setString(
         key: 'dailyChallengesInstance',
-        value: jsonEncode(categories, toEncodable: (nonEncodable) {
-          log('nonEncodable: $nonEncodable');
-          return null;
-        }),
+        value: jsonEncode(
+          categories.mapToString(),
+        ),
       );
     } catch (e) {
       log('encode error: $e');
