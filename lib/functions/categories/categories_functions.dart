@@ -300,6 +300,42 @@ class CategoryFunctions {
     }
   }
 
+  Future<CategoryRankModel?> getRankForACategory(
+      {required BuildContext context, required int categoryId}) async {
+    final hasConnection = await ConnectionCheck().hasConnection();
+    try {
+      if (hasConnection) {
+        if (context.mounted) {
+          String accessToken =
+              Provider.of<UserDetailsProvider>(context, listen: false)
+                  .getAccessToken();
+
+          final response = await http.post(
+            Uri.parse(CategoryUrl.getCategoryRank),
+            headers: {
+              "content-type": "application/json",
+              "accept": "application/json",
+              "Authorization": "Bearer $accessToken"
+            },
+            body: jsonEncode({'category_id': categoryId}),
+          );
+
+          if (response.statusCode == 200) {
+            return CategoryRankModel.fromJson(jsonDecode(response.body));
+          } else {
+            return null;
+          }
+        }
+      } else {
+        return null;
+      }
+      return null;
+    } catch (e) {
+      log("message: $e");
+      return null;
+    }
+  }
+
   static String listToString(List<int> list) {
     String str = '';
     for (int i = 0; i < list.length; i++) {

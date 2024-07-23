@@ -9,4 +9,6 @@ class CategoryUrl {
   static const gameMatrics = "$baseUrl/game-matrics/";
   static const favoriteCategories = "$baseUrl/question-category/get-favorites/";
   static getMyLevel(int? id) => "$baseUrl/question-category/$id/get-my-level/";
+
+  static const getCategoryRank = "${baseUrl}/get-category-rank/";
 }

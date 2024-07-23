@@ -5,6 +5,7 @@ import 'package:savyminds/functions/categories/categories_functions.dart';
 import 'package:savyminds/functions/games/game_function.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/categories/category_level_model.dart';
+import 'package:savyminds/models/categories/category_rank_model.dart';
 import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
@@ -47,26 +48,34 @@ class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
   CategoryLevelModel? categoryLevelModel;
   late GameItemsProvider gameItemsProvider;
 
+  CategoryRankModel? categoryRankModel;
+
   @override
   void initState() {
     gameItemsProvider = context.read<GameItemsProvider>();
     gameItemsProvider.setDailyCategoryToPlayed(id: widget.categoryModel!.id);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (widget.categoryModel != null) {
-        if (widget.categoryModel != null) {
-          CategoryFunctions().submitCategoryPoints(
-              context: context,
-              category: widget.categoryModel!.id,
-              gameTypeId: widget.quest.id,
-              totalPoints: widget.pointsScored);
-        }
-        getCategoryLevel();
-      }
-      GameFunction().postGameStreaks(
-        context: context,
-      );
+      getSomeData();
     });
     super.initState();
+  }
+
+  Future<void> getSomeData() async {
+    if (widget.categoryModel != null) {
+      if (widget.categoryModel != null) {
+        await CategoryFunctions().submitCategoryPoints(
+            context: context,
+            category: widget.categoryModel!.id,
+            gameTypeId: widget.quest.id,
+            totalPoints: widget.pointsScored);
+      }
+      getCategoryLevel();
+    }
+    GameFunction().postGameStreaks(
+      context: context,
+    );
+
+    getCategoryRank();
   }
 
   getCategoryLevel() async {
@@ -456,6 +465,17 @@ class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
           category: nextCategory,
           isDailyTraining: true,
         ));
+  }
+
+  Future<void> getCategoryRank() async {
+    final result = await CategoryFunctions().getRankForACategory(
+        context: context, categoryId: widget.categoryModel?.id ?? 0);
+
+    if (result is CategoryRankModel) {
+      setState(() {
+        categoryRankModel = result;
+      });
+    }
   }
 
   String getCategoryRankMessage({required int rank}) {

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
@@ -5,6 +7,7 @@ import 'package:savyminds/functions/categories/categories_functions.dart';
 import 'package:savyminds/functions/games/game_function.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/categories/category_level_model.dart';
+import 'package:savyminds/models/categories/category_rank_model.dart';
 import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
@@ -43,36 +46,14 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
   bool isLoading = false;
   CategoryLevelModel? categoryLevelModel;
 
+  CategoryRankModel? categoryRankModel;
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (widget.categoryModel != null) {
-        if (widget.categoryModel != null) {
-          CategoryFunctions().submitCategoryPoints(
-              context: context,
-              category: widget.categoryModel!.id,
-              gameTypeId: widget.quest.id,
-              totalPoints: widget.pointsScored);
-        }
-        getCategoryLevel();
-      }
-      GameFunction().postGameStreaks(
-        context: context,
-      );
+      getSomeData();
     });
     super.initState();
-  }
-
-  getCategoryLevel() async {
-    setState(() {
-      isLoading = true;
-    });
-    await CategoryFunctions()
-        .getCategoryLevel(context, widget.categoryModel?.id ?? 0);
-
-    setState(() {
-      isLoading = false;
-    });
   }
 
   @override
@@ -323,27 +304,28 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                                         SizedBox(
                                           height: d.pSH(7),
                                         ),
-                                        Container(
-                                          width: d.getPhoneScreenWidth(),
-                                          alignment: Alignment.center,
-                                          padding: EdgeInsets.all(d.pSH(5)),
-                                          margin: EdgeInsets.symmetric(
-                                              vertical: d.pSH(10)),
-                                          decoration: BoxDecoration(
-                                              color: AppColors.kWhite
-                                                  .withOpacity(0.9)),
-                                          child: Text(
-                                            "You are ranked in top 10",
-                                            style: TextStyle(
-                                              color: AppColors.kPrimaryColor,
-                                              fontSize: getFontSize(27, size),
-                                              fontFamily: AppFonts.caveat,
-                                              height: 1.5,
-                                              fontWeight: FontWeight.w700,
-                                              fontStyle: FontStyle.normal,
+                                        if (categoryRankModel != null)
+                                          Container(
+                                            width: d.getPhoneScreenWidth(),
+                                            alignment: Alignment.center,
+                                            padding: EdgeInsets.all(d.pSH(5)),
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: d.pSH(10)),
+                                            decoration: BoxDecoration(
+                                                color: AppColors.kWhite
+                                                    .withOpacity(0.9)),
+                                            child: Text(
+                                              "You are ranked in top ${categoryRankModel!.rank}",
+                                              style: TextStyle(
+                                                color: AppColors.kPrimaryColor,
+                                                fontSize: getFontSize(27, size),
+                                                fontFamily: AppFonts.caveat,
+                                                height: 1.5,
+                                                fontWeight: FontWeight.w700,
+                                                fontStyle: FontStyle.normal,
+                                              ),
                                             ),
                                           ),
-                                        ),
                                       ],
                                     )
                                   : const SizedBox();
@@ -398,7 +380,51 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
     );
   }
 
+///// Get Some Data
+  Future<void> getSomeData() async {
+    if (widget.categoryModel != null) {
+      if (widget.categoryModel != null) {
+        await CategoryFunctions().submitCategoryPoints(
+            context: context,
+            category: widget.categoryModel!.id,
+            gameTypeId: widget.quest.id,
+            totalPoints: widget.pointsScored);
+      }
+      getCategoryLevel();
+
+      GameFunction().postGameStreaks(
+        context: context,
+      );
+
+      getCategoryRank();
+    }
+  }
+
+  getCategoryLevel() async {
+    setState(() {
+      isLoading = true;
+    });
+    await CategoryFunctions()
+        .getCategoryLevel(context, widget.categoryModel?.id ?? 0);
+
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   String getCategoryRankMessage({required int rank}) {
     return '';
+  }
+
+  Future<void> getCategoryRank() async {
+    final result = await CategoryFunctions().getRankForACategory(
+        context: context, categoryId: widget.categoryModel?.id ?? 0);
+
+    log('rank result $result');
+    if (result is CategoryRankModel) {
+      setState(() {
+        categoryRankModel = result;
+      });
+    }
   }
 }
