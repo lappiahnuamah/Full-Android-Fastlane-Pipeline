@@ -383,7 +383,7 @@ class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
                                               color: AppColors.kWhite
                                                   .withOpacity(0.9)),
                                           child: Text(
-                                            "You are ranked in top 10",
+                                            "You are ranked in top ${categoryRankModel?.rank ?? 1}",
                                             style: TextStyle(
                                               color: AppColors.kPrimaryColor,
                                               fontSize: getFontSize(27, size),
