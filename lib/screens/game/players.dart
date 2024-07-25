@@ -76,7 +76,7 @@ class _PlayersSelectState extends State<PlayersSelect> {
                                   children: [
                                     SvgPicture.asset(AppImages.gameLogoSvg),
                                     SvgPicture.asset(
-                                      AppImages.quizWhizSvg,
+                                      AppImages.savvyMinds,
                                       height: d.pSH(50),
                                     ),
                                     const Text(

@@ -1,5 +1,5 @@
 class AppImages {
-  static String quizWhizSvg = "assets/icons/QuizWhiz.svg";
+  static String savvyMinds = "assets/icons/savvyminds.svg";
   static String gameLogoSvg = "assets/icons/game_logo.svg";
   static String gameLogoPng = "assets/images/game_logo.png";
 

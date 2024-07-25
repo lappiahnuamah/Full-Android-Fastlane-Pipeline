@@ -23,8 +23,11 @@ class _RetakeKeyDisplayState extends State<RetakeKeyDisplay> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return Consumer<GameItemsProvider>(
         builder: (context, gameItemsProvider, chikd) {
+      final retakeCount =
+          (gameItemsProvider.userKeys[GameKeyType.retakeKey]?.amount ?? 0);
       return Container(
         padding:
             EdgeInsets.symmetric(horizontal: d.pSH(16), vertical: d.pSH(40)),
@@ -48,6 +51,7 @@ class _RetakeKeyDisplayState extends State<RetakeKeyDisplay> {
             ),
             SizedBox(height: d.pSH(40)),
             Stack(
+              clipBehavior: Clip.none,
               children: [
                 SvgPicture.asset(
                   AppImages.retakeKey,
@@ -56,15 +60,13 @@ class _RetakeKeyDisplayState extends State<RetakeKeyDisplay> {
                   ..shimmer(duration: 1000.ms)
                   ..shakeX(duration: 1000.ms),
                 Positioned(
-                  right: 0,
+                  right: retakeCount > 99 ? -d.pSH(10) : 0,
+                  top: retakeCount > 99 ? -d.pSH(10) : 0,
                   child: CircleAvatar(
                     backgroundColor: Colors.white,
-                    radius: d.pSH(20),
+                    radius: retakeCount > 99 ? d.pSH(30) : d.pSH(20),
                     child: CustomText(
-                      label: (gameItemsProvider
-                                  .userKeys[GameKeyType.retakeKey]?.amount ??
-                              0)
-                          .toString(),
+                      label: retakeCount.toString(),
                       color: AppColors.kPrimaryColor,
                       fontSize: getFontSize(24, size),
                       fontWeight: FontWeight.w600,

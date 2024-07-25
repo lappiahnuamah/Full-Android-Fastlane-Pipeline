@@ -24,7 +24,7 @@ extension MapExtension on String {
       var keyValue = pair.split('=');
       if (keyValue.length == 2) {
         final newKeyValue = (keyValue[0]).replaceAll(RegExp(r'[^0-9]'), '');
-        map[int.parse(newKeyValue)] = (keyValue[1] == 'true');
+        map[int.parse(newKeyValue)] = (keyValue[1]).contains('true');
       }
     }
     return map;

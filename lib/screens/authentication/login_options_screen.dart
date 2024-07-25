@@ -49,7 +49,7 @@ class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
                     children: [
                       SvgPicture.asset(AppImages.gameLogoSvg),
                       SvgPicture.asset(
-                        AppImages.quizWhizSvg,
+                        AppImages.savvyMinds,
                         height: d.pSH(50),
                       ),
                       const Text(
@@ -180,30 +180,30 @@ class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
               ),
             ),
 
-            Positioned(
-              right: d.pSH(5),
-              top: d.pSH(70),
-              child: Consumer<DarkThemeProvider>(
-                  builder: (BuildContext consumerContext, value, child) {
-                return IconButton(
-                    onPressed: bright == Brightness.dark
-                        ? () {
-                            value.setTheme(1);
-                          }
-                        : () {
-                            value.setTheme(2);
-                          },
-                    icon: Icon(
-                      bright == Brightness.dark
-                          ? Icons.light_mode_outlined
-                          : Icons.dark_mode_outlined,
-                      size: d.pSH(28),
-                      color: bright == Brightness.dark
-                          ? const Color(0xFFE4E4E4)
-                          : AppColors.kSecondaryColor,
-                    ));
-              }),
-            ),
+            // Positioned(
+            //   right: d.pSH(5),
+            //   top: d.pSH(70),
+            //   child: Consumer<DarkThemeProvider>(
+            //       builder: (BuildContext consumerContext, value, child) {
+            //     return IconButton(
+            //         onPressed: bright == Brightness.dark
+            //             ? () {
+            //                 value.setTheme(1);
+            //               }
+            //             : () {
+            //                 value.setTheme(2);
+            //               },
+            //         icon: Icon(
+            //           bright == Brightness.dark
+            //               ? Icons.light_mode_outlined
+            //               : Icons.dark_mode_outlined,
+            //           size: d.pSH(28),
+            //           color: bright == Brightness.dark
+            //               ? const Color(0xFFE4E4E4)
+            //               : AppColors.kSecondaryColor,
+            //         ));
+            //   }),
+            // ),
 
             /////////////////////////////////////////////////////////
             /////////// CIRCULAR PROGRESS INDICATOR///////////////////

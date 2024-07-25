@@ -78,7 +78,7 @@ class _SplashScreenState extends State<SplashScreen> {
               children: [
                 SvgPicture.asset(AppImages.gameLogoSvg),
                 SvgPicture.asset(
-                  AppImages.quizWhizSvg,
+                  AppImages.savvyMinds,
                   height: d.pSH(50),
                 ),
                 const Text(

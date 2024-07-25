@@ -105,6 +105,8 @@ class GameItemsProvider extends ChangeNotifier {
         };
       }
     });
+
+    log('final dailyTrainingCategories: $dailyTrainingCategories');
     notifyListeners();
   }
 

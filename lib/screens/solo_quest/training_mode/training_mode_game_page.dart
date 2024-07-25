@@ -580,8 +580,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                             },
                                             //onRetakeTapped: () {},
                                             onFreezeTapped: () {
-                                              _freezeTime(
-                                                  question.questionTime);
+                                              _freezeTime(question);
                                             },
                                             onSwapTapped: () {
                                               if (!swapQuestion) {
@@ -830,12 +829,26 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
     startTimer(seconds.value);
   }
 
-  _freezeTime(int questionTime) {
-    timer?.cancel();
-    setState(() {});
-    Future.delayed(Duration(seconds: questionTime), () {
-      startTimer(seconds.value);
-    });
+  _freezeTime(NewQuestionModel question) {
+    try {
+      final questionTime = QuestionsUtils.getQuestionsTime(
+          complexityWeight: question.complexityWeight.toDouble(),
+          difficultyWeight: question.difficultyWeight.toDouble(),
+          context: context,
+          gameType: widget.quest.id,
+          level: widget.level.name.capitalize());
+      timer!.cancel();
+      setState(() {});
+
+      int newFreezeTime =
+          questionTime > 15 ? (questionTime ~/ 2) : questionTime;
+
+      Future.delayed(Duration(seconds: newFreezeTime), () {
+        startTimer(seconds.value);
+      });
+    } catch (e) {
+      dev.log('error: $e');
+    }
   }
 
   _useFiftyFiifty(List<OptionModel> options) {
