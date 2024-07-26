@@ -69,7 +69,6 @@ jobs:
 
           echo "::set-output name=new_version_code::$currentVersionCode"
           echo "::set-output name=new_version_name::$newVersionName"
-
       - name: Update GitHub Secret with New Version Code
         run: |
           echo "Updating GitHub secret with new version code"
