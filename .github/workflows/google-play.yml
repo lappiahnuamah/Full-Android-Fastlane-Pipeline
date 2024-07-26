@@ -52,7 +52,7 @@ jobs:
           versionNamePrefix="savyminds_alpha."
           currentSuffix=${currentVersionName#"$versionNamePrefix"}
           newSuffix=$((currentSuffix + 1))
-          newVersionName="${versionNamePrefix}${newSuffix}"
+          currentVersionName="${versionNamePrefix}${newSuffix}"
           
           sed -i "s/flutter.versionCode=[0-9]\+/flutter.versionCode=$currentVersionCode/"  ${{github.workspace}}/android/version.properties
           sed -i "s/flutter.versionName=[0-9.]\+/flutter.versionName=$currentVersionName/" ${{github.workspace}}/android/version.properties
