@@ -1,0 +1,66 @@
+
+def get_version_info()
+  track = "internal"
+  package_name = "com.terateck.games.savyminds"
+
+  # Fetch current version info from Google Play
+  alpha_version_code = google_play_track_version_codes(package_name: package_name, track: track)[0]
+  alpha_version_name = google_play_track_release_names(package_name: package_name, track: track)[0]
+
+  UI.message("Current version code on Google Play: #{alpha_version_code}")
+  UI.message("Current version name on Google Play: #{alpha_version_name}")
+
+  # Update the version.properties file with the fetched version info
+  root_dir = File.expand_path("../../", __FILE__)
+  gradle_file = "#{root_dir}/version.properties"
+
+  unless File.exist?(gradle_file)
+    UI.user_error!("Could not find the version.properties file: #{gradle_file}")
+  end
+
+  gradle_contents = File.read(gradle_file)
+
+  # Update versionCode and versionName based on the fetched values
+  gradle_contents.gsub!(/flutter.versionCode\s*=\s*\d+/, "flutter.versionCode=#{alpha_version_code}")
+  gradle_contents.gsub!(/flutter.versionName\s*=\s*\"[^\"]+\"/, "flutter.versionName=\"#{alpha_version_name}\"")
+
+  # Increment versionCode
+  new_version_code = alpha_version_code + 1 
+  gradle_contents.gsub!(/flutter.versionCode\s*=\s*\d+/, "flutter.versionCode=#{new_version_code}")
+
+  # Increment versionName
+  version_name_prefix = "savyminds_alpha."
+  # version_name_parts = alpha_version_name.split('.')
+  # new_patch_version = version_name_parts[2].to_i + 1  
+  current_suffix = alpha_version_name.split(version_name_prefix)[1].to_i
+  new_suffix = current_suffix + 1
+  new_version_name = "#{version_name_prefix}#{new_suffix}"
+  gradle_contents.gsub!(/flutter.versionName\s*=\s*\"[^\"]+\"/, "flutter.versionName=\"#{new_version_name}\"")
+  # new_version_name = "#{version_name_parts[0]}.#{version_name_parts[1]}.#{new_patch_version})" 
+  # gradle_contents.gsub!(/flutter.versionName\s*=\s*\"[^\"]+\"/, "flutter.versionName=\"#{new_version_name}\"")
+
+  File.write(gradle_file, gradle_contents)
+  return new_version_code, new_version_name
+end
+
+lane :get_version_info do
+  get_version_info()
+end
+
+lane :distribute_alpha_google_play do
+  alpha_version_code, alpha_version_name = get_version_info()
+
+  gradle(task: "bundle", build_type: "Release")
+  upload_to_play_store(
+    track: 'internal',
+    version_name: alpha_version_name,
+    version_code: alpha_version_code,
+    package_name: "com.terateck.games.savyminds",
+    skip_upload_apk: true,
+    skip_upload_metadata: true,
+    skip_upload_images: true,
+    skip_upload_screenshots: true,
+    skip_upload_changelogs: false,
+    aab: "../build/app/outputs/bundle/release/app-release.aab"
+  )
+end
