@@ -59,6 +59,6 @@ lane :distribute_alpha_google_play do
     skip_upload_screenshots: true,
     skip_upload_changelogs: false,
     aab: "../build/app/outputs/bundle/release/app-release.aab",
-    release_status: 'draft' # Ensure the release status is set to draft
+    release_status: 'completed' # Ensure the release status is set to draft
   )
 end
