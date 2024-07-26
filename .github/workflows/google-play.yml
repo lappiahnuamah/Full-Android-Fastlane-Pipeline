@@ -26,6 +26,7 @@ jobs:
           cd android
           bundle exec fastlane get_version_info
         env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
           GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
           GITHUB_REPOSITORY: ${{ github.repository }}
 
@@ -112,3 +113,5 @@ jobs:
         run: |
           cd android
           bundle exec fastlane distribute_alpha_google_play
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
