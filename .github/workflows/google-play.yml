@@ -65,7 +65,7 @@ jobs:
           git config --global user.name "lappiahnuamah"
           git add version.properties
           git commit -m "Increment version code to $newVersionCode and update version name to $newVersionName"
-          git push origin master
+          git push origin DevOps_SavyMinds
 
           echo "::set-output name=new_version_code::$currentVersionCode"
           echo "::set-output name=new_version_name::$newVersionName"
