@@ -22,7 +22,6 @@ def get_version_info()
   # Update versionCode and versionName based on the fetched values
   gradle_contents.gsub!(/flutter.versionCode\s*=\s*\d+/, "flutter.versionCode=#{alpha_version_code}")
   gradle_contents.gsub!(/flutter.versionName\s*=\s*\"[^\"]+\"/, "flutter.versionName=\"#{alpha_version_name}\"")
-
   # Increment versionCode
   new_version_code = alpha_version_code + 1 
   gradle_contents.gsub!(/flutter.versionCode\s*=\s*\d+/, "flutter.versionCode=#{new_version_code}")
