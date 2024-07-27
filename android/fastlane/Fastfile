@@ -3,8 +3,8 @@ def get_version_info()
   package_name = "com.terateck.games.savyminds"
 
   # Fetch current version info from Google Play
-  alpha_version_code = google_play_track_version_codes(package_name: package_name, track: track).last.to_i
-  alpha_version_name = google_play_track_release_names(package_name: package_name, track: track).last
+  alpha_version_code = google_play_track_version_codes(package_name: package_name, track: track)[0]
+  alpha_version_name = google_play_track_release_names(package_name: package_name, track: track)[0]
 
   UI.message("Current version code on Google Play: #{alpha_version_code}")
   UI.message("Current version name on Google Play: #{alpha_version_name}")
@@ -19,8 +19,12 @@ def get_version_info()
 
   gradle_contents = File.read(gradle_file)
 
+  # Update versionCode and versionName based on the fetched values
+  gradle_contents.gsub!(/flutter.versionCode\s*=\s*\d+/, "flutter.versionCode=#{alpha_version_code}")
+  gradle_contents.gsub!(/flutter.versionName\s*=\s*\"[^\"]+\"/, "flutter.versionName=\"#{alpha_version_name}\"")
+
   # Increment versionCode
-  new_version_code = alpha_version_code + 1
+  new_version_code = alpha_version_code + 1 
   gradle_contents.gsub!(/flutter.versionCode\s*=\s*\d+/, "flutter.versionCode=#{new_version_code}")
 
   # Increment versionName
@@ -55,6 +59,6 @@ lane :distribute_alpha_google_play do
     skip_upload_screenshots: true,
     skip_upload_changelogs: false,
     aab: "../build/app/outputs/bundle/release/app-release.aab",
-    release_status: 'completed'
+    release_status: 'completed' # Ensure the release status is set to draft
   )
 end
