@@ -64,9 +64,9 @@ class ContestFunctions {
       RecordsProvider recordsProvider =
           Provider.of<RecordsProvider>(context, listen: false);
 
-      recordsProvider.setRanksIsLoading(isLoading: true, gameType: gameType);
-
       if (hasConnection) {
+        recordsProvider.setRanksIsLoading(isLoading: true, gameType: gameType);
+
         if (context.mounted) {
           final result = SharedPreferencesHelper.getString(
               SharedPreferenceValues.soloAndMultiRanks + gameType);
@@ -105,7 +105,6 @@ class ContestFunctions {
             recordsProvider.contestQuestRank(
                 contestRanks: ranksList, gameType: gameType);
           } else {
-      
             recordsProvider.setRanksIsLoading(
                 isLoading: false, gameType: gameType);
             return [];
