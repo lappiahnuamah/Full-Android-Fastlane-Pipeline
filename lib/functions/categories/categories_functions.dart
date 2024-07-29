@@ -186,26 +186,44 @@ class CategoryFunctions {
   }
 
   Future getCategoryLevel(context, int id) async {
-    final String accessToken =
+   
+    try {
+       final String accessToken =
         Provider.of<UserDetailsProvider>(context, listen: false)
             .getAccessToken();
 
     CategoryProvider categoryProvider =
         Provider.of<CategoryProvider>(context, listen: false);
-    try {
-      final response = await http.get(
-        Uri.parse('${CategoryUrl.getMyLevel(id)}'),
-        headers: {
-          "content-type": "application/json",
-          "accept": "application/json",
-          "Authorization": " Bearer $accessToken"
-        },
-      );
-      log('level:${response.body}');
-      if (response.statusCode == 200) {
-        final level = CategoryLevelModel.fromJson(jsonDecode(response.body));
-        categoryProvider.setCategoryLevel(id, level);
-        return level;
+
+      if (await ConnectionCheck().hasConnection()) {
+        final result = SharedPreferencesHelper.getString(
+            SharedPreferenceValues.categoryLevel + id.toString());
+
+        if (result.isNotEmpty && result != "null") {
+          final level = CategoryLevelModel.fromJson(jsonDecode(result));
+          categoryProvider.setCategoryLevel(id, level);
+        } 
+          final response = await http.get(
+            Uri.parse('${CategoryUrl.getMyLevel(id)}'),
+            headers: {
+              "content-type": "application/json",
+              "accept": "application/json",
+              "Authorization": " Bearer $accessToken"
+            },
+          );
+          log('level:${response.body}');
+          if (response.statusCode == 200) {
+            final level =
+                CategoryLevelModel.fromJson(jsonDecode(response.body));
+            SharedPreferencesHelper.setString(
+                key: SharedPreferenceValues.categoryLevel + id.toString(),
+                value: response.body);
+            categoryProvider.setCategoryLevel(id, level);
+            return level;
+          } else {
+            return null;
+          }
+        
       } else {
         return null;
       }

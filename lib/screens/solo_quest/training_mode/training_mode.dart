@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/animations/lightening_animation.dart';
 import 'package:savyminds/constants.dart';
+import 'package:savyminds/data/shared_preference_values.dart';
 import 'package:savyminds/functions/categories/categories_functions.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/categories/category_level_model.dart';
@@ -21,11 +23,13 @@ import 'package:savyminds/screens/categories/components/category_placeholder.dar
 import 'package:savyminds/screens/categories/components/level_card.dart';
 import 'package:savyminds/screens/categories/select_categoiries.dart';
 import 'package:savyminds/screens/solo_quest/training_mode/training_mode_game_page.dart';
+import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/func_new.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/utils/questions/questions_manager.dart';
 import 'package:savyminds/widgets/availalble_keys_widget.dart';
+import 'package:savyminds/widgets/default_snackbar.dart';
 import 'package:savyminds/widgets/load_indicator.dart';
 import 'package:savyminds/widgets/page_template.dart';
 import 'package:savyminds/widgets/quest_icon_desc_card.dart';
@@ -70,15 +74,30 @@ class _TrainingModeState extends State<TrainingMode> {
   }
 
   getCategoryLevel() async {
-    setState(() {
-      isLoading = true;
-    });
-    await CategoryFunctions()
-        .getCategoryLevel(context, selectedCategory?.id ?? 0);
+    showSnackBar(context, "Updating category levels...");
 
-    setState(() {
-      isLoading = false;
-    });
+    final result = SharedPreferencesHelper.getString(
+        SharedPreferenceValues.categoryLevel +
+            (selectedCategory?.id ?? 0).toString());
+          lg("Category level from cache: $result");
+
+    if (result.isNotEmpty && result != "null") {
+      final level = CategoryLevelModel.fromJson(jsonDecode(result));
+      categoryProvider.setCategoryLevel(selectedCategory?.id ?? 0, level);
+    } 
+      // setState(() {
+      //   isLoading = true;
+      // });
+      await CategoryFunctions()
+          .getCategoryLevel(context, selectedCategory?.id ?? 0)
+          .then((value) {
+        showSnackBar(context, "Update done.");
+      });   
+
+    // setState(() {
+    //   isLoading = false;
+    // });
+    
   }
 
   @override
