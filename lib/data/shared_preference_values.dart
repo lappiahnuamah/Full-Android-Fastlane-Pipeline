@@ -11,15 +11,18 @@ class SharedPreferenceValues {
   //category
   static const String allCategories = 'ALL_CATEGORIES';
   static const String favoriteCategories = 'FAVORITE_CATEGORIES';
-  
-  //category levels 
-  static const String categoryLevel = 'CATEGORY_LEVEL';
 
+  //category levels
+  static const String categoryLevel = 'CATEGORY_LEVEL';
 
   //Quests
   static const String soloQuests = 'SOLO_QUESTS';
   static const String contests = 'CONTESTS';
-  
+
   //Metric
   static const String allMetrics = 'All-METRICS';
+
+  //Records Ranks
+  static const String categoryRanks = 'CATEGORY-RANKS';
+  static const String soloAndMultiRanks = 'SOLO-AND-MULTI-';
 }
