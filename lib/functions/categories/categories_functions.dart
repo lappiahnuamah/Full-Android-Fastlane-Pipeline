@@ -186,14 +186,13 @@ class CategoryFunctions {
   }
 
   Future getCategoryLevel(context, int id) async {
-   
     try {
-       final String accessToken =
-        Provider.of<UserDetailsProvider>(context, listen: false)
-            .getAccessToken();
+      final String accessToken =
+          Provider.of<UserDetailsProvider>(context, listen: false)
+              .getAccessToken();
 
-    CategoryProvider categoryProvider =
-        Provider.of<CategoryProvider>(context, listen: false);
+      CategoryProvider categoryProvider =
+          Provider.of<CategoryProvider>(context, listen: false);
 
       if (await ConnectionCheck().hasConnection()) {
         final result = SharedPreferencesHelper.getString(
@@ -202,28 +201,26 @@ class CategoryFunctions {
         if (result.isNotEmpty && result != "null") {
           final level = CategoryLevelModel.fromJson(jsonDecode(result));
           categoryProvider.setCategoryLevel(id, level);
-        } 
-          final response = await http.get(
-            Uri.parse('${CategoryUrl.getMyLevel(id)}'),
-            headers: {
-              "content-type": "application/json",
-              "accept": "application/json",
-              "Authorization": " Bearer $accessToken"
-            },
-          );
-          log('level:${response.body}');
-          if (response.statusCode == 200) {
-            final level =
-                CategoryLevelModel.fromJson(jsonDecode(response.body));
-            SharedPreferencesHelper.setString(
-                key: SharedPreferenceValues.categoryLevel + id.toString(),
-                value: response.body);
-            categoryProvider.setCategoryLevel(id, level);
-            return level;
-          } else {
-            return null;
-          }
-        
+        }
+        final response = await http.get(
+          Uri.parse('${CategoryUrl.getMyLevel(id)}'),
+          headers: {
+            "content-type": "application/json",
+            "accept": "application/json",
+            "Authorization": " Bearer $accessToken"
+          },
+        );
+        log('level:${response.body}');
+        if (response.statusCode == 200) {
+          final level = CategoryLevelModel.fromJson(jsonDecode(response.body));
+          SharedPreferencesHelper.setString(
+              key: SharedPreferenceValues.categoryLevel + id.toString(),
+              value: response.body);
+          categoryProvider.setCategoryLevel(id, level);
+          return level;
+        } else {
+          return null;
+        }
       } else {
         return null;
       }

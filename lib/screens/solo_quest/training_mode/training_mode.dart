@@ -29,7 +29,6 @@ import 'package:savyminds/utils/func_new.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/utils/questions/questions_manager.dart';
 import 'package:savyminds/widgets/availalble_keys_widget.dart';
-import 'package:savyminds/widgets/default_snackbar.dart';
 import 'package:savyminds/widgets/load_indicator.dart';
 import 'package:savyminds/widgets/page_template.dart';
 import 'package:savyminds/widgets/quest_icon_desc_card.dart';
@@ -52,7 +51,6 @@ class TrainingMode extends StatefulWidget {
 class _TrainingModeState extends State<TrainingMode> {
   late CategoryProvider categoryProvider;
   late GameProvider gameProvider;
-  bool isLoading = false;
   bool questionsLoading = false;
 
   CategoryModel? selectedCategory;
@@ -74,30 +72,20 @@ class _TrainingModeState extends State<TrainingMode> {
   }
 
   getCategoryLevel() async {
-    showSnackBar(context, "Updating category levels...");
-
+    setState(() {});
     final result = SharedPreferencesHelper.getString(
         SharedPreferenceValues.categoryLevel +
             (selectedCategory?.id ?? 0).toString());
-          lg("Category level from cache: $result");
+    lg("Category level from cache: $result");
 
     if (result.isNotEmpty && result != "null") {
       final level = CategoryLevelModel.fromJson(jsonDecode(result));
       categoryProvider.setCategoryLevel(selectedCategory?.id ?? 0, level);
-    } 
-      // setState(() {
-      //   isLoading = true;
-      // });
-      await CategoryFunctions()
-          .getCategoryLevel(context, selectedCategory?.id ?? 0)
-          .then((value) {
-        showSnackBar(context, "Update done.");
-      });   
+    }
 
-    // setState(() {
-    //   isLoading = false;
-    // });
-    
+    await CategoryFunctions()
+        .getCategoryLevel(context, selectedCategory?.id ?? 0)
+        .then((value) {});
   }
 
   @override
@@ -162,43 +150,33 @@ class _TrainingModeState extends State<TrainingMode> {
                           ],
                         ),
                   SizedBox(height: d.pSH(30)),
-                  isLoading
-                      ? SizedBox(
-                          height: d.pSH(60),
-                          width: double.infinity,
-                          child: const Center(
-                            child: CircularProgressIndicator(
-                              color: AppColors.kPrimaryColor,
-                            ),
-                          ),
-                        )
-                      : Consumer<CategoryProvider>(
-                          builder: (context, catProv, chils) {
-                          final CategoryLevelModel? catLevel = catProv
-                              .getCategoryLevel(selectedCategory?.id ?? 0);
-                          return catLevel != null
-                              ? Wrap(
-                                  runSpacing: d.pSH(10),
-                                  spacing: d.pSW(15),
-                                  alignment: WrapAlignment.center,
-                                  children: [
-                                    ...List.generate(
-                                      catLevel.levels.length,
-                                      (index) {
-                                        final _level = catLevel.levels[index];
-                                        if (_level.isCurrentLevel) {
-                                          level = _level.name;
-                                        }
-                                        return LevelCard(
-                                          level: _level,
-                                          totalPoints: catLevel.totalPoints,
-                                        );
-                                      },
-                                    )
-                                  ],
-                                )
-                              : const SizedBox();
-                        }),
+                  Consumer<CategoryProvider>(
+                      builder: (context, catProv, chils) {
+                    final CategoryLevelModel? catLevel =
+                        catProv.getCategoryLevel(selectedCategory?.id ?? 0);
+                    return catLevel != null
+                        ? Wrap(
+                            runSpacing: d.pSH(10),
+                            spacing: d.pSW(15),
+                            alignment: WrapAlignment.center,
+                            children: [
+                              ...List.generate(
+                                catLevel.levels.length,
+                                (index) {
+                                  final _level = catLevel.levels[index];
+                                  if (_level.isCurrentLevel) {
+                                    level = _level.name;
+                                  }
+                                  return LevelCard(
+                                    level: _level,
+                                    totalPoints: catLevel.totalPoints,
+                                  );
+                                },
+                              )
+                            ],
+                          )
+                        : const SizedBox();
+                  }),
                   SizedBox(height: d.pSH(20)),
                   RichText(
                       textAlign: TextAlign.center,
@@ -237,7 +215,10 @@ class _TrainingModeState extends State<TrainingMode> {
                   SizedBox(
                     height: d.pSH(30),
                   ),
-                  if (selectedCategory != null) const AvailableKeysWidget(),
+                  if (selectedCategory != null)
+                    const AvailableKeysWidget(
+                      showShop: false,
+                    ),
                   SizedBox(
                     height: d.pSH(30),
                   ),
