@@ -54,6 +54,8 @@ class PageTemplate extends StatefulWidget {
       this.refreshWidget = const SizedBox(),
       this.showRefreshWidget = false,
       this.bottomNavigationBar,
+      this.backgroundLeftPosition,
+      this.backgroundRightPosition,
       this.showStatusBar = true})
       : super(key: key);
 
@@ -100,6 +102,8 @@ class PageTemplate extends StatefulWidget {
   final bool showRefreshWidget;
   final Widget? bottomNavigationBar;
   final bool showStatusBar;
+  final double? backgroundLeftPosition;
+  final double? backgroundRightPosition;
 
   @override
   State<PageTemplate> createState() => _PageTemplateState();
@@ -137,7 +141,10 @@ class _PageTemplateState extends State<PageTemplate> {
             ),
             child: Stack(
               children: [
-                const GameBackground(),
+                GameBackground(
+                  leftPosition: widget.backgroundLeftPosition,
+                  rightPosition: widget.backgroundRightPosition,
+                ),
                 SafeArea(
                   child: Container(
                     foregroundDecoration: widget.foreGroundDecoration,

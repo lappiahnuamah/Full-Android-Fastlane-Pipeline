@@ -1,24 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:savyminds/resources/app_images.dart';
 
 class GameBackground extends StatelessWidget {
-  const GameBackground({super.key});
+  const GameBackground({super.key, this.leftPosition, this.rightPosition});
+  final double? leftPosition;
+  final double? rightPosition;
 
   @override
   Widget build(BuildContext context) {
     final bright = Theme.of(context).brightness;
+    Size size = MediaQuery.of(context).size;
     return Stack(
       children: [
-        Opacity(
-          opacity: 0.2,
-          child: SvgPicture.asset(
-            AppImages.gameBackgroundSvg,
-            colorFilter: bright == Brightness.dark
-                ? const ColorFilter.mode(
-                    Color.fromARGB(70, 24, 22, 22), BlendMode.srcIn)
-                : null,
-                
+        Positioned(
+          left: leftPosition,
+          right: rightPosition,
+          child: SafeArea(
+            child: Opacity(
+              opacity: 0.3,
+              child: SvgPicture.asset(
+                AppImages.gameBackgroundSvg,
+                height: size.height * 0.87,
+                fit: BoxFit.fitHeight,
+                colorFilter: bright == Brightness.dark
+                    ? const ColorFilter.mode(
+                        Color.fromARGB(70, 24, 22, 22), BlendMode.srcIn)
+                    : null,
+              ),
+            ),
           ),
         ),
         Opacity(

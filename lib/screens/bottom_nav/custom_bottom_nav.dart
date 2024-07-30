@@ -46,7 +46,10 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
           bottomNavigationBar: bottomNavigationBar(),
           body: Stack(
             children: [
-              const GameBackground(),
+              GameBackground(
+                leftPosition: _getLeftPosition(),
+                rightPosition: _getRightPosition(),
+              ),
               SafeArea(
                 child: IndexedStack(
                   index: currentIndex,
@@ -62,6 +65,40 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
             ],
           )),
     );
+  }
+
+  _getLeftPosition() {
+    switch (currentIndex) {
+      case 0:
+        return -d.pSW(10);
+      case 1:
+        return -d.pSW(43);
+      case 2:
+        return d.pSW(0);
+      case 3:
+        return null;
+      case 4:
+        return null;
+      default:
+        return null;
+    }
+  }
+
+  _getRightPosition() {
+    switch (currentIndex) {
+      case 0:
+        return null;
+      case 1:
+        return null;
+      case 2:
+        return d.pSW(0);
+      case 3:
+        return -d.pSW(43);
+      case 4:
+        return -d.pSW(10);
+      default:
+        return null;
+    }
   }
 
   Widget bottomNavigationBar() {
