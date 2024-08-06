@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:savyminds/constants.dart';
+import 'package:savyminds/resources/app_gradients.dart';
 import 'package:savyminds/screens/game/game/components/game_background.dart';
 
 enum HalloaStepState {
@@ -288,7 +289,9 @@ class StepperState extends State<HalloaStepper> with TickerProviderStateMixin {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          const GameBackground(),
+          GameBackground(
+            backgroundGradient: AppGradients.landingGradient,
+          ),
           SafeArea(
             child: Column(
               children: [

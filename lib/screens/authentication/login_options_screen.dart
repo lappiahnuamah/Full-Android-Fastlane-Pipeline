@@ -5,9 +5,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/auth/auth_functions.dart';
-import 'package:savyminds/providers/dark_theme_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
-import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/resources/app_gradients.dart';
 import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/screens/authentication/change_display_name.dart';
 import 'package:savyminds/screens/authentication/login.dart';
@@ -31,12 +30,13 @@ class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
-    Brightness bright = Theme.of(context).brightness;
+    ///  Brightness bright = Theme.of(context).brightness;
 
     return PopScope(
       canPop: false,
       child: PageTemplate(
         hasTopNav: false,
+        backgroundGradient: AppGradients.landingGradient,
         child: Stack(
           children: [
             Padding(

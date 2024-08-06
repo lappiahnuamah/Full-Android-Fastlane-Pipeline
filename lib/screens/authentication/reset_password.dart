@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/auth/auth_functions.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/resources/app_gradients.dart';
 import 'package:savyminds/utils/validator.dart';
 import 'package:savyminds/widgets/custom_button.dart';
 import 'package:savyminds/widgets/custom_textfeild.dart';
@@ -39,6 +40,7 @@ class _ResetPasswordState extends State<ResetPassword> {
     d.init(context);
     return PageTemplate(
       pageTitle: "Reset Password",
+      backgroundGradient: AppGradients.landingGradient,
       child: SafeArea(
         child: Stack(
           children: [
@@ -49,7 +51,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                 key: _passwordFormKey,
                 child: SingleChildScrollView(
                   child: Column(children: [
-                    ////////////////////////////////////////////////////////////////////
+                    ////////////////////////////////////////////////////////
                     //////////////(-Setting new password -)/////////////////
 
                     Text(
@@ -124,7 +126,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                     SizedBox(
                       height: d.pSH(30),
                     ),
-
 
                     Text(
                       "Your password must have at least 8 characters | 1 uppercase letter |\n 1 lowercase letter | 1 number | 1 symbol",

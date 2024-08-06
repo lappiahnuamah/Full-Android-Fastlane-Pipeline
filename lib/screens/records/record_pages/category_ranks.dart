@@ -1,14 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
-import 'package:savyminds/data/shared_preference_values.dart';
 import 'package:savyminds/functions/categories/categories_functions.dart';
-import 'package:savyminds/models/categories/category_rank_model.dart';
 import 'package:savyminds/providers/records_provider.dart';
 import 'package:savyminds/screens/records/record_ranks.dart';
-import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 
 class CategoryRanks extends StatefulWidget {
   const CategoryRanks({super.key});
@@ -18,7 +13,6 @@ class CategoryRanks extends StatefulWidget {
 }
 
 class _CategoryRanksState extends State<CategoryRanks> {
-
   @override
   void initState() {
     super.initState();
@@ -26,11 +20,10 @@ class _CategoryRanksState extends State<CategoryRanks> {
   }
 
   loadCategoryRanks() async {
-    
     final result = await CategoryFunctions().getCategoryRanks(context: context);
 
     if (!mounted) return;
-   
+
     return result;
   }
 
@@ -47,13 +40,15 @@ class _CategoryRanksState extends State<CategoryRanks> {
                 SizedBox(height: d.pSH(10)),
                 Expanded(
                   child: Builder(builder: (context) {
-                    if (value.categoryRanksIsLoading && value.categoryRanks.isEmpty) {
+                    if (value.categoryRanksIsLoading &&
+                        value.categoryRanks.isEmpty) {
                       return Center(
                         child: CircularProgressIndicator(),
                       );
                     }
 
-                    if (!value.categoryRanksIsLoading && value.categoryRanks.isEmpty) {
+                    if (!value.categoryRanksIsLoading &&
+                        value.categoryRanks.isEmpty) {
                       return Center(
                         child: Text('No data found'),
                       );

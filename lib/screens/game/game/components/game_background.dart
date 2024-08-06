@@ -4,9 +4,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:savyminds/resources/app_images.dart';
 
 class GameBackground extends StatelessWidget {
-  const GameBackground({super.key, this.leftPosition, this.rightPosition});
+  const GameBackground(
+      {super.key,
+      this.leftPosition,
+      this.rightPosition,
+      this.backgroundGradient});
   final double? leftPosition;
   final double? rightPosition;
+  final Gradient? backgroundGradient;
 
   @override
   Widget build(BuildContext context) {
@@ -33,57 +38,24 @@ class GameBackground extends StatelessWidget {
           ),
         ),
         Opacity(
-          opacity: 0.7,
+          opacity: 0.8,
           child: Container(
             width: double.infinity,
             height: double.maxFinite,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: bright == Brightness.dark
-                    ? [
-                        const Color(0xFF2E2E2E).withOpacity(0),
-                        const Color(0xFF2E2E2E),
-                      ]
-                    : [
-                        // 313.54% 70.71% at 50% 50%,
-                        const Color(0xFFEEDCFF), //100%)
-                        const Color(0xFFD9FFFD), //0%,
-                        const Color(0xFFDEF9FB), //41.15%,
-                        const Color(0xFFEEDCFF) //100%)
-
-                        ////
-                        ///linear-gradient
-                        ///(0deg, var(--dark_overlay, #2E2E2E) 0%, var(--dark_overlay, #2E2E2E) 100%),
-                        ///radial-gradient(313.54% 70.71% at 50% 50%, #D9FFFD 0%, #DEF9FB 41.15%, #FFDCED 100%)
-                      ],
-              ),
+              gradient: backgroundGradient ??
+                  LinearGradient(
+                    begin: Alignment(-1.0, -0.5),
+                    end: Alignment(1.0, 0.5),
+                    colors: [
+                      Color(0xFFDEFEFC),
+                      Color(0xFFF2E5FF),
+                    ],
+                    stops: [-0.0884, 1.0],
+                  ),
             ),
           ),
         ),
-        // if (bright == Brightness.dark)
-        //   Opacity(
-        //     opacity: .1,
-        //     child: Container(
-        //       width: double.infinity,
-        //       height: double.maxFinite,
-        //       decoration: BoxDecoration(
-        //         gradient: RadialGradient(
-        //           colors: [
-        //             // 313.54% 70.71% at 50% 50%,3
-        //             const Color(0xFFD9FFFD).withOpacity(0), //100%)
-        //             const Color(0xFFDEF9FB).withOpacity(0.41), //0%,
-        //             const Color(0xFFFFDCED),
-        //             const Color(0xFF2E2E2E).withOpacity(0),
-        //             //41.15%,
-
-        //             ///radial-gradient(313.54% 70.71% at 50% 50%, #D9FFFD 0%, #DEF9FB 41.15%, #FFDCED 100%)
-        //           ],
-        //         ),
-        //       ),
-        //     ),
-        //   ),
       ],
     );
   }

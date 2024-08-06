@@ -56,6 +56,7 @@ class PageTemplate extends StatefulWidget {
       this.bottomNavigationBar,
       this.backgroundLeftPosition,
       this.backgroundRightPosition,
+      this.backgroundGradient,
       this.showStatusBar = true})
       : super(key: key);
 
@@ -104,6 +105,7 @@ class PageTemplate extends StatefulWidget {
   final bool showStatusBar;
   final double? backgroundLeftPosition;
   final double? backgroundRightPosition;
+  final Gradient? backgroundGradient;
 
   @override
   State<PageTemplate> createState() => _PageTemplateState();
@@ -144,6 +146,7 @@ class _PageTemplateState extends State<PageTemplate> {
                 GameBackground(
                   leftPosition: widget.backgroundLeftPosition,
                   rightPosition: widget.backgroundRightPosition,
+                  backgroundGradient: widget.backgroundGradient,
                 ),
                 SafeArea(
                   child: Container(

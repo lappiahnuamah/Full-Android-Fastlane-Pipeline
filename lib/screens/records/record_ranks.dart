@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:savyminds/constants.dart';
-import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/records/components/record_rank_header.dart';
 import 'package:savyminds/screens/records/record_pages/category_ranks.dart';
 import 'package:savyminds/screens/records/record_pages/contest_ranks.dart';
@@ -157,43 +156,6 @@ class ContestRankTableHeader extends StatelessWidget {
       Expanded(
         flex: 2,
         child: CustomText(
-          label: "Level",
-          fontSize: getFontSize(16, size),
-          textAlign: TextAlign.end,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      Expanded(
-        flex: 2,
-        child: CustomText(
-          label: "Rank",
-          fontSize: getFontSize(16, size),
-          textAlign: TextAlign.end,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    ]);
-  }
-}
-
-class SoloQuestRankTableHeader extends StatelessWidget {
-  const SoloQuestRankTableHeader({
-    super.key,
-    required this.size,
-  });
-
-  final Size size;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(children: [
-      Expanded(
-        flex: 5,
-        child: SizedBox(height: d.pSH(15)),
-      ),
-      Expanded(
-        flex: 2,
-        child: CustomText(
           label: "Sessions",
           fontSize: getFontSize(16, size),
           textAlign: TextAlign.end,
@@ -213,7 +175,6 @@ class SoloQuestRankTableHeader extends StatelessWidget {
   }
 }
 
-//
 //Rows
 class CustomRankRow extends StatelessWidget {
   const CustomRankRow(
@@ -287,13 +248,10 @@ class CustomRankRow extends StatelessWidget {
 
 class SoloQuestRankRow extends StatelessWidget {
   const SoloQuestRankRow(
-      {super.key,
-      required this.rank,
-      required this.name,
-      required this.sessions});
+      {super.key, required this.rank, required this.name, required this.level});
   final String rank;
   final String name;
-  final String sessions;
+  final String level;
 
   @override
   Widget build(BuildContext context) {
@@ -305,13 +263,13 @@ class SoloQuestRankRow extends StatelessWidget {
           flex: 5,
           child: Row(
             children: [
-              SvgPicture.asset(
-                'assets/icons/learner.svg',
-                height: d.pSH(15),
-                colorFilter: const ColorFilter.mode(
-                    AppColors.hintTextBlack, BlendMode.srcIn),
-              ),
-              SizedBox(width: d.pSW(10)),
+              // SvgPicture.asset(
+              //   'assets/icons/learner.svg',
+              //   height: d.pSH(15),
+              //   colorFilter: const ColorFilter.mode(
+              //       AppColors.hintTextBlack, BlendMode.srcIn),
+              // ),
+              // SizedBox(width: d.pSW(10)),
               Expanded(
                 child: CustomText(
                   label: name,
@@ -325,7 +283,7 @@ class SoloQuestRankRow extends StatelessWidget {
         Expanded(
           flex: 2,
           child: CustomText(
-            label: sessions,
+            label: level,
             fontSize: getFontSize(15, size),
             textAlign: TextAlign.end,
             fontWeight: FontWeight.w400,

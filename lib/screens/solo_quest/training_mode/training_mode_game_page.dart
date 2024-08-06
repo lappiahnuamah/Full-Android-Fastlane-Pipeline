@@ -201,7 +201,8 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
           body: Stack(
             clipBehavior: Clip.none,
             children: [
-              GamePageBackground(icon: widget.category.icon),
+              GamePageBackground(
+                  icon: widget.category.icon, questIcon: widget.quest.icon),
 
               //Actual Game
               SafeArea(
@@ -219,8 +220,19 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                               onTap: () async {
                                 goBack();
                               },
-                              child:
-                                  SvgPicture.asset('assets/icons/log-out.svg'),
+                              child: Card(
+                                child: Padding(
+                                  padding: EdgeInsets.all(d.pSH(6)),
+                                  child: SvgPicture.network(
+                                    widget.quest.icon,
+                                    height: d.pSH(20),
+                                    colorFilter: ColorFilter.mode(
+                                      AppColors.borderPrimary,
+                                      BlendMode.srcIn,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
 
                             //Score

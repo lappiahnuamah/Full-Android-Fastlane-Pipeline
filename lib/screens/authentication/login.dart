@@ -14,6 +14,7 @@ import 'package:savyminds/models/error_response.dart';
 import 'package:savyminds/providers/dark_theme_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/resources/app_gradients.dart';
 import 'package:savyminds/screens/authentication/email_verification.dart';
 import 'package:savyminds/screens/authentication/forgot_password.dart';
 import 'package:savyminds/screens/authentication/login_options_screen.dart';
@@ -72,7 +73,9 @@ class _LoginState extends State<Login> {
               key: _scaffoldKey,
               body: Stack(
                 children: [
-                  const GameBackground(),
+                  GameBackground(
+                    backgroundGradient: AppGradients.landingGradient,
+                  ),
                   SafeArea(
                     child: SingleChildScrollView(
                       child: SizedBox(

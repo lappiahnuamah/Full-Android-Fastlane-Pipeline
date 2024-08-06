@@ -6,6 +6,7 @@ import 'package:savyminds/functions/auth/auth_functions.dart';
 import 'package:savyminds/functions/auth/profile_functions.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/resources/app_gradients.dart';
 import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
 import 'package:savyminds/utils/validator.dart';
 import 'package:savyminds/widgets/custom_button.dart';
@@ -39,6 +40,7 @@ class _ChangeDisplayNameState extends State<ChangeDisplayName> {
       canPop: false,
       child: PageTemplate(
           pageTitle: 'Change Display Name',
+          backgroundGradient: AppGradients.landingGradient,
           child: Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: d.pSW(25), vertical: d.pSH(16)),

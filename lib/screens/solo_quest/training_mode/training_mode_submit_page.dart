@@ -20,6 +20,7 @@ import 'package:savyminds/screens/solo_quest/training_mode/training_mode.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/availalble_keys_widget.dart';
+import 'package:savyminds/widgets/custom_text.dart';
 import 'package:savyminds/widgets/submit_page_background.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
 
@@ -357,17 +358,18 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                         buttonColor: AppColors.kGameGreen,
                       ),
                       SizedBox(
-                        height: d.pSH(30),
+                        height: d.pSH(25),
                       ),
-                      TransformedButton(
+                      InkWell(
                         onTap: () {
                           nextScreen(context, const CustomBottomNav());
                         },
-                        buttonText: 'Return Home',
-                        fontSize: getFontSize(22, size),
-                        height: d.pSH(80),
-                        buttonColor: AppColors.kGameRed,
-                        width: d.getPhoneScreenWidth() * 0.65,
+                        child: CustomText(
+                          label: 'Return Home',
+                          fontSize: d.pSH(21),
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.borderAccent,
+                        ),
                       ),
                     ],
                   ),

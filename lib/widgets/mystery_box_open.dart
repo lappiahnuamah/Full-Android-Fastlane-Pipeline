@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +31,9 @@ class _MysteryBoxOpenState extends State<MysteryBoxOpen> {
   @override
   void initState() {
     gameItemsProvider = context.read<GameItemsProvider>();
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      openBox();
+    });
     super.initState();
   }
 
@@ -109,42 +113,41 @@ class _MysteryBoxOpenState extends State<MysteryBoxOpen> {
             ).animate()
               ..shimmer(duration: 1000.ms)
               ..shakeX(duration: 1000.ms),
-            SizedBox(height: d.pSH(50)),
-            InkWell(
-              onTap: showReward
-                  ? () {
-                      Navigator.pop(context);
-                    }
-                  : () {
-                      if (openingMysteryBox) return;
-                      setState(() {
-                        openingMysteryBox = true;
-                      });
-                      getRadomKey();
-                      openingMysteryBox = false;
-                      showReward = true;
-                    },
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                    vertical: d.pSH(5), horizontal: d.pSW(12)),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(d.pSH(22)),
-                  border: Border.all(color: AppColors.blueBird, width: 1),
+            if (showReward) SizedBox(height: d.pSH(50)),
+            if (showReward)
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                      vertical: d.pSH(5), horizontal: d.pSW(12)),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(d.pSH(22)),
+                    border: Border.all(color: AppColors.blueBird, width: 1),
+                  ),
+                  child: CustomText(
+                    label: 'Continue',
+                    fontSize: getFontSize(20, size),
+                    fontWeight: FontWeight.bold,
+                    fontFamily: AppFonts.caveat,
+                    color: AppColors.blueBird,
+                  ),
                 ),
-                child: CustomText(
-                  label:
-                      showReward ? 'Continnue' : 'Tap here to get your reward',
-                  fontSize: getFontSize(20, size),
-                  fontWeight: FontWeight.bold,
-                  fontFamily: AppFonts.caveat,
-                  color: AppColors.blueBird,
-                ),
-              ),
-            )
+              )
           ],
         ),
       ),
     );
+  }
+
+  void openBox() {
+    setState(() {
+      openingMysteryBox = true;
+    });
+    getRadomKey();
+    openingMysteryBox = false;
+    showReward = true;
   }
 
   getRadomKey() {

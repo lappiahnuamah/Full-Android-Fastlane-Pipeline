@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/auth/auth_functions.dart';
 import 'package:savyminds/models/error_response.dart';
+import 'package:savyminds/resources/app_gradients.dart';
 import 'package:savyminds/utils/validator.dart';
 import 'package:savyminds/widgets/custom_button.dart';
 import 'package:savyminds/widgets/custom_textfeild_with_label.dart';
@@ -36,6 +37,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     d.init(context);
     return PageTemplate(
       pageTitle: "Forgot Password",
+      backgroundGradient: AppGradients.landingGradient,
       child: SafeArea(
         child: Stack(
           children: [
