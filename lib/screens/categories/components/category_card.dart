@@ -54,12 +54,14 @@ class _CategoryCardState extends State<CategoryCard> {
                 log('is daily training on card: ${widget.isDailyTraining}');
 
                 nextScreen(
-                    context,
-                    TrainingMode(
-                      category: widget.category,
-                      quest: soloQuestProvider.getQuestByName('Training Mode'),
-                      isDailyTraining: widget.isDailyTraining,
-                    ));
+                  context,
+                  TrainingMode(
+                    category: widget.category,
+                    quest: soloQuestProvider.getQuestByName('Training Mode'),
+                    isDailyTraining: widget.isDailyTraining,
+                  ),
+                  TransitionType.slide,
+                );
               } else {}
             }
           : null,
@@ -153,13 +155,15 @@ class _CategoryCardState extends State<CategoryCard> {
                             if (!(widget.category.isLocked ||
                                 widget.greyedOut)) {
                               nextScreen(
-                                  context,
-                                  TrainingMode(
-                                    category: widget.category,
-                                    quest: soloQuestProvider
-                                        .getQuestByName('Training Mode'),
-                                    isDailyTraining: widget.isDailyTraining,
-                                  ));
+                                context,
+                                TrainingMode(
+                                  category: widget.category,
+                                  quest: soloQuestProvider
+                                      .getQuestByName('Training Mode'),
+                                  isDailyTraining: widget.isDailyTraining,
+                                ),
+                                TransitionType.slide,
+                              );
                             } else {}
                           },
                           child: Padding(

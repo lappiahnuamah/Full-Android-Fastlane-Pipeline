@@ -279,14 +279,16 @@ class _TrainingModeState extends State<TrainingMode> {
         log('is daily training on init page: ${widget.isDailyTraining}');
 
         nextScreen(
-            context,
-            TrainingModeGamePage(
-                category: selectedCategory!,
-                questionList: result.questions,
-                swapQuestions: result.swapQuestions,
-                quest: widget.quest,
-                level: level,
-                isDailyTraining: widget.isDailyTraining));
+          context,
+          TrainingModeGamePage(
+              category: selectedCategory!,
+              questionList: result.questions,
+              swapQuestions: result.swapQuestions,
+              quest: widget.quest,
+              level: level,
+              isDailyTraining: widget.isDailyTraining),
+          TransitionType.combined,
+        );
       }
     } else {
       Fluttertoast.showToast(

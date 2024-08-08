@@ -458,26 +458,26 @@ class _LoginState extends State<Login> {
                                 )),
 
                             //
-                            Positioned(
-                              right: 0,
-                              child: IconButton(
-                                  onPressed: bright == Brightness.dark
-                                      ? () {
-                                          value.setTheme(1);
-                                        }
-                                      : () {
-                                          value.setTheme(2);
-                                        },
-                                  icon: Icon(
-                                    bright == Brightness.dark
-                                        ? Icons.light_mode_outlined
-                                        : Icons.dark_mode_outlined,
-                                    size: d.pSH(28),
-                                    color: bright == Brightness.dark
-                                        ? const Color(0xFFE4E4E4)
-                                        : AppColors.kSecondaryColor,
-                                  )),
-                            ),
+                            // Positioned(
+                            //   right: 0,
+                            //   child: IconButton(
+                            //       onPressed: bright == Brightness.dark
+                            //           ? () {
+                            //               value.setTheme(1);
+                            //             }
+                            //           : () {
+                            //               value.setTheme(2);
+                            //             },
+                            //       icon: Icon(
+                            //         bright == Brightness.dark
+                            //             ? Icons.light_mode_outlined
+                            //             : Icons.dark_mode_outlined,
+                            //         size: d.pSH(28),
+                            //         color: bright == Brightness.dark
+                            //             ? const Color(0xFFE4E4E4)
+                            //             : AppColors.kSecondaryColor,
+                            //       )),
+                            // ),
                           ],
                         ),
                       ),

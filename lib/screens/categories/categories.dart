@@ -23,7 +23,9 @@ class Categories extends StatefulWidget {
   State<Categories> createState() => _CategoriesState();
 }
 
-class _CategoriesState extends State<Categories> {
+class _CategoriesState extends State<Categories> with TickerProviderStateMixin {
+  List<AnimationController> _controllers = [];
+  List<Animation<double>> _animations = [];
   bool isLoading = false;
   String searchText = "";
   final searchController = TextEditingController();
@@ -38,6 +40,24 @@ class _CategoriesState extends State<Categories> {
       GameMatricFunction().getGameMatrics(context: context);
     });
     super.initState();
+  }
+
+  getAnimations(List<CategoryModel> categories) {
+    _controllers = categories.map((item) {
+      return AnimationController(
+        duration: const Duration(milliseconds: 500),
+        vsync: this,
+      );
+    }).toList();
+
+    _animations = _controllers.map((controller) {
+      return CurvedAnimation(
+        parent: controller,
+        curve: Curves.easeIn,
+      );
+    }).toList();
+
+    _startAnimations();
   }
 
   @override
@@ -174,10 +194,10 @@ class _CategoriesState extends State<Categories> {
                                     final category = searchText.isEmpty
                                         ? categoryProvider.categories[index]
                                         : searchValue.value[index];
-                                    return CategoryCard(
-                                      category: category,
-                                      index: index,
-                                    );
+                                    return _buildItem(
+                                        categoryModel: category,
+                                        context: context,
+                                        index: index);
                                   }),
                                 ]),
                           ],
@@ -200,8 +220,14 @@ class _CategoriesState extends State<Categories> {
         return CategoryModel.fromJson(json.decode(value));
       }).toList();
       categoryProvider.setCategories(categories);
+      getAnimations(categories);
+
+      await CategoryFunctions().getCategories(context: context);
+    } else {
+      await CategoryFunctions().getCategories(context: context);
+      getAnimations(categoryProvider.categories);
     }
-    await CategoryFunctions().getCategories(context: context);
+
     setState(() {
       isLoading = false;
     });
@@ -216,14 +242,43 @@ class _CategoriesState extends State<Categories> {
         searchCategories.add(category);
       }
     }
-
     searchValue.value = searchCategories;
+    getAnimations(searchCategories);
     setState(() {});
   }
 
-  @override
-  void dispose() {
-    searchValue.dispose();
-    super.dispose();
+  Widget _buildItem(
+      {required BuildContext context,
+      required CategoryModel categoryModel,
+      required int index}) {
+    return _animations.isNotEmpty
+        ? AnimatedBuilder(
+            animation: _animations[index],
+            builder: (context, child) {
+              return FadeTransition(
+                opacity: _animations[index],
+                child: CategoryCard(category: categoryModel, index: index),
+              );
+            })
+        : CategoryCard(category: categoryModel, index: index);
+  }
+
+  void _startAnimations() {
+    for (int i = 0; i < _controllers.length; i++) {
+      Future.delayed(Duration(milliseconds: i * 600), () {
+        _controllers[i].forward();
+      });
+    }
+
+    @override
+    void dispose() {
+      searchValue.dispose();
+      for (var controller in _controllers) {
+        controller.dispose();
+      }
+      _animations.clear();
+      _controllers.clear();
+      super.dispose();
+    }
   }
 }

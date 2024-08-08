@@ -8,7 +8,6 @@ import 'package:savyminds/api_urls/category_url.dart';
 import 'package:savyminds/api_urls/game_url.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/data/shared_preference_values.dart';
-import 'package:savyminds/functions/contests/contests_functions.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:savyminds/models/categories/category_level_model.dart';
@@ -85,8 +84,8 @@ class CategoryFunctions {
       lg('point submit: ${response.body} : points: $totalPoints');
 
       // Add type points
-      await ContestFunctions().submitGameTypePoints(
-          context: context, gameType: gameTypeId, totalPoints: totalPoints);
+      // await ContestFunctions().submitGameTypePoints(
+      //     context: context, gameType: gameTypeId, totalPoints: totalPoints);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);
@@ -290,14 +289,14 @@ class CategoryFunctions {
         if (context.mounted) {
           final result = SharedPreferencesHelper.getString(
               SharedPreferenceValues.categoryRanks);
-            recordsProvider.setRanksIsLoading(isLoading: true,gameType: '');
+          recordsProvider.setRanksIsLoading(isLoading: true, gameType: '');
 
           if (result.isNotEmpty && result != "null") {
             final categoryRankList = ((jsonDecode(result) ?? []) as List)
                 .map((e) => CategoryRankModel.fromJson(e))
                 .toList();
             recordsProvider.setCategoryRanks(categoryRankList);
-            recordsProvider.setRanksIsLoading(isLoading: false,gameType: '');
+            recordsProvider.setRanksIsLoading(isLoading: false, gameType: '');
           }
           String accessToken =
               Provider.of<UserDetailsProvider>(context, listen: false)
@@ -326,7 +325,7 @@ class CategoryFunctions {
             // SharedPreferencesHelper.setString(
             //     key: SharedPreferenceValues.categoryRanks,
             //     value: jsonEncode([]));
-            recordsProvider.setRanksIsLoading(isLoading: false,gameType: '');
+            recordsProvider.setRanksIsLoading(isLoading: false, gameType: '');
 
             return [];
           }

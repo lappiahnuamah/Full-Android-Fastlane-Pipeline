@@ -80,8 +80,9 @@ class _RetakeKeyDisplayState extends State<RetakeKeyDisplay> {
               onTap: widget.onRetakeTapped,
               child: Container(
                 padding: EdgeInsets.symmetric(
-                    vertical: d.pSH(5), horizontal: d.pSW(12)),
+                    vertical: d.pSH(5), horizontal: d.pSW(14)),
                 decoration: BoxDecoration(
+                  color: AppColors.everGreen,
                   borderRadius: BorderRadius.circular(d.pSH(22)),
                   border: Border.all(color: AppColors.everGreen, width: 1),
                 ),
@@ -90,7 +91,7 @@ class _RetakeKeyDisplayState extends State<RetakeKeyDisplay> {
                   fontSize: getFontSize(24, size),
                   fontWeight: FontWeight.bold,
                   fontFamily: AppFonts.caveat,
-                  color: AppColors.everGreen,
+                  color: Colors.white,
                 ),
               ),
             )

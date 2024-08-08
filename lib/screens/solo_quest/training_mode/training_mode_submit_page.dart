@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:savyminds/animations/increasing_number.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/categories/categories_functions.dart';
 import 'package:savyminds/functions/games/game_function.dart';
@@ -90,15 +91,15 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                           fontStyle: FontStyle.italic,
                         ),
                       ),
-                      Text(
-                        widget.pointsScored.toString(),
-                        textAlign: TextAlign.center,
+                      IncreasingNumberAnimation(
+                        from: 0,
+                        to: widget.pointsScored,
                         style: TextStyle(
                           color: AppColors.kGameLightBlue,
                           fontSize: getFontSize(24, size),
+                          fontWeight: FontWeight.bold,
                           fontFamily: AppFonts.inter,
                           height: 1.5,
-                          fontWeight: FontWeight.w700,
                         ),
                       ),
                       SizedBox(height: d.pSH(15)),
@@ -114,62 +115,60 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                         ),
                       ),
                       SizedBox(height: d.pSH(25)),
-                      isLoading
-                          ? SizedBox(
-                              height: d.pSH(60),
-                              width: double.infinity,
-                              child: const Center(
-                                child: CircularProgressIndicator(
-                                  color: AppColors.kPrimaryColor,
-                                ),
-                              ),
-                            )
-                          : Consumer<CategoryProvider>(
-                              builder: (context, catProv, chils) {
-                              final CategoryLevelModel? catLevel =
-                                  categoryLevelModel = catProv.getCategoryLevel(
-                                      widget.categoryModel?.id ?? 0);
-                              return catLevel != null
-                                  ? Column(
-                                      mainAxisSize: MainAxisSize.min,
+                      Consumer<CategoryProvider>(
+                          builder: (context, catProv, child) {
+                        final CategoryLevelModel? catLevel =
+                            categoryLevelModel = catProv.getCategoryLevel(
+                                widget.categoryModel?.id ?? 0);
+                        return catLevel != null
+                            ? Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: d.pSH(16)),
+                                    child: Wrap(
+                                      runSpacing: d.pSH(10),
+                                      spacing: d.pSW(15),
+                                      alignment: WrapAlignment.center,
                                       children: [
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: d.pSH(16)),
-                                          child: Wrap(
-                                            runSpacing: d.pSH(10),
-                                            spacing: d.pSW(15),
-                                            alignment: WrapAlignment.center,
-                                            children: [
-                                              ...List.generate(
-                                                catLevel.levels.length,
-                                                (index) {
-                                                  final _level =
-                                                      catLevel.levels[index];
-                                                  if (_level.isCurrentLevel) {
-                                                    levelName = _level.name;
-                                                    levelUpperBound =
-                                                        _level.upperboundary;
-                                                    levelLowerBound =
-                                                        _level.lowerboundary;
-                                                  }
-                                                  return LevelCard(
-                                                    level: _level,
-                                                    totalPoints:
-                                                        catLevel.totalPoints,
-                                                    pointsScored:
-                                                        widget.pointsScored,
-                                                  );
-                                                },
-                                              )
-                                            ],
+                                        ...List.generate(
+                                          catLevel.levels.length,
+                                          (index) {
+                                            final _level =
+                                                catLevel.levels[index];
+                                            if (_level.isCurrentLevel) {
+                                              levelName = _level.name;
+                                              levelUpperBound =
+                                                  _level.upperboundary;
+                                              levelLowerBound =
+                                                  _level.lowerboundary;
+                                            }
+                                            return LevelCard(
+                                              level: _level,
+                                              totalPoints: catLevel.totalPoints,
+                                              pointsScored: widget.pointsScored,
+                                            );
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: d.pSH(10)),
+                                  RichText(
+                                      textAlign: TextAlign.center,
+                                      text: TextSpan(
+                                          text: "Nice Job!",
+                                          style: TextStyle(
+                                            color: AppColors.textBlack,
+                                            fontSize: getFontSize(13, size),
+                                            fontFamily: AppFonts.inter,
+                                            height: 1.5,
+                                            fontStyle: FontStyle.normal,
                                           ),
-                                        ),
-                                        SizedBox(height: d.pSH(10)),
-                                        RichText(
-                                            textAlign: TextAlign.center,
-                                            text: TextSpan(
-                                                text: "Nice Job!",
+                                          children: [
+                                            TextSpan(
+                                                text: "\nYou need ",
                                                 style: TextStyle(
                                                   color: AppColors.textBlack,
                                                   fontSize:
@@ -180,12 +179,13 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                                                 ),
                                                 children: [
                                                   TextSpan(
-                                                      text: "\nYou need ",
+                                                      text:
+                                                          "${(levelUpperBound - (catLevel.totalPoints + widget.pointsScored)).toInt()}",
                                                       style: TextStyle(
-                                                        color:
-                                                            AppColors.textBlack,
+                                                        color: AppColors
+                                                            .kGameDarkLightBlue,
                                                         fontSize: getFontSize(
-                                                            13, size),
+                                                            16, size),
                                                         fontFamily:
                                                             AppFonts.inter,
                                                         height: 1.5,
@@ -194,143 +194,120 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                                                       ),
                                                       children: [
                                                         TextSpan(
-                                                            text:
-                                                                "${(levelUpperBound - (catLevel.totalPoints + widget.pointsScored)).toInt()}",
-                                                            style: TextStyle(
-                                                              color: AppColors
-                                                                  .kGameDarkLightBlue,
-                                                              fontSize:
-                                                                  getFontSize(
-                                                                      16, size),
-                                                              fontFamily:
-                                                                  AppFonts
-                                                                      .inter,
-                                                              height: 1.5,
-                                                              fontStyle:
-                                                                  FontStyle
-                                                                      .normal,
-                                                            ),
-                                                            children: [
-                                                              TextSpan(
-                                                                text:
-                                                                    " more points to move to the \nnext level.",
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: AppColors
-                                                                      .textBlack,
-                                                                  fontSize:
-                                                                      getFontSize(
-                                                                          13,
-                                                                          size),
-                                                                  fontFamily:
-                                                                      AppFonts
-                                                                          .inter,
-                                                                  height: 1.5,
-                                                                  fontStyle:
-                                                                      FontStyle
-                                                                          .normal,
-                                                                ),
-                                                              )
-                                                            ])
+                                                          text:
+                                                              " more points to move to the \nnext level.",
+                                                          style: TextStyle(
+                                                            color: AppColors
+                                                                .textBlack,
+                                                            fontSize:
+                                                                getFontSize(
+                                                                    13, size),
+                                                            fontFamily:
+                                                                AppFonts.inter,
+                                                            height: 1.5,
+                                                            fontStyle: FontStyle
+                                                                .normal,
+                                                          ),
+                                                        )
                                                       ])
-                                                ])),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Column(
-                                              children: [
-                                                Text(
-                                                  "Correct Answers",
-                                                  style: TextStyle(
-                                                    color: AppColors.textBlack,
-                                                    fontSize:
-                                                        getFontSize(22, size),
-                                                    fontFamily: AppFonts.caveat,
-                                                    height: 1.5,
-                                                    fontStyle: FontStyle.normal,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: d.pSH(7),
-                                                ),
-                                                Text(
-                                                  "${widget.correctAnswers}",
-                                                  style: TextStyle(
-                                                    color: AppColors
-                                                        .kGameDarkLightBlue,
-                                                    fontSize:
-                                                        getFontSize(20, size),
-                                                    fontFamily: AppFonts.inter,
-                                                    fontWeight: FontWeight.w700,
-                                                    height: 1.5,
-                                                    fontStyle: FontStyle.normal,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Column(
-                                              children: [
-                                                Text(
-                                                  "Overall scores",
-                                                  style: TextStyle(
-                                                    color: AppColors.textBlack,
-                                                    fontSize:
-                                                        getFontSize(22, size),
-                                                    fontFamily: AppFonts.caveat,
-                                                    height: 1.5,
-                                                    fontStyle: FontStyle.normal,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  height: d.pSH(7),
-                                                ),
-                                                Text(
-                                                  "${(catLevel.totalPoints + widget.pointsScored).toInt()}",
-                                                  style: TextStyle(
-                                                    color: AppColors
-                                                        .kGameDarkLightBlue,
-                                                    fontSize:
-                                                        getFontSize(20, size),
-                                                    fontFamily: AppFonts.inter,
-                                                    fontWeight: FontWeight.w700,
-                                                    height: 1.5,
-                                                    fontStyle: FontStyle.normal,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: d.pSH(7),
-                                        ),
-                                        if (categoryRankModel != null)
-                                          Container(
-                                            width: d.getPhoneScreenWidth(),
-                                            alignment: Alignment.center,
-                                            padding: EdgeInsets.all(d.pSH(5)),
-                                            margin: EdgeInsets.symmetric(
-                                                vertical: d.pSH(10)),
-                                            decoration: BoxDecoration(
-                                                color: AppColors.kWhite
-                                                    .withOpacity(0.9)),
-                                            child: Text(
-                                              "You are ranked in top ${categoryRankModel!.rank}",
-                                              style: TextStyle(
-                                                color: AppColors.kPrimaryColor,
-                                                fontSize: getFontSize(27, size),
-                                                fontFamily: AppFonts.caveat,
-                                                height: 1.5,
-                                                fontWeight: FontWeight.w700,
-                                                fontStyle: FontStyle.normal,
-                                              ),
+                                                ])
+                                          ])),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Text(
+                                            "Correct Answers",
+                                            style: TextStyle(
+                                              color: AppColors.textBlack,
+                                              fontSize: getFontSize(22, size),
+                                              fontFamily: AppFonts.caveat,
+                                              height: 1.5,
+                                              fontStyle: FontStyle.normal,
                                             ),
                                           ),
-                                      ],
-                                    )
-                                  : const SizedBox();
-                            }),
+                                          SizedBox(
+                                            height: d.pSH(7),
+                                          ),
+                                          Text(
+                                            "${widget.correctAnswers}",
+                                            style: TextStyle(
+                                              color:
+                                                  AppColors.kGameDarkLightBlue,
+                                              fontSize: getFontSize(20, size),
+                                              fontFamily: AppFonts.inter,
+                                              fontWeight: FontWeight.w700,
+                                              height: 1.5,
+                                              fontStyle: FontStyle.normal,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          Text(
+                                            "Overall scores",
+                                            style: TextStyle(
+                                              color: AppColors.textBlack,
+                                              fontSize: getFontSize(22, size),
+                                              fontFamily: AppFonts.caveat,
+                                              height: 1.5,
+                                              fontStyle: FontStyle.normal,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: d.pSH(7),
+                                          ),
+                                          IncreasingNumberAnimation(
+                                            from: catLevel.totalPoints.toInt(),
+                                            to: (catLevel.totalPoints +
+                                                    widget.pointsScored)
+                                                .toInt(),
+                                            style: TextStyle(
+                                              color:
+                                                  AppColors.kGameDarkLightBlue,
+                                              fontSize: getFontSize(20, size),
+                                              fontFamily: AppFonts.inter,
+                                              fontWeight: FontWeight.w700,
+                                              height: 1.5,
+                                              fontStyle: FontStyle.normal,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: d.pSH(7),
+                                  ),
+                                  if (categoryRankModel != null)
+                                    Container(
+                                      width: d.getPhoneScreenWidth(),
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.all(d.pSH(5)),
+                                      margin: EdgeInsets.symmetric(
+                                          vertical: d.pSH(10)),
+                                      decoration: BoxDecoration(
+                                          color: AppColors.kWhite
+                                              .withOpacity(0.9)),
+                                      child: Text(
+                                        "You are ranked in top ${categoryRankModel!.rank}",
+                                        style: TextStyle(
+                                          color: AppColors.kPrimaryColor,
+                                          fontSize: getFontSize(27, size),
+                                          fontFamily: AppFonts.caveat,
+                                          height: 1.5,
+                                          fontWeight: FontWeight.w700,
+                                          fontStyle: FontStyle.normal,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              )
+                            : const SizedBox();
+                      }),
                       SizedBox(
                         height: d.pSH(15),
                       ),

@@ -8,6 +8,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:savyminds/animations/increasing_number.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/questions/option_model.dart';
@@ -91,8 +92,8 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
   double fontSize = 45.0;
   int gamePoints = 1;
 
-  int currentGamePoints = 0;
   int totalPoints = 0;
+  int oldTotalPoints = 0;
 
   int answerStreak = 0;
   int loseStreaks = 0;
@@ -225,7 +226,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                   padding: EdgeInsets.all(d.pSH(6)),
                                   child: SvgPicture.network(
                                     widget.quest.icon,
-                                    height: d.pSH(20),
+                                    height: d.pSH(22),
                                     colorFilter: ColorFilter.mode(
                                       AppColors.borderPrimary,
                                       BlendMode.srcIn,
@@ -255,6 +256,15 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                   color: AppColors.kPrimaryColor,
                                   fontSize: getFontSize(24, size),
                                   fontWeight: FontWeight.bold,
+                                ),
+                                IncreasingNumberAnimation(
+                                  from: oldTotalPoints,
+                                  to: totalPoints,
+                                  style: TextStyle(
+                                    color: AppColors.kPrimaryColor,
+                                    fontSize: getFontSize(24, size),
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ],
                             )
@@ -801,9 +811,9 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
     }
     startScoreAnimation();
     Future.delayed(const Duration(seconds: 2), () {
-      currentGamePoints = gamePoints;
-      totalPoints += currentGamePoints;
-      if (mounted) currentGamePoints;
+      oldTotalPoints = totalPoints;
+      totalPoints += gamePoints;
+      setState(() {});
     });
   }
 
