@@ -40,8 +40,8 @@ class GameTopKeysList extends StatelessWidget {
                     AppImages.hintKey,
                     height: d.pSH(33),
                   )).animate()
-                ..shimmer(duration: 1000.ms)
-                ..scale(duration: 1000.ms),
+                ..shimmer(duration: 700.ms)
+                ..scale(duration: 700.ms),
             SizedBox(height: d.pSH(10)),
             if ((showMysteryBox || showTimesTwo) && showHint)
               SizedBox(width: d.pSH(34)),

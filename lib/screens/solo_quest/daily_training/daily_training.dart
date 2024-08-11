@@ -9,6 +9,7 @@ import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/resources/app_hero_tags.dart';
 import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/extensions/extensions.dart';
@@ -27,6 +28,7 @@ class _DailyTrainingState extends State<DailyTraining> {
   late CategoryProvider categoryProvider;
   bool isLoading = true;
   late GameItemsProvider gameItemsProvider;
+  bool _isExpanded = false;
 
   @override
   void initState() {
@@ -54,7 +56,10 @@ class _DailyTrainingState extends State<DailyTraining> {
               );
             }),
             const SizedBox(width: 10),
-            SvgPicture.asset("assets/icons/flame.svg")
+            Hero(
+              tag: AppHeroTags.streakIcon,
+              child: SvgPicture.asset("assets/icons/flame.svg"),
+            )
           ],
         )
       ],
@@ -78,8 +83,11 @@ class _DailyTrainingState extends State<DailyTraining> {
                         ),
                       ),
                       Align(
-                        child: SvgPicture.asset(
-                            "assets/icons/daily_training_icon.svg"),
+                        child: Hero(
+                          tag: AppHeroTags.dailyTrainingLogo,
+                          child: SvgPicture.asset(
+                              "assets/icons/daily_training_icon.svg"),
+                        ),
                       )
                     ],
                   ),
@@ -102,30 +110,36 @@ class _DailyTrainingState extends State<DailyTraining> {
                       )
                     : Consumer<GameItemsProvider>(
                         builder: (context, itemProvider, child) {
-                        return SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              //Categories
-
-                              ...itemProvider.dailyTrainingCategories.entries
-                                  .map((e) {
-                                final category = e.value['category'];
-                                return Container(
+                        return Stack(
+                          alignment: Alignment.center,
+                          children: itemProvider.dailyTrainingCategories.entries
+                              .map((e) {
+                            int index = itemProvider
+                                .dailyTrainingCategories.keys
+                                .toList()
+                                .indexOf(e.key);
+                            return AnimatedPositioned(
+                                duration: Duration(seconds: 1),
+                                curve: Curves.easeInOut,
+                                top: _isExpanded
+                                    ? index * d.pSH(156.0)
+                                    : _isExpanded
+                                        ? index == 0
+                                            ? 0
+                                            : d.pSH(20)
+                                        : d.pSH(176),
+                                child: Container(
                                   height: d.pSH(156.5),
                                   width: d.pSW(160.2),
                                   margin: EdgeInsets.only(bottom: d.pSH(8)),
                                   child: CategoryCard(
-                                    category: category,
+                                    category: e.value['category'],
                                     hidePlay: e.value['isPlayed'],
                                     greyedOut: e.value['isPlayed'],
                                     isDailyTraining: true,
                                   ),
-                                );
-                              }),
-
-                              SizedBox(height: d.pSH(16)),
-                            ],
-                          ),
+                                ));
+                          }).toList(),
                         );
                       }))
           ],
@@ -166,6 +180,13 @@ class _DailyTrainingState extends State<DailyTraining> {
         gameItemsProvider.setDailyTrainingPlayInstanceFromCache(
             categories: newProviderData);
       }
+
+      ///Expand animation
+      Future.delayed(const Duration(milliseconds: 700), () {
+        setState(() {
+          _isExpanded = true;
+        });
+      });
       return storedChallenges;
     }
 
@@ -182,6 +203,13 @@ class _DailyTrainingState extends State<DailyTraining> {
     });
 
     gameItemsProvider.setDailyTrainingCategories(selectedCategories);
+
+    ///Expand animation
+    Future.delayed(const Duration(milliseconds: 700), () {
+      setState(() {
+        _isExpanded = true;
+      });
+    });
 
     return selectedCategories;
   }

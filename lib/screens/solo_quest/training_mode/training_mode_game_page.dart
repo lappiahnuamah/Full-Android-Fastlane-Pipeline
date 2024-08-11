@@ -8,7 +8,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:savyminds/animations/increasing_number.dart';
+import 'package:savyminds/animations/blink_animation.dart';
+//import 'package:savyminds/animations/increasing_number.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/questions/option_model.dart';
@@ -20,6 +21,7 @@ import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_enums.dart';
 import 'package:savyminds/resources/app_fonts.dart';
+import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/screens/solo_quest/daily_training/daily_training_submit_page.dart';
 import 'package:savyminds/screens/solo_quest/training_mode/training_mode_submit_page.dart';
 import 'package:savyminds/utils/func.dart';
@@ -74,6 +76,8 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
   bool retakeActivated = false;
   bool breakTime = false;
   bool showRetake = false;
+
+  bool timeFrozen = false;
 
   ///////////////////////////////
   //////Animations
@@ -257,15 +261,6 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                   fontSize: getFontSize(24, size),
                                   fontWeight: FontWeight.bold,
                                 ),
-                                IncreasingNumberAnimation(
-                                  from: oldTotalPoints,
-                                  to: totalPoints,
-                                  style: TextStyle(
-                                    color: AppColors.kPrimaryColor,
-                                    fontSize: getFontSize(24, size),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
                               ],
                             )
                           ],
@@ -332,16 +327,16 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                       fontFamily:
-                                                          AppFonts.caveat,
+                                                          AppFonts.inter,
                                                       color:
                                                           AppColors.textBlack,
                                                       fontSize: getFontSize(
                                                           question.image.isEmpty
-                                                              ? 30
-                                                              : 22,
-                                                          size), //88 : 20
+                                                              ? 24
+                                                              : 17,
+                                                          size),
                                                       fontWeight:
-                                                          FontWeight.w600,
+                                                          FontWeight.w500,
                                                     )),
                                                 if (question.image.isNotEmpty)
                                                   SizedBox(height: d.pSH(20)),
@@ -439,32 +434,54 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                                 ),
                                                 SizedBox(width: d.pSH(30)),
                                                 ////
-                                                /// Timer
-                                                ValueListenableBuilder<int>(
-                                                    valueListenable: seconds,
-                                                    builder:
-                                                        (context, time, child) {
-                                                      return SizedBox(
-                                                        width: d.pSH(25),
-                                                        child: Text(
-                                                          '$time',
-                                                          textAlign:
-                                                              TextAlign.end,
-                                                          style: TextStyle(
-                                                              fontSize:
-                                                                  getFontSize(
-                                                                      20, size),
-                                                              color: time < 6
-                                                                  ? AppColors
-                                                                      .kGameRed
-                                                                  : AppColors
-                                                                      .kGameGreen,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w700),
-                                                        ),
-                                                      );
-                                                    }),
+                                                /// Timerss
+                                                Stack(
+                                                  clipBehavior: Clip.none,
+                                                  children: [
+                                                    ValueListenableBuilder<int>(
+                                                        valueListenable:
+                                                            seconds,
+                                                        builder: (context, time,
+                                                            child) {
+                                                          return SizedBox(
+                                                            width: d.pSH(25),
+                                                            child: Text(
+                                                              '$time',
+                                                              textAlign:
+                                                                  TextAlign.end,
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      getFontSize(
+                                                                          20,
+                                                                          size),
+                                                                  color: time <
+                                                                          6
+                                                                      ? AppColors
+                                                                          .kGameRed
+                                                                      : AppColors
+                                                                          .kGameGreen,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w700),
+                                                            ),
+                                                          );
+                                                        }),
+
+                                                    //Freeze Icon
+                                                    if (timeFrozen)
+                                                      Positioned(
+                                                          top: -d.pSH(5),
+                                                          right: -d.pSH(5),
+                                                          child: BlinkAnimation(
+                                                            child: SvgPicture
+                                                                .asset(
+                                                              AppImages
+                                                                  .freezeSnowIcon,
+                                                              height: d.pSH(20),
+                                                            ),
+                                                          ))
+                                                  ],
+                                                ),
                                               ],
                                             ),
                                           ],
@@ -618,6 +635,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                                   horizontal: d.pSH(16)),
                                               child: GamePageKeysList(
                                                 answerStreaks: answerStreak,
+                                                cantFreeze: timeFrozen,
                                                 onFiftyTapped: () {
                                                   _useFiftyFiifty(
                                                       question.options);
@@ -888,12 +906,16 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
           gameType: widget.quest.id,
           level: widget.level.name.capitalize());
       timer!.cancel();
+      timeFrozen = true;
       setState(() {});
 
       int newFreezeTime =
           questionTime > 15 ? (questionTime ~/ 2) : questionTime;
 
       Future.delayed(Duration(seconds: newFreezeTime), () {
+        timeFrozen = false;
+        setState(() {});
+
         startTimer(seconds.value);
       });
     } catch (e) {

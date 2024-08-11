@@ -9,56 +9,57 @@ import 'package:savyminds/utils/route_behaviour.dart';
 import 'package:savyminds/widgets/twin_text_wn.dart';
 
 class PageTemplate extends StatefulWidget {
-  const PageTemplate(
-      {Key? key,
-      this.statusBarColor = Colors.white,
-      this.statusBarTheme = Brightness.light,
-      this.statusBarIconTheme = Brightness.dark,
-      this.hasTopNav = true,
-      this.hasNotice = false,
-      this.lightBackgroundColor,
-      this.darkBackgroundColor,
-      this.mainAxisAlignment = MainAxisAlignment.start,
-      this.crossAxisAlignment = CrossAxisAlignment.start,
-      this.resizeToAvoidBottomInset,
-      this.child,
-      this.horizontalPadding = 16,
-      this.topSpace = 0,
-      this.pageTitle = 'Page Title',
-      this.isWidgetTitle,
-      this.widgetTitle,
-      this.navActionItems,
-      this.floatingActionBtn,
-      this.floatingActionBtnLoc,
-      this.noticeIconLoc,
-      this.noticeTitle,
-      this.noticeMsg,
-      this.noticeBgColor,
-      this.noticeIconColor = AppColors.kWhite,
-      this.onCloseNotice,
-      this.onWillPop,
-      this.onBackPressed,
-      this.foreGroundDecoration,
-      this.showBackBtn = true,
-      this.showTopSpace = true,
-      this.topNavHeight = 40,
-      this.topNavIconColor,
-      this.backIcon = Icons.arrow_back_rounded,
-      this.pageTitleColor = Colors.black,
-      this.iconColor = Colors.black,
-      this.topNavColor,
-      this.pageTitleStyle,
-      this.topNavHasImage,
-      this.topNavBarImage,
-      this.topNoticeWidget,
-      this.refreshWidget = const SizedBox(),
-      this.showRefreshWidget = false,
-      this.bottomNavigationBar,
-      this.backgroundLeftPosition,
-      this.backgroundRightPosition,
-      this.backgroundGradient,
-      this.showStatusBar = true})
-      : super(key: key);
+  const PageTemplate({
+    Key? key,
+    this.statusBarColor = Colors.white,
+    this.statusBarTheme = Brightness.light,
+    this.statusBarIconTheme = Brightness.dark,
+    this.hasTopNav = true,
+    this.hasNotice = false,
+    this.lightBackgroundColor,
+    this.darkBackgroundColor,
+    this.mainAxisAlignment = MainAxisAlignment.start,
+    this.crossAxisAlignment = CrossAxisAlignment.start,
+    this.resizeToAvoidBottomInset,
+    this.child,
+    this.horizontalPadding = 16,
+    this.topSpace = 0,
+    this.pageTitle = 'Page Title',
+    this.isWidgetTitle,
+    this.widgetTitle,
+    this.navActionItems,
+    this.floatingActionBtn,
+    this.floatingActionBtnLoc,
+    this.noticeIconLoc,
+    this.noticeTitle,
+    this.noticeMsg,
+    this.noticeBgColor,
+    this.noticeIconColor = AppColors.kWhite,
+    this.onCloseNotice,
+    this.onWillPop,
+    this.onBackPressed,
+    this.foreGroundDecoration,
+    this.showBackBtn = true,
+    this.showTopSpace = true,
+    this.topNavHeight = 40,
+    this.topNavIconColor,
+    this.backIcon = Icons.arrow_back_rounded,
+    this.pageTitleColor = Colors.black,
+    this.iconColor = Colors.black,
+    this.topNavColor,
+    this.pageTitleStyle,
+    this.topNavHasImage,
+    this.topNavBarImage,
+    this.topNoticeWidget,
+    this.refreshWidget = const SizedBox(),
+    this.showRefreshWidget = false,
+    this.bottomNavigationBar,
+    this.backgroundLeftPosition,
+    this.backgroundRightPosition,
+    this.backgroundGradient,
+    this.showStatusBar = true,
+    this.titleHeroTag,
+  }) : super(key: key);
 
   final Color statusBarColor;
   final Brightness statusBarTheme;
@@ -106,6 +107,7 @@ class PageTemplate extends StatefulWidget {
   final double? backgroundLeftPosition;
   final double? backgroundRightPosition;
   final Gradient? backgroundGradient;
+  final String? titleHeroTag;
 
   @override
   State<PageTemplate> createState() => _PageTemplateState();
@@ -195,19 +197,23 @@ class _PageTemplateState extends State<PageTemplate> {
                                       padding: const EdgeInsets.only(top: 0),
                                       child: widget.isWidgetTitle ?? false
                                           ? widget.widgetTitle
-                                          : Text(
-                                              widget.pageTitle,
-                                              style: widget.pageTitleStyle ??
-                                                  TextStyle(
-                                                      fontSize:
-                                                          getFontSize(18, size),
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: bright ==
-                                                              Brightness.dark
-                                                          ? Colors.white
-                                                          : AppColors
-                                                              .kDarkCardColor),
+                                          : Hero(
+                                              tag: widget.titleHeroTag ??
+                                                  'Hero-${widget.pageTitle}',
+                                              child: Text(
+                                                widget.pageTitle,
+                                                style: widget.pageTitleStyle ??
+                                                    TextStyle(
+                                                        fontSize: getFontSize(
+                                                            18, size),
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: bright ==
+                                                                Brightness.dark
+                                                            ? Colors.white
+                                                            : AppColors
+                                                                .kDarkCardColor),
+                                              ),
                                             ),
                                     )),
                                     Padding(

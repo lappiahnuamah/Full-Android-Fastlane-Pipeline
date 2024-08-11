@@ -7,6 +7,7 @@ import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/auth/auth_functions.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_gradients.dart';
+import 'package:savyminds/resources/app_hero_tags.dart';
 import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/screens/authentication/change_display_name.dart';
 import 'package:savyminds/screens/authentication/login.dart';
@@ -47,10 +48,16 @@ class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset(AppImages.gameLogoSvg),
-                      SvgPicture.asset(
-                        AppImages.savvyMinds,
-                        height: d.pSH(50),
+                      Hero(
+                        tag: AppHeroTags.savvyMindsLogo,
+                        child: SvgPicture.asset(AppImages.gameLogoSvg),
+                      ),
+                      Hero(
+                        tag: AppHeroTags.savvyMindsText,
+                        child: SvgPicture.asset(
+                          AppImages.savvyMinds,
+                          height: d.pSH(50),
+                        ),
                       ),
                       const Text(
                         'Think you are smart?',

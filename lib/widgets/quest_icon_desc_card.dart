@@ -40,8 +40,11 @@ class _QuestIconDescCardState extends State<QuestIconDescCard> {
                 ),
               ),
               Align(
-                child: SvgPicture.network(
-                  widget.quest.icon,
+                child: Hero(
+                  tag: 'Logo-${widget.quest.name}7', //TODO:Fix later
+                  child: SvgPicture.network(
+                    widget.quest.icon,
+                  ),
                 ),
               )
             ],
@@ -52,7 +55,7 @@ class _QuestIconDescCardState extends State<QuestIconDescCard> {
             child: CustomText(
           fontWeight: FontWeight.w400,
           fontSize: 13,
-          label:widget.description?? widget.quest.description,
+          label: widget.description ?? widget.quest.description,
         ))
       ],
     );

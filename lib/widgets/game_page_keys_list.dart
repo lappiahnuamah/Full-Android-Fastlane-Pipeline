@@ -18,6 +18,7 @@ class GamePageKeysList extends StatefulWidget {
     required this.onSwapTapped,
     required this.onGoldenTapped,
     this.hideSwap = false,
+    this.cantFreeze = false,
   });
   final int answerStreaks;
   final Function()? onFiftyTapped;
@@ -25,6 +26,7 @@ class GamePageKeysList extends StatefulWidget {
   final Function()? onSwapTapped;
   final Function()? onGoldenTapped;
   final bool hideSwap;
+  final bool cantFreeze;
 
   @override
   State<GamePageKeysList> createState() => _GamePageKeysListState();
@@ -85,6 +87,7 @@ class _GamePageKeysListState extends State<GamePageKeysList> {
                 keyWithAmount(
                   size,
                   icon: AppImages.fiftyFiftyKey,
+                  inactiveIcon: AppImages.fiftyFiftyInactiveKey,
                   number: gameItemsProvider
                           .userKeys[GameKeyType.fiftyFifty]?.amount ??
                       0,
@@ -92,29 +95,24 @@ class _GamePageKeysListState extends State<GamePageKeysList> {
                 ),
             ],
           ),
-          // keyWithAmount(
-          //   size,
-          //   icon: AppImages.retakeKey,
-          //   number:
-          //       gameItemsProvider.userKeys[GameKeyType.retakeKey]?.amount ?? 0,
-          //   onTap: () {
-          //     widget.onRetakeTapped.call();
-          //     gameItemsProvider.reduceKeyAmount(GameKeyType.retakeKey);
-          //   },
-          // ),
           if (widget.onFreezeTapped != null)
             keyWithAmount(size,
                 icon: AppImages.freezeTimeKey,
+                inactiveIcon: AppImages.freezeTimeInactiveKey,
                 number: gameItemsProvider
                         .userKeys[GameKeyType.freezeTimeKey]?.amount ??
-                    0, onTap: () {
-              widget.onFreezeTapped?.call();
-              gameItemsProvider.reduceKeyAmount(GameKeyType.freezeTimeKey);
-            }),
-
+                    0,
+                onTap: widget.cantFreeze
+                    ? () {}
+                    : () {
+                        widget.onFreezeTapped?.call();
+                        gameItemsProvider
+                            .reduceKeyAmount(GameKeyType.freezeTimeKey);
+                      }),
           if (widget.onSwapTapped != null)
             keyWithAmount(size,
                 icon: AppImages.swapKey,
+                inactiveIcon: AppImages.swapKeyInactive,
                 number:
                     gameItemsProvider.userKeys[GameKeyType.swapKey]?.amount ??
                         0, onTap: () {
@@ -123,6 +121,7 @@ class _GamePageKeysListState extends State<GamePageKeysList> {
           if (widget.onGoldenTapped != null)
             keyWithAmount(size,
                 icon: AppImages.goldenKey,
+                inactiveIcon: AppImages.goldenInactiveKey,
                 number:
                     gameItemsProvider.userKeys[GameKeyType.goldenKey]?.amount ??
                         0, onTap: () {
@@ -136,18 +135,18 @@ class _GamePageKeysListState extends State<GamePageKeysList> {
 
   Widget keyWithAmount(Size size,
       {required String icon,
+      required String inactiveIcon,
       required int number,
       required VoidCallback onTap}) {
     return InkWell(
       onTap: number < 1 ? null : onTap,
       child: Stack(
         children: [
-          SvgPicture.asset(icon,
-              height: d.pSH(40),
-              fit: BoxFit.fitHeight,
-              colorFilter: number < 1
-                  ? const ColorFilter.mode(Colors.grey, BlendMode.srcIn)
-                  : null),
+          SvgPicture.asset(
+            number > 0 ? icon : inactiveIcon,
+            height: d.pSH(40),
+            fit: BoxFit.fitHeight,
+          ),
           if (number > 0)
             Positioned(
               right: 0,

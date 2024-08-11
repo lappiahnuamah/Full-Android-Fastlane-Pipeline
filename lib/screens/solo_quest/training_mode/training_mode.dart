@@ -104,7 +104,7 @@ class _TrainingModeState extends State<TrainingMode> {
                   SizedBox(height: d.pSH(40)),
                   selectedCategory != null
                       ? SizedBox(
-                          height: 159.6,
+                          height: d.pSH(159.6),
                           width: 187,
                           child: CategoryCard(
                             category: selectedCategory!,

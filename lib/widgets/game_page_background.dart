@@ -84,7 +84,7 @@ class GamePageBackground extends StatelessWidget {
 
         if (questIcon != null)
           Positioned(
-            top: d.pSH(350),
+            top: d.pSH(340),
             left: d.pSH(0),
             child: Opacity(
               opacity: 1,
@@ -92,7 +92,7 @@ class GamePageBackground extends StatelessWidget {
                 turns: const AlwaysStoppedAnimation(-30 / 360),
                 child: SvgPicture.network(
                   questIcon!,
-                  height: d.pSH(50),
+                  height: d.pSH(90),
                   colorFilter:
                       const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                 ),

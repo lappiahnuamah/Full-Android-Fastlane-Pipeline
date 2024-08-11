@@ -60,7 +60,7 @@ class _CategoryCardState extends State<CategoryCard> {
                     quest: soloQuestProvider.getQuestByName('Training Mode'),
                     isDailyTraining: widget.isDailyTraining,
                   ),
-                  TransitionType.slide,
+                  TransitionType.fade,
                 );
               } else {}
             }
@@ -127,13 +127,15 @@ class _CategoryCardState extends State<CategoryCard> {
                       children: [
                         if (widget.category.icon.isNotEmpty)
                           SizedBox(
-                            height: widget.iconSize ?? d.pSH(45),
-                            child: SvgPicture.network(
-                              widget.category.icon,
-                              fit: BoxFit.fitHeight,
-                              height: widget.iconSize,
-                            ),
-                          ),
+                              height: widget.iconSize ?? d.pSH(45),
+                              child: Hero(
+                                tag: 'Category-Logo-${widget.category.name}',
+                                child: SvgPicture.network(
+                                  widget.category.icon,
+                                  fit: BoxFit.fitHeight,
+                                  height: widget.iconSize,
+                                ),
+                              )),
                         SizedBox(height: d.pSH(6)),
                         CustomText(
                           label: widget.category.name,
@@ -162,7 +164,7 @@ class _CategoryCardState extends State<CategoryCard> {
                                       .getQuestByName('Training Mode'),
                                   isDailyTraining: widget.isDailyTraining,
                                 ),
-                                TransitionType.slide,
+                                TransitionType.fade,
                               );
                             } else {}
                           },

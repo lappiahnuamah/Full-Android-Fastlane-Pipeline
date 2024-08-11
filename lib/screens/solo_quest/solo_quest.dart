@@ -12,6 +12,7 @@ import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/providers/solo_quest_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/resources/app_hero_tags.dart';
 import 'package:savyminds/screens/solo_quest/challlenge_of_the_day/challenge_of_day.dart';
 import 'package:savyminds/screens/solo_quest/components/quest_card.dart';
 import 'package:savyminds/screens/solo_quest/daily_training/daily_training.dart';
@@ -79,13 +80,16 @@ class _SoloQuestState extends State<SoloQuest> {
                           );
                         }),
                         const SizedBox(width: 10),
-                        SvgPicture.asset("assets/icons/flame.svg")
+                        Hero(
+                            tag: AppHeroTags.streakIcon,
+                            child: SvgPicture.asset("assets/icons/flame.svg"))
                       ],
                     )
                   ],
                 ),
                 SizedBox(height: d.pSH(16)),
                 QuestCard(
+                    iconHeroTag: AppHeroTags.dailyTrainingLogo,
                     onTap: () {
                       nextScreen(context, const DailyTraining());
                     },

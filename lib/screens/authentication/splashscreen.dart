@@ -16,6 +16,7 @@ import 'package:savyminds/models/auth/app_user.dart';
 import 'package:savyminds/providers/dark_theme_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_gradients.dart';
+import 'package:savyminds/resources/app_hero_tags.dart';
 import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/screens/authentication/login_options_screen.dart';
 import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
@@ -79,10 +80,16 @@ class _SplashScreenState extends State<SplashScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgPicture.asset(AppImages.gameLogoSvg),
-                SvgPicture.asset(
-                  AppImages.savvyMinds,
-                  height: d.pSH(50),
+                Hero(
+                  tag: AppHeroTags.savvyMindsLogo,
+                  child: SvgPicture.asset(AppImages.gameLogoSvg),
+                ),
+                Hero(
+                  tag: AppHeroTags.savvyMindsText,
+                  child: SvgPicture.asset(
+                    AppImages.savvyMinds,
+                    height: d.pSH(50),
+                  ),
                 ),
                 const Text(
                   'Think you are smart?',

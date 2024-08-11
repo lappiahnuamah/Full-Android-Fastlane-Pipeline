@@ -15,11 +15,13 @@ class QuestCard extends StatelessWidget {
       required this.quest,
       this.isMultiCard = false,
       this.isDailyTraining = false,
-      required this.onTap});
+      required this.onTap,
+      this.iconHeroTag});
   final QuestModel quest;
   final bool isMultiCard;
   final bool isDailyTraining;
   final VoidCallback onTap;
+  final String? iconHeroTag;
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +30,18 @@ class QuestCard extends StatelessWidget {
       onTap: onTap,
       child: Stack(
         children: [
-          SvgPicture.asset(
-            quest.isLocked
-                ? AppImages.darkQuestCardSvg
-                : isMultiCard
-                    ? AppImages.redQuestCardSvg
-                    : AppImages.blueQuestCardSvg,
-            fit: BoxFit.fill,
-            width: double.infinity,
-            height: d.pSH(74),
+          Hero(
+            tag: iconHeroTag ?? 'Logo-${quest.name}',
+            child: SvgPicture.asset(
+              quest.isLocked
+                  ? AppImages.darkQuestCardSvg
+                  : isMultiCard
+                      ? AppImages.redQuestCardSvg
+                      : AppImages.blueQuestCardSvg,
+              fit: BoxFit.fill,
+              width: double.infinity,
+              height: d.pSH(74),
+            ),
           ),
           Container(
             width: double.infinity,
