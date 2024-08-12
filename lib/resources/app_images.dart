@@ -51,7 +51,7 @@ class AppImages {
   static String doublePointsInactive =
       "assets/icons/game_keys/times_two_inactive.svg";
   static String freezeTimeInactiveKey =
-      "assets/icons/game_keys/freeze_inactive.svg";
+      "assets/icons/game_keys/fifty_fifty_inactive.svg";
   static String hintInactiveKey = "assets/icons/game_keys/hint_inactive.svg";
   static String mysteryBoxInactive =
       "assets/icons/game_keys/mystery_box_inactive.svg";

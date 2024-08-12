@@ -112,6 +112,7 @@ class _AnswerButtonState extends State<AnswerButton>
                             isReversed: !widget.isReversed,
                             padding: EdgeInsets.symmetric(
                                 horizontal: d.pSH(10), vertical: d.pSH(5)),
+                            animateText: true,
                           ),
                         ));
                   }),

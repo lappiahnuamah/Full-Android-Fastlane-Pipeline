@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/resources/app_colors.dart';
@@ -19,6 +20,7 @@ class TransformedButton extends StatelessWidget {
       this.width,
       this.padding,
       this.fontFamily,
+      this.animateText = false,
       super.key});
 
   final Function()? onTap;
@@ -33,6 +35,7 @@ class TransformedButton extends StatelessWidget {
   final bool? keepBlue;
   final EdgeInsets? padding;
   final String? fontFamily;
+  final bool animateText;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +72,8 @@ class TransformedButton extends StatelessWidget {
                           fontSize: getFontSize(fontSize ?? 22, size),
                           fontWeight: textWeight,
                           letterSpacing: 1.2),
-                    ),
+                    ).animate()
+                      ..slideX(duration: animateText ? 700.ms : 0.ms),
                   ),
                 ),
               ],

@@ -337,7 +337,8 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                                           size),
                                                       fontWeight:
                                                           FontWeight.w500,
-                                                    )),
+                                                    )).animate()
+                                                  ..scale(duration: 700.ms),
                                                 if (question.image.isNotEmpty)
                                                   SizedBox(height: d.pSH(20)),
                                                 if (question.image.isNotEmpty)
