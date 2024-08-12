@@ -19,14 +19,32 @@ import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class Contest extends StatefulWidget {
-  const Contest({super.key});
+  const Contest({Key? key}) : super(key: key);
 
   @override
-  State<Contest> createState() => _ContestState();
+  State<Contest> createState() => ContestState();
 }
 
-class _ContestState extends State<Contest> {
+class ContestState extends State<Contest> with TickerProviderStateMixin {
+  List<AnimationController> _controllers = [];
+  List<Animation<double>> _animations = [];
   bool isLoading = false;
+
+  getAnimations(List<QuestModel> quests) {
+    _controllers = quests.map((item) {
+      return AnimationController(
+        duration: const Duration(milliseconds: 500),
+        vsync: this,
+      );
+    }).toList();
+
+    _animations = _controllers.map((controller) {
+      return CurvedAnimation(
+        parent: controller,
+        curve: Curves.easeIn,
+      );
+    }).toList();
+  }
 
   @override
   void initState() {
@@ -73,30 +91,68 @@ class _ContestState extends State<Contest> {
                             (index) {
                           final quest = contestProvider.contests[index];
                           return Padding(
-                            padding: EdgeInsets.only(bottom: d.pSH(15)),
-                            child: QuestCard(
-                              isMultiCard: true,
-                              quest: contestProvider.contests[index],
-                              onTap: () {
-                                if (quest.isLocked) {
-                                  Fluttertoast.showToast(
-                                      msg: 'This contest will be opened soon');
-                                } else {
-                                  if (quest.name == "Contest Mode") {
-                                    nextScreen(
-                                        context, JoinContest(quest: quest));
-                                  } else if (quest.name == "Team Battle") {
-                                    nextScreen(
-                                        context, JoinBattleTeam(quest: quest));
-                                  } else {
-                                    Fluttertoast.showToast(
-                                        msg:
-                                            'This contest is not available yet');
-                                  }
-                                }
-                              },
-                            ),
-                          );
+                              padding: EdgeInsets.only(bottom: d.pSH(15)),
+                              child: _animations.isNotEmpty
+                                  ? AnimatedBuilder(
+                                      animation: _animations[index],
+                                      builder: (context, child) {
+                                        return FadeTransition(
+                                            opacity: _animations[index],
+                                            child: QuestCard(
+                                              isMultiCard: true,
+                                              quest: contestProvider
+                                                  .contests[index],
+                                              onTap: () {
+                                                if (quest.isLocked) {
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          'This contest will be opened soon');
+                                                } else {
+                                                  if (quest.name ==
+                                                      "Contest Mode") {
+                                                    nextScreen(
+                                                        context,
+                                                        JoinContest(
+                                                            quest: quest));
+                                                  } else if (quest.name ==
+                                                      "Team Battle") {
+                                                    nextScreen(
+                                                        context,
+                                                        JoinBattleTeam(
+                                                            quest: quest));
+                                                  } else {
+                                                    Fluttertoast.showToast(
+                                                        msg:
+                                                            'This contest is not available yet');
+                                                  }
+                                                }
+                                              },
+                                            ));
+                                      })
+                                  : QuestCard(
+                                      isMultiCard: true,
+                                      quest: contestProvider.contests[index],
+                                      onTap: () {
+                                        if (quest.isLocked) {
+                                          Fluttertoast.showToast(
+                                              msg:
+                                                  'This contest will be opened soon');
+                                        } else {
+                                          if (quest.name == "Contest Mode") {
+                                            nextScreen(context,
+                                                JoinContest(quest: quest));
+                                          } else if (quest.name ==
+                                              "Team Battle") {
+                                            nextScreen(context,
+                                                JoinBattleTeam(quest: quest));
+                                          } else {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    'This contest is not available yet');
+                                          }
+                                        }
+                                      },
+                                    ));
                         }),
                       ],
                     ),
@@ -119,10 +175,31 @@ class _ContestState extends State<Contest> {
         return QuestModel.fromJson(json.decode(value));
       }).toList();
       contestProvider.setContests(soloQuests);
+      getAnimations(soloQuests);
     }
     await ContestFunctions().getQuests(context: context);
+    getAnimations(contestProvider.contests);
+
     setState(() {
       isLoading = false;
     });
+  }
+
+  void startAnimations() {
+    for (int i = 0; i < _controllers.length; i++) {
+      Future.delayed(Duration(milliseconds: i * 600), () {
+        _controllers[i].forward();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    _animations.clear();
+    _controllers.clear();
+    super.dispose();
   }
 }

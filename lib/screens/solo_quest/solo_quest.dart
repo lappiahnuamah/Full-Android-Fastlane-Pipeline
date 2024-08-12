@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -25,13 +26,15 @@ import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class SoloQuest extends StatefulWidget {
-  const SoloQuest({super.key});
+  const SoloQuest({Key? key}) : super(key: key);
 
   @override
-  State<SoloQuest> createState() => _SoloQuestState();
+  State<SoloQuest> createState() => SoloQuestState();
 }
 
-class _SoloQuestState extends State<SoloQuest> {
+class SoloQuestState extends State<SoloQuest> with TickerProviderStateMixin {
+  List<AnimationController> _controllers = [];
+  List<Animation<double>> _animations = [];
   bool isLoading = false;
 
   @override
@@ -40,6 +43,24 @@ class _SoloQuestState extends State<SoloQuest> {
       getSoloQuests();
     });
     super.initState();
+  }
+
+  getAnimations(List<QuestModel> quests) {
+    _controllers = quests.map((item) {
+      return AnimationController(
+        duration: const Duration(milliseconds: 500),
+        vsync: this,
+      );
+    }).toList();
+
+    _animations = _controllers.map((controller) {
+      return CurvedAnimation(
+        parent: controller,
+        curve: Curves.easeIn,
+      );
+    }).toList();
+
+    // startAnimations();
   }
 
   @override
@@ -126,43 +147,38 @@ class _SoloQuestState extends State<SoloQuest> {
                               final quest = soloQuestProvider.soloQuests[index];
                               return Padding(
                                 padding: EdgeInsets.only(bottom: d.pSH(15)),
-                                child: QuestCard(
-                                  quest: quest,
-                                  onTap: () {
-                                    if (quest.isLocked) {
-                                      Fluttertoast.showToast(
-                                          msg:
-                                              'This quest will be opened soon');
-                                      return;
-                                    }
-                                    if (quest.name == 'Time Rush') {
-                                      nextScreen(
-                                          context,
-                                          TimeRush(
-                                            quest: quest,
-                                          ));
-                                    } else if (quest.name == 'Training Mode') {
-                                      nextScreen(
-                                          context,
-                                          TrainingMode(
-                                            quest: quest,
-                                          ));
-                                    } else if (quest.name == 'Survival Quest') {
-                                      nextScreen(
-                                          context,
-                                          SurvivalQuest(
-                                            quest: quest,
-                                          ));
-                                    } else if (quest.name ==
-                                        'Challenge of the day') {
-                                      nextScreen(
-                                          context,
-                                          ChallengeOfTheDay(
-                                            quest: quest,
-                                          ));
-                                    }
-                                  },
-                                ),
+                                child: _animations.isNotEmpty
+                                    ? AnimatedBuilder(
+                                        animation: _animations[index],
+                                        builder: (context, child) {
+                                          return FadeTransition(
+                                              opacity: _animations[index],
+                                              child: QuestCard(
+                                                quest: quest,
+                                                onTap: () {
+                                                  if (quest.isLocked) {
+                                                    Fluttertoast.showToast(
+                                                        msg:
+                                                            'This quest will be opened soon');
+                                                    return;
+                                                  }
+                                                  checkNavigation(
+                                                      quest, context);
+                                                },
+                                              ));
+                                        })
+                                    : QuestCard(
+                                        quest: quest,
+                                        onTap: () {
+                                          if (quest.isLocked) {
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    'This quest will be opened soon');
+                                            return;
+                                          }
+                                          checkNavigation(quest, context);
+                                        },
+                                      ),
                               );
                             },
                           ),
@@ -174,6 +190,34 @@ class _SoloQuestState extends State<SoloQuest> {
         )
       ]),
     );
+  }
+
+  void checkNavigation(QuestModel quest, BuildContext context) {
+    if (quest.name == 'Time Rush') {
+      nextScreen(
+          context,
+          TimeRush(
+            quest: quest,
+          ));
+    } else if (quest.name == 'Training Mode') {
+      nextScreen(
+          context,
+          TrainingMode(
+            quest: quest,
+          ));
+    } else if (quest.name == 'Survival Quest') {
+      nextScreen(
+          context,
+          SurvivalQuest(
+            quest: quest,
+          ));
+    } else if (quest.name == 'Challenge of the day') {
+      nextScreen(
+          context,
+          ChallengeOfTheDay(
+            quest: quest,
+          ));
+    }
   }
 
   Future<void> getSoloQuests() async {
@@ -188,10 +232,31 @@ class _SoloQuestState extends State<SoloQuest> {
         return QuestModel.fromJson(json.decode(value));
       }).toList();
       soloQuestProvider.setSoloQuests(soloQuests);
+      getAnimations(soloQuests);
     }
     await SoloQuestFunctions().getQuests(context: context);
+    getAnimations(soloQuestProvider.soloQuests);
     setState(() {
       isLoading = false;
     });
+  }
+
+  void startAnimations() {
+    log('start animation');
+    for (int i = 0; i < _controllers.length; i++) {
+      Future.delayed(Duration(milliseconds: i * 600), () {
+        _controllers[i].forward();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    _animations.clear();
+    _controllers.clear();
+    super.dispose();
   }
 }

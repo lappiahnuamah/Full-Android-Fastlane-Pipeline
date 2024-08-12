@@ -34,6 +34,8 @@ import 'package:savyminds/widgets/page_template.dart';
 import 'package:savyminds/widgets/quest_icon_desc_card.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
 
+import '../../../animations/scaling_animation.dart';
+
 class TrainingMode extends StatefulWidget {
   const TrainingMode(
       {super.key,
@@ -223,17 +225,19 @@ class _TrainingModeState extends State<TrainingMode> {
                     height: d.pSH(30),
                   ),
                   if (selectedCategory != null)
-                    SizedBox(
-                      width: d.pSH(240),
-                      child: TransformedButton(
-                        onTap: () {
-                          getQuestions();
-                        },
-                        buttonColor: AppColors.kGameGreen,
-                        buttonText: ' START ',
-                        textColor: Colors.white,
-                        textWeight: FontWeight.bold,
-                        height: d.pSH(66),
+                    ScalingAnimationWidget(
+                      child: SizedBox(
+                        width: d.pSH(240),
+                        child: TransformedButton(
+                          onTap: () {
+                            getQuestions();
+                          },
+                          buttonColor: AppColors.kGameGreen,
+                          buttonText: ' START ',
+                          textColor: Colors.white,
+                          textWeight: FontWeight.bold,
+                          height: d.pSH(66),
+                        ),
                       ),
                     ),
                   SizedBox(height: d.pSH(16)),

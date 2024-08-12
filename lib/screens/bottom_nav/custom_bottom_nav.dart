@@ -22,6 +22,8 @@ class CustomBottomNav extends StatefulWidget {
 
 class _CustomBottomNavState extends State<CustomBottomNav> {
   int currentIndex = 0;
+  final GlobalKey<SoloQuestState> _soloQuestKey = GlobalKey<SoloQuestState>();
+  final GlobalKey<ContestState> _contestKey = GlobalKey<ContestState>();
 
   @override
   void initState() {
@@ -51,16 +53,17 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
                 rightPosition: _getRightPosition(),
               ),
               SafeArea(
-                child: IndexedStack(
-                  index: currentIndex,
-                  children: const [
-                    Categories(),
-                    SoloQuest(),
-                    Contest(),
-                    Records(),
-                    Profile()
-                  ],
-                ),
+                child: IndexedStack(index: currentIndex, children: [
+                  Categories(),
+                  SoloQuest(
+                    key: _soloQuestKey,
+                  ),
+                  Contest(
+                    key: _contestKey,
+                  ),
+                  Records(),
+                  Profile()
+                ]),
               ),
             ],
           )),
@@ -134,6 +137,11 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
         setState(() {
           currentIndex = index;
         });
+        if (index == 1) {
+          _soloQuestKey.currentState?.startAnimations();
+        } else if (index == 2) {
+          _contestKey.currentState?.startAnimations();
+        }
       },
       backgroundColor: bright == Brightness.dark
           ? AppColors.kDarkBottomNavBarColor

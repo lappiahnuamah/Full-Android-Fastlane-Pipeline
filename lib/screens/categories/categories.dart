@@ -269,16 +269,16 @@ class _CategoriesState extends State<Categories> with TickerProviderStateMixin {
         _controllers[i].forward();
       });
     }
+  }
 
-    @override
-    void dispose() {
-      searchValue.dispose();
-      for (var controller in _controllers) {
-        controller.dispose();
-      }
-      _animations.clear();
-      _controllers.clear();
-      super.dispose();
+  @override
+  void dispose() {
+    searchValue.dispose();
+    for (var controller in _controllers) {
+      controller.dispose();
     }
+    _animations.clear();
+    _controllers.clear();
+    super.dispose();
   }
 }
