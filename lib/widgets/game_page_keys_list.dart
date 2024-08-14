@@ -6,7 +6,6 @@ import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_enums.dart';
 import 'package:savyminds/resources/app_images.dart';
-import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class GamePageKeysList extends StatefulWidget {
@@ -141,22 +140,30 @@ class _GamePageKeysListState extends State<GamePageKeysList> {
     return InkWell(
       onTap: number < 1 ? null : onTap,
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
           SvgPicture.asset(
             number > 0 ? icon : inactiveIcon,
-            height: d.pSH(40),
+            height: d.pSH(d.isTablet ? 50 : 40),
             fit: BoxFit.fitHeight,
           ),
           if (number > 0)
             Positioned(
-              right: 0,
+              right: d.isTablet ? -10 : 0,
+              top: d.isTablet ? -5 : 0,
               child: CircleAvatar(
                 backgroundColor: const Color(0xffF14646),
-                radius: d.pSH(8),
+                radius: d.pSH(d.isTablet
+                    ? number > 99
+                        ? 18
+                        : 16
+                    : number > 99
+                        ? 12
+                        : 8),
                 child: CustomText(
                   label: number.toString(),
                   color: Colors.white,
-                  fontSize: getFontSize(12, size),
+                  fontSize: number > 99 ? 10 : 12,
                   fontWeight: FontWeight.w600,
                 ),
               ),

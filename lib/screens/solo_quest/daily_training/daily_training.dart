@@ -58,7 +58,10 @@ class _DailyTrainingState extends State<DailyTraining> {
             const SizedBox(width: 10),
             Hero(
               tag: AppHeroTags.streakIcon,
-              child: SvgPicture.asset("assets/icons/flame.svg"),
+              child: SvgPicture.asset(
+                "assets/icons/flame.svg",
+                height: d.isTablet ? d.pSW(25) : null,
+              ),
             )
           ],
         )
@@ -70,13 +73,15 @@ class _DailyTrainingState extends State<DailyTraining> {
             Row(
               children: [
                 SizedBox(
-                  height: d.pSH(51),
-                  width: d.pSH(59),
+                  height: d.isTablet ? d.pSW(71) : d.pSW(51),
+                  width: d.isTablet ? d.pSW(79) : d.pSW(59),
                   child: Stack(
                     children: [
                       SvgPicture.asset(
                         "assets/icons/quest_icon_container.svg",
                         fit: BoxFit.fill,
+                        height: d.isTablet ? d.pSW(71) : d.pSW(51),
+                        width: d.isTablet ? d.pSW(79) : d.pSW(59),
                         colorFilter: const ColorFilter.mode(
                           AppColors.borderPrimary,
                           BlendMode.srcIn,
@@ -86,7 +91,9 @@ class _DailyTrainingState extends State<DailyTraining> {
                         child: Hero(
                           tag: AppHeroTags.dailyTrainingLogo,
                           child: SvgPicture.asset(
-                              "assets/icons/daily_training_icon.svg"),
+                            "assets/icons/daily_training_icon.svg",
+                            height: d.isTablet ? d.pSW(40) : null,
+                          ),
                         ),
                       )
                     ],
@@ -98,7 +105,7 @@ class _DailyTrainingState extends State<DailyTraining> {
                   fontWeight: FontWeight.w400,
                   fontSize: 13,
                   label:
-                      'Categories are selected at random based on your favorites or your frequently played games. You will need to play in  3 categories. ',
+                      'Categories are selected at random based on your favorites or your frequently played games. You will need to play in 3 categories. ',
                 ))
               ],
             ),
@@ -122,16 +129,17 @@ class _DailyTrainingState extends State<DailyTraining> {
                                 duration: Duration(seconds: 1),
                                 curve: Curves.easeInOut,
                                 top: _isExpanded
-                                    ? index * d.pSH(156.0)
+                                    ? index * d.pSW(d.isTablet ? 170 : 156)
                                     : _isExpanded
                                         ? index == 0
                                             ? 0
-                                            : d.pSH(20)
-                                        : d.pSH(176),
+                                            : d.pSW(20)
+                                        : d.pSW(176),
                                 child: Container(
-                                  height: d.pSH(156.5),
-                                  width: d.pSW(160.2),
-                                  margin: EdgeInsets.only(bottom: d.pSH(8)),
+                                  height:
+                                      d.isTablet ? d.pSW(170) : d.pSH(156.5),
+                                  width: d.isTablet ? d.pSW(230) : d.pSW(160.2),
+                                  margin: EdgeInsets.only(bottom: d.pSW(8)),
                                   child: CategoryCard(
                                     category: e.value['category'],
                                     hidePlay: e.value['isPlayed'],

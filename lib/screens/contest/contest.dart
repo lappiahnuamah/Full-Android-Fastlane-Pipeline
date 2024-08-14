@@ -14,7 +14,6 @@ import 'package:savyminds/screens/contest/battle_mode/join_battle_team.dart';
 import 'package:savyminds/screens/contest/contest_mode/join_contest.dart';
 import 'package:savyminds/screens/solo_quest/components/quest_card.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
-import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
@@ -56,15 +55,13 @@ class ContestState extends State<Contest> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Padding(
       padding: EdgeInsets.all(d.pSH(16)),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         CustomText(
           label: 'Multi Player',
           fontWeight: FontWeight.w700,
-          fontSize: getFontSize(24, size),
+          fontSize: 24,
         ),
         SizedBox(height: d.pSH(16)),
         const CustomText(
@@ -91,7 +88,7 @@ class ContestState extends State<Contest> with TickerProviderStateMixin {
                             (index) {
                           final quest = contestProvider.contests[index];
                           return Padding(
-                              padding: EdgeInsets.only(bottom: d.pSH(15)),
+                              padding: EdgeInsets.only(bottom: d.pSW(15)),
                               child: _animations.isNotEmpty
                                   ? AnimatedBuilder(
                                       animation: _animations[index],

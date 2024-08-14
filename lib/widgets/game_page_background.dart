@@ -35,7 +35,8 @@ class GamePageBackground extends StatelessWidget {
 
         Positioned(
           top: d.pSH(379),
-          left: d.pSH(198),
+          left: d.isTablet ? null : d.pSH(198),
+          right: d.isTablet ? 0 : null,
           child: Opacity(
             opacity: 0.5,
             child: RotationTransition(

@@ -73,22 +73,26 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
             ),
             SafeArea(
               child: Container(
+                width: size.width,
                 alignment: const Alignment(0.5, -0.5),
                 padding: EdgeInsets.symmetric(vertical: d.pSH(16)),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        "Points Scored",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: AppColors.kPrimaryColor,
-                          fontSize: getFontSize(24, size),
-                          fontFamily: AppFonts.caveat,
-                          height: 1.5,
-                          fontWeight: FontWeight.bold,
-                          fontStyle: FontStyle.italic,
+                      SizedBox(
+                        width: size.width,
+                        child: Text(
+                          "Points Scored",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: AppColors.kPrimaryColor,
+                            fontSize: getFontSize(d.isTablet ? 22 : 24, size),
+                            fontFamily: AppFonts.caveat,
+                            height: 1.5,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
                       ),
                       IncreasingNumberAnimation(
@@ -96,7 +100,7 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                         to: widget.pointsScored,
                         style: TextStyle(
                           color: AppColors.kGameLightBlue,
-                          fontSize: getFontSize(24, size),
+                          fontSize: getFontSize(d.isTablet ? 22 : 24, size),
                           fontWeight: FontWeight.bold,
                           fontFamily: AppFonts.inter,
                           height: 1.5,
@@ -104,12 +108,12 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                       ),
                       SizedBox(height: d.pSH(15)),
                       SizedBox(
-                        width: d.pSW(135),
-                        height: d.pSH(125),
+                        width: d.pSW(d.isTablet ? 225 : 135),
+                        height: d.pSH(d.isTablet ? 165 : 125),
                         child: CategoryCard(
                           category: widget.categoryModel!,
-                          borderRadius: d.pSH(10),
-                          fontSize: d.pSH(16),
+                          borderRadius: d.pSH(d.isTablet ? 20 : 10),
+                          fontSize: 16,
                           hidePlay: true,
                           iconSize: 35,
                         ),
@@ -154,7 +158,7 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(height: d.pSH(10)),
+                                  SizedBox(height: d.pSH(d.isTablet ? 20 : 10)),
                                   RichText(
                                       textAlign: TextAlign.center,
                                       text: TextSpan(
@@ -171,8 +175,9 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                                                 text: "\nYou need ",
                                                 style: TextStyle(
                                                   color: AppColors.textBlack,
-                                                  fontSize:
-                                                      getFontSize(13, size),
+                                                  fontSize: getFontSize(
+                                                      d.isTablet ? 12 : 13,
+                                                      size),
                                                   fontFamily: AppFonts.inter,
                                                   height: 1.5,
                                                   fontStyle: FontStyle.normal,
@@ -185,7 +190,10 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                                                         color: AppColors
                                                             .kGameDarkLightBlue,
                                                         fontSize: getFontSize(
-                                                            16, size),
+                                                            d.isTablet
+                                                                ? 14
+                                                                : 16,
+                                                            size),
                                                         fontFamily:
                                                             AppFonts.inter,
                                                         height: 1.5,
@@ -201,7 +209,10 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                                                                 .textBlack,
                                                             fontSize:
                                                                 getFontSize(
-                                                                    13, size),
+                                                                    d.isTablet
+                                                                        ? 12
+                                                                        : 13,
+                                                                    size),
                                                             fontFamily:
                                                                 AppFonts.inter,
                                                             height: 1.5,
@@ -222,7 +233,8 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                                             "Correct Answers",
                                             style: TextStyle(
                                               color: AppColors.textBlack,
-                                              fontSize: getFontSize(22, size),
+                                              fontSize: getFontSize(
+                                                  d.isTablet ? 20 : 22, size),
                                               fontFamily: AppFonts.caveat,
                                               height: 1.5,
                                               fontStyle: FontStyle.normal,
@@ -236,7 +248,8 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                                             style: TextStyle(
                                               color:
                                                   AppColors.kGameDarkLightBlue,
-                                              fontSize: getFontSize(20, size),
+                                              fontSize: getFontSize(
+                                                  d.isTablet ? 18 : 20, size),
                                               fontFamily: AppFonts.inter,
                                               fontWeight: FontWeight.w700,
                                               height: 1.5,
@@ -250,8 +263,10 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                                           Text(
                                             "Overall scores",
                                             style: TextStyle(
-                                              color: AppColors.textBlack,
-                                              fontSize: getFontSize(22, size),
+                                              color: const Color.fromRGBO(
+                                                  44, 44, 44, 1),
+                                              fontSize: getFontSize(
+                                                  d.isTablet ? 20 : 22, size),
                                               fontFamily: AppFonts.caveat,
                                               height: 1.5,
                                               fontStyle: FontStyle.normal,
@@ -268,7 +283,8 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                                             style: TextStyle(
                                               color:
                                                   AppColors.kGameDarkLightBlue,
-                                              fontSize: getFontSize(20, size),
+                                              fontSize: getFontSize(
+                                                  d.isTablet ? 18 : 20, size),
                                               fontFamily: AppFonts.inter,
                                               fontWeight: FontWeight.w700,
                                               height: 1.5,
@@ -296,7 +312,8 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                                         "You are ranked in top ${categoryRankModel!.rank}",
                                         style: TextStyle(
                                           color: AppColors.kPrimaryColor,
-                                          fontSize: getFontSize(27, size),
+                                          fontSize: getFontSize(
+                                              d.isTablet ? 22 : 27, size),
                                           fontFamily: AppFonts.caveat,
                                           height: 1.5,
                                           fontWeight: FontWeight.w700,
@@ -309,7 +326,7 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                             : const SizedBox();
                       }),
                       SizedBox(
-                        height: d.pSH(15),
+                        height: d.pSH(d.isTablet ? 20 : 15),
                       ),
                       const AvailableKeysWidget(
                         showShop: false,
@@ -328,7 +345,7 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                               ));
                         },
                         buttonText: 'PLAY AGAIN',
-                        fontSize: getFontSize(22, size),
+                        fontSize: 22,
                         isReversed: true,
                         height: d.pSH(70),
                         width: d.getPhoneScreenWidth() * 0.55,
@@ -343,7 +360,7 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
                         },
                         child: CustomText(
                           label: 'Return Home',
-                          fontSize: d.pSH(21),
+                          fontSize: 21,
                           fontWeight: FontWeight.w600,
                           color: AppColors.borderAccent,
                         ),

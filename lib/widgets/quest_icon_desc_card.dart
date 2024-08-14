@@ -25,8 +25,8 @@ class _QuestIconDescCardState extends State<QuestIconDescCard> {
     return Row(
       children: [
         SizedBox(
-          height: d.pSH(51),
-          width: d.pSH(59),
+          height: d.isTablet ? d.pSW(71) : d.pSW(51),
+          width: d.isTablet ? d.pSW(79) : d.pSW(59),
           child: Stack(
             children: [
               SvgPicture.asset(
@@ -38,12 +38,15 @@ class _QuestIconDescCardState extends State<QuestIconDescCard> {
                       : AppColors.borderPrimary,
                   BlendMode.srcIn,
                 ),
+                height: d.isTablet ? d.pSW(71) : d.pSW(51),
+                width: d.isTablet ? d.pSW(79) : d.pSW(59),
               ),
               Align(
                 child: Hero(
                   tag: 'Logo-${widget.quest.name}7', //TODO:Fix later
                   child: SvgPicture.network(
                     widget.quest.icon,
+                    height: d.isTablet ? d.pSW(40) : null,
                   ),
                 ),
               )

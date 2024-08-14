@@ -5,7 +5,6 @@ import 'package:savyminds/screens/records/components/record_rank_header.dart';
 import 'package:savyminds/screens/records/record_pages/category_ranks.dart';
 import 'package:savyminds/screens/records/record_pages/contest_ranks.dart';
 import 'package:savyminds/screens/records/record_pages/solo_quest_ranks.dart';
-import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 enum RankHeaderEnum { categories, soloQuest, contest }
@@ -23,15 +22,13 @@ class _RecordRanksState extends State<RecordRanks> {
   int _selectedRankIndex = 0;
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomText(
           label: 'Ranks',
           fontWeight: FontWeight.w500,
-          fontSize: getFontSize(22, size),
+          fontSize: 22,
         ),
         SizedBox(height: d.pSH(12)),
 
@@ -113,7 +110,7 @@ class CategoryRankTableHeader extends StatelessWidget {
       Expanded(
         child: CustomText(
           label: "Plyd",
-          fontSize: getFontSize(16, size),
+          fontSize: 16,
           textAlign: TextAlign.center,
           fontWeight: FontWeight.w600,
         ),
@@ -121,7 +118,7 @@ class CategoryRankTableHeader extends StatelessWidget {
       Expanded(
         child: CustomText(
           label: "Points",
-          fontSize: getFontSize(16, size),
+          fontSize: 16,
           textAlign: TextAlign.center,
           fontWeight: FontWeight.w600,
         ),
@@ -129,7 +126,7 @@ class CategoryRankTableHeader extends StatelessWidget {
       Expanded(
         child: CustomText(
           label: "Rank",
-          fontSize: getFontSize(16, size),
+          fontSize: 16,
           textAlign: TextAlign.end,
           fontWeight: FontWeight.w600,
         ),
@@ -157,7 +154,7 @@ class ContestRankTableHeader extends StatelessWidget {
         flex: 2,
         child: CustomText(
           label: "Sessions",
-          fontSize: getFontSize(16, size),
+          fontSize: 16,
           textAlign: TextAlign.end,
           fontWeight: FontWeight.w600,
         ),
@@ -166,7 +163,7 @@ class ContestRankTableHeader extends StatelessWidget {
         flex: 2,
         child: CustomText(
           label: "Rank",
-          fontSize: getFontSize(16, size),
+          fontSize: 16,
           textAlign: TextAlign.end,
           fontWeight: FontWeight.w600,
         ),
@@ -190,8 +187,6 @@ class CustomRankRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Row(
       children: [
         Expanded(
@@ -210,7 +205,7 @@ class CustomRankRow extends StatelessWidget {
               Expanded(
                 child: CustomText(
                   label: name,
-                  fontSize: getFontSize(16, size),
+                  fontSize: 16,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -220,7 +215,7 @@ class CustomRankRow extends StatelessWidget {
         Expanded(
           child: CustomText(
             label: gamesPlayed,
-            fontSize: getFontSize(16, size),
+            fontSize: 16,
             textAlign: TextAlign.center,
             fontWeight: FontWeight.w400,
           ),
@@ -228,7 +223,7 @@ class CustomRankRow extends StatelessWidget {
         Expanded(
           child: CustomText(
             label: points,
-            fontSize: getFontSize(16, size),
+            fontSize: 16,
             textAlign: TextAlign.center,
             fontWeight: FontWeight.w400,
           ),
@@ -236,7 +231,7 @@ class CustomRankRow extends StatelessWidget {
         Expanded(
           child: CustomText(
             label: rank,
-            fontSize: getFontSize(16, size),
+            fontSize: 16,
             textAlign: TextAlign.end,
             fontWeight: FontWeight.w400,
           ),
@@ -255,8 +250,6 @@ class SoloQuestRankRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Row(
       children: [
         Expanded(
@@ -273,7 +266,7 @@ class SoloQuestRankRow extends StatelessWidget {
               Expanded(
                 child: CustomText(
                   label: name,
-                  fontSize: getFontSize(15, size),
+                  fontSize: 15,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -284,7 +277,7 @@ class SoloQuestRankRow extends StatelessWidget {
           flex: 2,
           child: CustomText(
             label: level,
-            fontSize: getFontSize(15, size),
+            fontSize: 15,
             textAlign: TextAlign.end,
             fontWeight: FontWeight.w400,
           ),
@@ -293,7 +286,7 @@ class SoloQuestRankRow extends StatelessWidget {
           flex: 2,
           child: CustomText(
             label: rank,
-            fontSize: getFontSize(15, size),
+            fontSize: 15,
             textAlign: TextAlign.end,
             fontWeight: FontWeight.w400,
           ),

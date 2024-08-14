@@ -51,7 +51,7 @@ class _ContestRanksState extends State<ContestRanks> {
                   if (!value.multiQuestRankIsLoading &&
                       value.multiQuestRanks.isEmpty) {
                     return Center(
-                      child: Text('No data found'),
+                      child: CustomText(label: 'No data found'),
                     );
                   }
 

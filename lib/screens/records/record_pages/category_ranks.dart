@@ -4,6 +4,7 @@ import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/categories/categories_functions.dart';
 import 'package:savyminds/providers/records_provider.dart';
 import 'package:savyminds/screens/records/record_ranks.dart';
+import 'package:savyminds/widgets/custom_text.dart';
 
 class CategoryRanks extends StatefulWidget {
   const CategoryRanks({super.key});
@@ -50,7 +51,7 @@ class _CategoryRanksState extends State<CategoryRanks> {
                     if (!value.categoryRanksIsLoading &&
                         value.categoryRanks.isEmpty) {
                       return Center(
-                        child: Text('No data found'),
+                        child: CustomText(label: 'No data found'),
                       );
                     }
 

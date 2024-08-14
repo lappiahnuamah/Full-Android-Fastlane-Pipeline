@@ -91,7 +91,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                                                 crossAxisCount: 2,
                                                 crossAxisSpacing: d.pSH(24),
                                                 mainAxisSpacing: d.pSH(10),
-                                                childAspectRatio: 1.05),
+                                                childAspectRatio: d.pSW(1.05)),
                                         children: [
                                           ...List.generate(
                                               categoryProvider

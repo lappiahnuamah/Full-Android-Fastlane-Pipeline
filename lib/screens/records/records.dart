@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/screens/records/record_ranks.dart';
-import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class Records extends StatefulWidget {
@@ -14,8 +13,6 @@ class Records extends StatefulWidget {
 class _RecordsState extends State<Records> {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Padding(
       padding: EdgeInsets.all(d.pSH(16)),
       child: Column(
@@ -24,7 +21,7 @@ class _RecordsState extends State<Records> {
           CustomText(
             label: 'Records',
             fontWeight: FontWeight.w700,
-            fontSize: getFontSize(24, size),
+            fontSize: 24,
           ),
           SizedBox(height: d.pSH(16)),
           Expanded(

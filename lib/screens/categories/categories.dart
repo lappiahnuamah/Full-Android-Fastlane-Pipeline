@@ -12,7 +12,6 @@ import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/categories/components/category_card.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
-import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_search_feild.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
@@ -62,7 +61,6 @@ class _CategoriesState extends State<Categories> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Consumer<CategoryProvider>(
         builder: (context, categoryProvider, child) {
       return isLoading
@@ -93,14 +91,15 @@ class _CategoriesState extends State<Categories> with TickerProviderStateMixin {
 
               //Content
               Padding(
-                  padding: EdgeInsets.all(d.pSH(16)),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: d.pSW(16), vertical: d.pSH(16)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CustomText(
                         label: 'Categories',
                         fontWeight: FontWeight.w700,
-                        fontSize: getFontSize(24, size),
+                        fontSize: 24,
                       ),
                       SizedBox(height: d.pSH(16)),
 
@@ -143,21 +142,19 @@ class _CategoriesState extends State<Categories> with TickerProviderStateMixin {
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 2,
-                                          crossAxisSpacing: d.pSH(24),
-                                          mainAxisSpacing: d.pSH(10),
-                                          childAspectRatio: 1.05),
+                                          crossAxisSpacing: d.pSW(24),
+                                          mainAxisSpacing: d.pSW(10),
+                                          childAspectRatio: d.pSW(1.05)),
                                   children: [
                                     ...List.generate(
                                         categoryProvider.favoriteCategories
                                             .length, (index) {
                                       final category = categoryProvider
                                           .favoriteCategories[index];
-                                      return Hero(
-                                        tag: "Category ${category.id}",
-                                        child: CategoryCard(
-                                          category: category,
-                                          index: index,
-                                        ),
+                                      return CategoryCard(
+                                        category: category,
+                                        index: index,
+                                        isFavCategory: true,
                                       );
                                     }),
                                   ]),
@@ -183,9 +180,9 @@ class _CategoriesState extends State<Categories> with TickerProviderStateMixin {
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 2,
-                                        crossAxisSpacing: d.pSH(24),
-                                        mainAxisSpacing: d.pSH(10),
-                                        childAspectRatio: 1.05),
+                                        crossAxisSpacing: d.pSW(24),
+                                        mainAxisSpacing: d.pSW(10),
+                                        childAspectRatio: d.pSW(1.05)),
                                 children: [
                                   ...List.generate(
                                       searchText.isEmpty

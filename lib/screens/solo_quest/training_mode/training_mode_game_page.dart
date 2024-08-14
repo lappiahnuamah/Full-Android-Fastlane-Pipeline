@@ -24,7 +24,6 @@ import 'package:savyminds/resources/app_fonts.dart';
 import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/screens/solo_quest/daily_training/daily_training_submit_page.dart';
 import 'package:savyminds/screens/solo_quest/training_mode/training_mode_submit_page.dart';
-import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/utils/questions/questions_utils.dart';
 import 'package:savyminds/widgets/answer_button.dart';
@@ -199,7 +198,6 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return PopScope(
         canPop: false,
         child: Scaffold(
@@ -227,10 +225,11 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                               },
                               child: Card(
                                 child: Padding(
-                                  padding: EdgeInsets.all(d.pSH(6)),
+                                  padding: EdgeInsets.all(
+                                      d.isTablet ? d.pSH(12) : d.pSH(6)),
                                   child: SvgPicture.network(
                                     widget.quest.icon,
-                                    height: d.pSH(22),
+                                    height: d.isTablet ? d.pSH(25) : d.pSH(22),
                                     colorFilter: ColorFilter.mode(
                                       AppColors.borderPrimary,
                                       BlendMode.srcIn,
@@ -249,7 +248,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                   CustomText(
                                     label: 'x2',
                                     color: AppColors.everGreen,
-                                    fontSize: getFontSize(18, size),
+                                    fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 SizedBox(
@@ -258,7 +257,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                 CustomText(
                                   label: '$totalPoints',
                                   color: AppColors.kPrimaryColor,
-                                  fontSize: getFontSize(24, size),
+                                  fontSize: 24,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ],
@@ -313,7 +312,8 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                             if (question.isGolden)
                                               SvgPicture.asset(
                                                 'assets/icons/star.svg',
-                                                height: d.pSH(25),
+                                                height:
+                                                    d.pSH(d.isTablet ? 35 : 25),
                                               ).animate()
                                                 ..shimmer(duration: 1000.ms)
                                                 ..scale(duration: 1000.ms),
@@ -330,11 +330,14 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                                           AppFonts.inter,
                                                       color:
                                                           AppColors.textBlack,
-                                                      fontSize: getFontSize(
+                                                      fontSize:
                                                           question.image.isEmpty
-                                                              ? 24
-                                                              : 17,
-                                                          size),
+                                                              ? d.isTablet
+                                                                  ? 30
+                                                                  : 24
+                                                              : d.isTablet
+                                                                  ? 23
+                                                                  : 17,
                                                       fontWeight:
                                                           FontWeight.w500,
                                                     )).animate()
@@ -404,7 +407,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                                       color: AppColors
                                                           .hintTextBlack,
                                                       fontSize:
-                                                          getFontSize(20, size),
+                                                          d.isTablet ? 30 : 20,
                                                       fontWeight:
                                                           FontWeight.w700),
                                                 ),
@@ -445,16 +448,19 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                                         builder: (context, time,
                                                             child) {
                                                           return SizedBox(
-                                                            width: d.pSH(25),
+                                                            width: d.pSH(
+                                                                d.isTablet
+                                                                    ? 35
+                                                                    : 25),
                                                             child: Text(
                                                               '$time',
                                                               textAlign:
                                                                   TextAlign.end,
                                                               style: TextStyle(
                                                                   fontSize:
-                                                                      getFontSize(
-                                                                          20,
-                                                                          size),
+                                                                      d.isTablet
+                                                                          ? 30
+                                                                          : 20,
                                                                   color: time <
                                                                           6
                                                                       ? AppColors
@@ -878,6 +884,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
   ////////////////////////////####################////////////////////////
   _showHintDialog(String hint) async {
     timer?.cancel();
+    FlameAudio.bgm.stop();
     await showDialog(
       context: context,
       builder: ((context) => AlertDialog(content: GameHintDialog(hint: hint))),
@@ -889,6 +896,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
 
   _showMysteryBox() async {
     timer?.cancel();
+    FlameAudio.bgm.stop();
     hideMysteryBoxKey = true;
     setState(() {});
     await showDialog(
@@ -900,6 +908,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
 
   _freezeTime(NewQuestionModel question) {
     try {
+      FlameAudio.bgm.stop();
       final questionTime = QuestionsUtils.getQuestionsTime(
           complexityWeight: question.complexityWeight.toDouble(),
           difficultyWeight: question.difficultyWeight.toDouble(),

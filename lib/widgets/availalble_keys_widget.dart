@@ -42,7 +42,8 @@ class _AvailableKeysWidgetState extends State<AvailableKeysWidget> {
                     gameItemsProvider.userKeys.values.elementAt(index);
                 return userKey.amount > 0
                     ? Padding(
-                        padding: EdgeInsets.symmetric(horizontal: d.pSW(8)),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: d.pSW(d.isTablet ? 15 : 8)),
                         child: KeyCard(
                           gameKey: userKey,
                           height: d.pSH(35),

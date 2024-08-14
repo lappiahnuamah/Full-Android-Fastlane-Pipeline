@@ -4,7 +4,6 @@ import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/contests/contests_functions.dart';
 import 'package:savyminds/providers/records_provider.dart';
 import 'package:savyminds/screens/records/record_ranks.dart';
-import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class SoloQuestRanks extends StatefulWidget {
@@ -51,7 +50,7 @@ class _SoloQuestRanksState extends State<SoloQuestRanks> {
                   if (!value.soloQuestRankIsLoading &&
                       value.soloQuestRanks.isEmpty) {
                     return Center(
-                      child: Text('No data found'),
+                      child: CustomText(label: 'No data found'),
                     );
                   }
 
@@ -101,7 +100,7 @@ class SoloQuestRankTableHeader extends StatelessWidget {
         flex: 2,
         child: CustomText(
           label: "Level",
-          fontSize: getFontSize(16, size),
+          fontSize: 16,
           textAlign: TextAlign.end,
           fontWeight: FontWeight.w600,
         ),
@@ -110,7 +109,7 @@ class SoloQuestRankTableHeader extends StatelessWidget {
         flex: 2,
         child: CustomText(
           label: "Rank",
-          fontSize: getFontSize(16, size),
+          fontSize: 16,
           textAlign: TextAlign.end,
           fontWeight: FontWeight.w600,
         ),

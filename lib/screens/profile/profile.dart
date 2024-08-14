@@ -10,10 +10,8 @@ import 'package:savyminds/screens/profile/components/key_card.dart';
 import 'package:savyminds/screens/records/components/record_rank_header.dart';
 import 'package:savyminds/utils/cache/content_mgt.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
-import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
-import 'package:savyminds/widgets/retake_key_display.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -50,7 +48,7 @@ class _ProfileState extends State<Profile> {
                 CustomText(
                   label: 'Profile',
                   fontWeight: FontWeight.w700,
-                  fontSize: getFontSize(24, size),
+                  fontSize: 24,
                 ),
 
                 // InkWell(
@@ -75,7 +73,7 @@ class _ProfileState extends State<Profile> {
                       label:
                           '${userDetailsProvider.getUserDetails().displayName ?? userDetailsProvider.getUserDetails().username}',
                       fontWeight: FontWeight.w500,
-                      fontSize: getFontSize(25, size),
+                      fontSize: d.isTablet ? 22 : 25,
                     ),
                     SizedBox(height: d.pSH(12)),
 
@@ -87,13 +85,13 @@ class _ProfileState extends State<Profile> {
                         CustomText(
                           label: 'Current Streaks  ',
                           fontWeight: FontWeight.w300,
-                          fontSize: getFontSize(16, size),
+                          fontSize: 16,
                         ),
                         CustomText(
                           label:
                               '${gameItemsProvider.gameStreaks.streaks} ${gameItemsProvider.gameStreaks.streaks > 1 ? "Days" : "Day"}',
                           fontWeight: FontWeight.w500,
-                          fontSize: getFontSize(16, size),
+                          fontSize: 16,
                         ),
                       ],
                     ),
@@ -105,12 +103,12 @@ class _ProfileState extends State<Profile> {
                         CustomText(
                           label: 'Games so far  ',
                           fontWeight: FontWeight.w300,
-                          fontSize: getFontSize(16, size),
+                          fontSize: 16,
                         ),
                         CustomText(
                           label: '${gameItemsProvider.gameStreaks.gamesPlayed}',
                           fontWeight: FontWeight.w500,
-                          fontSize: getFontSize(16, size),
+                          fontSize: 16,
                         ),
                       ],
                     ),
@@ -133,7 +131,7 @@ class _ProfileState extends State<Profile> {
                         child: Center(
                           child: CustomText(
                             label: 'Log Out',
-                            fontSize: getFontSize(13, size),
+                            fontSize: 13,
                             color: AppColors.kGameRed,
                             fontWeight: FontWeight.bold,
                           ),
@@ -149,7 +147,7 @@ class _ProfileState extends State<Profile> {
                         CustomText(
                           label: 'Savvy Store',
                           fontWeight: FontWeight.w500,
-                          fontSize: getFontSize(23, size),
+                          fontSize: d.isTablet ? 21 : 23,
                         ),
                         RecordRankHeader(
                             title: 'Open Store',
@@ -166,7 +164,7 @@ class _ProfileState extends State<Profile> {
                         CustomText(
                           label: 'Current Plan',
                           fontWeight: FontWeight.w300,
-                          fontSize: getFontSize(19, size),
+                          fontSize: d.isTablet ? 17 : 19,
                         ),
                         SizedBox(
                           width: d.pSW(15),
@@ -174,7 +172,7 @@ class _ProfileState extends State<Profile> {
                         CustomText(
                           label: 'Limited User',
                           fontWeight: FontWeight.w500,
-                          fontSize: getFontSize(19, size),
+                          fontSize: d.isTablet ? 17 : 19,
                         ),
                       ],
                     ),
@@ -182,14 +180,14 @@ class _ProfileState extends State<Profile> {
                     CustomText(
                       label: 'User Keys',
                       fontWeight: FontWeight.w500,
-                      fontSize: getFontSize(19, size),
+                      fontSize: d.isTablet ? 17 : 19,
                     ),
                     SizedBox(height: d.pSH(3)),
 
                     //Keys
                     GridView(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
+                        crossAxisCount: d.isTablet ? 5 : 4,
                         crossAxisSpacing: d.pSW(8),
                         mainAxisSpacing: d.pSH(8),
                         childAspectRatio: 1,
@@ -221,7 +219,7 @@ class _ProfileState extends State<Profile> {
                     //       CustomText(
                     //         label: 'Achievements',
                     //         fontWeight: FontWeight.w500,
-                    //         fontSize: getFontSize(23, size),
+                    //         fontSize: 23,
                     //       ),
                     //     ])
                   ],

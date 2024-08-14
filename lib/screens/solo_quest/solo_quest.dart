@@ -21,7 +21,6 @@ import 'package:savyminds/screens/solo_quest/survival_quest/survival_quest.dart'
 import 'package:savyminds/screens/solo_quest/time_rush/time_rush.dart';
 import 'package:savyminds/screens/solo_quest/training_mode/training_mode.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
-import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
@@ -65,15 +64,13 @@ class SoloQuestState extends State<SoloQuest> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Padding(
       padding: EdgeInsets.all(d.pSH(16)),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         CustomText(
           label: 'Single Player',
           fontWeight: FontWeight.w700,
-          fontSize: getFontSize(24, size),
+          fontSize: 24,
         ),
         SizedBox(height: d.pSH(16)),
         Expanded(
@@ -146,7 +143,7 @@ class SoloQuestState extends State<SoloQuest> with TickerProviderStateMixin {
                             (index) {
                               final quest = soloQuestProvider.soloQuests[index];
                               return Padding(
-                                padding: EdgeInsets.only(bottom: d.pSH(15)),
+                                padding: EdgeInsets.only(bottom: d.pSW(15)),
                                 child: _animations.isNotEmpty
                                     ? AnimatedBuilder(
                                         animation: _animations[index],

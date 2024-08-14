@@ -106,8 +106,8 @@ class _TrainingModeState extends State<TrainingMode> {
                   SizedBox(height: d.pSH(40)),
                   selectedCategory != null
                       ? SizedBox(
-                          height: d.pSH(159.6),
-                          width: 187,
+                          height: d.isTablet ? d.pSW(179) : d.pSW(159.6),
+                          width: d.isTablet ? d.pSW(230) : d.pSW(187),
                           child: CategoryCard(
                             category: selectedCategory!,
                             hidePlay: true,
@@ -118,8 +118,8 @@ class _TrainingModeState extends State<TrainingMode> {
                             Padding(
                               padding: EdgeInsets.only(bottom: d.pSH(5)),
                               child: CategoryPlaceholder(
-                                height: 159,
-                                width: 187,
+                                height: d.pSW(159),
+                                width: d.pSW(187),
                                 label: 'Click here to select a category ',
                                 onTap: () async {
                                   final result = await nextScreen(
@@ -146,6 +146,7 @@ class _TrainingModeState extends State<TrainingMode> {
                                 },
                                 child: SvgPicture.asset(
                                   AppImages.randomIcon,
+                                  height: d.isTablet ? d.pSW(45) : null,
                                 ),
                               ),
                             )
@@ -158,8 +159,8 @@ class _TrainingModeState extends State<TrainingMode> {
                         catProv.getCategoryLevel(selectedCategory?.id ?? 0);
                     return catLevel != null
                         ? Wrap(
-                            runSpacing: d.pSH(10),
-                            spacing: d.pSW(15),
+                            runSpacing: d.pSW(10),
+                            spacing: d.isTablet ? d.pSW(20) : d.pSW(15),
                             alignment: WrapAlignment.center,
                             children: [
                               ...List.generate(
@@ -222,12 +223,12 @@ class _TrainingModeState extends State<TrainingMode> {
                       showShop: false,
                     ),
                   SizedBox(
-                    height: d.pSH(30),
+                    height: d.isTablet ? d.pSH(50) : d.pSH(30),
                   ),
                   if (selectedCategory != null)
                     ScalingAnimationWidget(
                       child: SizedBox(
-                        width: d.pSH(240),
+                        width: d.pSH(d.isTablet ? 340 : 240),
                         child: TransformedButton(
                           onTap: () {
                             getQuestions();
@@ -236,7 +237,7 @@ class _TrainingModeState extends State<TrainingMode> {
                           buttonText: ' START ',
                           textColor: Colors.white,
                           textWeight: FontWeight.bold,
-                          height: d.pSH(66),
+                          height: d.pSH(d.isTablet ? 76 : 66),
                         ),
                       ),
                     ),

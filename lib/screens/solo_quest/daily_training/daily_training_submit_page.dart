@@ -130,7 +130,7 @@ class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 2.0),
                                     child: AspectRatio(
-                                      aspectRatio: 0.99,
+                                      aspectRatio: d.isTablet ? 1.25 : 0.99,
                                       child: CategoryCard(
                                         category: category,
                                         hidePlay: true,
@@ -152,7 +152,7 @@ class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: AppColors.kPrimaryColor,
-                          fontSize: getFontSize(24, size),
+                          fontSize: getFontSize(d.isTablet ? 20 : 24, size),
                           fontFamily: AppFonts.caveat,
                           height: 1.5,
                           fontWeight: FontWeight.bold,
@@ -164,7 +164,7 @@ class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
                         to: widget.pointsScored,
                         style: TextStyle(
                           color: AppColors.kGameLightBlue,
-                          fontSize: getFontSize(24, size),
+                          fontSize: getFontSize(d.isTablet ? 20 : 24, size),
                           fontWeight: FontWeight.bold,
                           fontFamily: AppFonts.inter,
                           height: 1.5,
@@ -176,7 +176,7 @@ class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: AppColors.textBlack,
-                          fontSize: getFontSize(24, size),
+                          fontSize: getFontSize(d.isTablet ? 20 : 24, size),
                           fontFamily: AppFonts.inter,
                           height: 1.5,
                           fontWeight: FontWeight.w700,
@@ -222,7 +222,7 @@ class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(height: d.pSH(10)),
+                                  SizedBox(height: d.pSH(d.isTablet ? 20 : 10)),
                                   RichText(
                                       textAlign: TextAlign.center,
                                       text: TextSpan(
@@ -239,8 +239,9 @@ class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
                                                 text: "\nYou need ",
                                                 style: TextStyle(
                                                   color: AppColors.textBlack,
-                                                  fontSize:
-                                                      getFontSize(13, size),
+                                                  fontSize: getFontSize(
+                                                      d.isTablet ? 12 : 13,
+                                                      size),
                                                   fontFamily: AppFonts.inter,
                                                   height: 1.5,
                                                   fontStyle: FontStyle.normal,
@@ -253,7 +254,10 @@ class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
                                                         color: AppColors
                                                             .kGameDarkLightBlue,
                                                         fontSize: getFontSize(
-                                                            16, size),
+                                                            d.isTablet
+                                                                ? 14
+                                                                : 16,
+                                                            size),
                                                         fontFamily:
                                                             AppFonts.inter,
                                                         height: 1.5,
@@ -269,7 +273,10 @@ class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
                                                                 .textBlack,
                                                             fontSize:
                                                                 getFontSize(
-                                                                    13, size),
+                                                                    d.isTablet
+                                                                        ? 12
+                                                                        : 13,
+                                                                    size),
                                                             fontFamily:
                                                                 AppFonts.inter,
                                                             height: 1.5,
@@ -290,7 +297,8 @@ class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
                                             "Correct Answers",
                                             style: TextStyle(
                                               color: AppColors.textBlack,
-                                              fontSize: getFontSize(22, size),
+                                              fontSize: getFontSize(
+                                                  d.isTablet ? 20 : 22, size),
                                               fontFamily: AppFonts.caveat,
                                               height: 1.5,
                                               fontStyle: FontStyle.normal,
@@ -304,7 +312,8 @@ class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
                                             style: TextStyle(
                                               color:
                                                   AppColors.kGameDarkLightBlue,
-                                              fontSize: getFontSize(20, size),
+                                              fontSize: getFontSize(
+                                                  d.isTablet ? 18 : 20, size),
                                               fontFamily: AppFonts.inter,
                                               fontWeight: FontWeight.w700,
                                               height: 1.5,
@@ -319,7 +328,8 @@ class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
                                             "Overall scores",
                                             style: TextStyle(
                                               color: AppColors.textBlack,
-                                              fontSize: getFontSize(22, size),
+                                              fontSize: getFontSize(
+                                                  d.isTablet ? 20 : 22, size),
                                               fontFamily: AppFonts.caveat,
                                               height: 1.5,
                                               fontStyle: FontStyle.normal,
@@ -336,7 +346,8 @@ class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
                                             style: TextStyle(
                                               color:
                                                   AppColors.kGameDarkLightBlue,
-                                              fontSize: getFontSize(20, size),
+                                              fontSize: getFontSize(
+                                                  d.isTablet ? 18 : 20, size),
                                               fontFamily: AppFonts.inter,
                                               fontWeight: FontWeight.w700,
                                               height: 1.5,
@@ -363,7 +374,8 @@ class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
                                       "You are ranked in top ${categoryRankModel?.rank ?? 1}",
                                       style: TextStyle(
                                         color: AppColors.kPrimaryColor,
-                                        fontSize: getFontSize(27, size),
+                                        fontSize: getFontSize(
+                                            d.isTablet ? 22 : 27, size),
                                         fontFamily: AppFonts.caveat,
                                         height: 1.5,
                                         fontWeight: FontWeight.w700,
@@ -394,7 +406,7 @@ class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
                                   playNextCategory(context);
                                 },
                                 buttonText: 'PLAY NEXT',
-                                fontSize: getFontSize(22, size),
+                                fontSize: 22,
                                 isReversed: true,
                                 height: d.pSH(70),
                                 width: d.getPhoneScreenWidth() * 0.55,
@@ -412,7 +424,7 @@ class _DailyTrainingSubmitPageState extends State<DailyTrainingSubmitPage> {
                           nextScreen(context, const DailyTraining());
                         },
                         buttonText: 'RETURN TO TRAINING',
-                        fontSize: getFontSize(22, size),
+                        fontSize: 22,
                         height: d.pSH(80),
                         buttonColor: AppColors.kGameRed,
                         width: d.getPhoneScreenWidth() * 0.65,
