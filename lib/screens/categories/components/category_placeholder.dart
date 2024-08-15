@@ -41,11 +41,11 @@ class CategoryPlaceholder extends StatelessWidget {
                   CustomText(
                     label: '?',
                     color: AppColors.notSelectedColor,
-                    fontSize: d.isTablet ? width * 0.16 : width * 0.2,
+                    fontSize: d.isTablet ? width * 0.14 : width * 0.2,
                   ),
                   CustomText(
                     label: label ?? 'Select Category',
-                    fontSize: d.isTablet ? width * 0.06 : width * 0.1,
+                    fontSize: d.isTablet ? width * 0.05 : width * 0.1,
                     color: AppColors.notSelectedColor,
                     textAlign: TextAlign.center,
                   ),

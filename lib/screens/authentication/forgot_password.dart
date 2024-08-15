@@ -5,6 +5,7 @@ import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/auth/auth_functions.dart';
 import 'package:savyminds/models/error_response.dart';
 import 'package:savyminds/resources/app_gradients.dart';
+import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/validator.dart';
 import 'package:savyminds/widgets/custom_button.dart';
 import 'package:savyminds/widgets/custom_textfeild_with_label.dart';
@@ -35,6 +36,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     d.init(context);
+    Size size = MediaQuery.of(context).size;
     return PageTemplate(
       pageTitle: "Forgot Password",
       backgroundGradient: AppGradients.landingGradient,
@@ -42,8 +44,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         child: Stack(
           children: [
             Container(
-              padding: EdgeInsets.only(
-                  top: d.pSH(50), left: d.pSW(25), right: d.pSW(25)),
+              padding: d.isTablet
+                  ? EdgeInsets.symmetric(
+                      horizontal: size.width * 0.12,
+                      vertical: d.pSH(50),
+                    )
+                  : EdgeInsets.only(
+                      top: d.pSH(50), left: d.pSW(25), right: d.pSW(25)),
               child: Form(
                 key: emailFormKey,
                 child: SingleChildScrollView(
@@ -54,7 +61,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     Text("Retrieve your password in less than a minute",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: d.pSH(17),
+                          fontSize: getFontSize(15, size),
                         )),
 
                     SizedBox(
@@ -86,7 +93,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         "A 6-digit OTP will be sent to your email to help you reset your password",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: d.pSH(14),
+                          fontSize: getFontSize(12, size),
                         )),
 
                     SizedBox(

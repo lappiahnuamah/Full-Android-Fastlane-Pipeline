@@ -150,7 +150,7 @@ class _CategoryCardState extends State<CategoryCard> {
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           textAlign: TextAlign.center,
-                          fontSize: widget.fontSize ?? 14,
+                          fontSize: widget.fontSize ?? 13,
                         )
                       ],
                     ),

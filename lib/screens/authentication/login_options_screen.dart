@@ -31,7 +31,7 @@ class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
-    ///  Brightness bright = Theme.of(context).brightness;
+    Size size = MediaQuery.of(context).size;
 
     return PopScope(
       canPop: false,
@@ -41,7 +41,9 @@ class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
         child: Stack(
           children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(d.pSH(25), d.pSH(25), d.pSH(25), 0),
+              padding: d.isTablet
+                  ? EdgeInsets.symmetric(horizontal: size.width * 0.12)
+                  : EdgeInsets.fromLTRB(d.pSH(25), d.pSH(25), d.pSH(25), 0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -50,22 +52,25 @@ class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
                     children: [
                       Hero(
                         tag: AppHeroTags.savvyMindsLogo,
-                        child: SvgPicture.asset(AppImages.gameLogoSvg),
+                        child: SvgPicture.asset(AppImages.gameLogoSvg,
+                            height: d.isTablet ? d.pSH(120) : null),
                       ),
                       Hero(
                         tag: AppHeroTags.savvyMindsText,
                         child: SvgPicture.asset(
                           AppImages.savvyMinds,
-                          height: d.pSH(50),
+                          height: d.isTablet ? d.pSH(60) : d.pSH(50),
                         ),
                       ),
-                      const Text(
+                      Text(
                         'Think you are smart?',
                         style: TextStyle(
                             fontFamily: 'Architects_Daughter',
                             fontWeight: FontWeight.w300,
                             letterSpacing: 1.8,
-                            height: 1.5),
+                            height: 1.5,
+                            fontSize:
+                                d.isTablet ? getFontSize(18, size) : null),
                       )
                     ],
                   ),
@@ -81,7 +86,7 @@ class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
                       'Login',
                       style: TextStyle(
                           color: Colors.black,
-                          fontSize: d.pSH(16),
+                          fontSize: getFontSize(15, size),
                           fontWeight: FontWeight.w500),
                     ),
                   ),
@@ -95,7 +100,7 @@ class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
                       'Sign Up',
                       style: TextStyle(
                           color: Colors.black,
-                          fontSize: d.pSH(16),
+                          fontSize: getFontSize(15, size),
                           fontWeight: FontWeight.w500),
                     ),
                   ),
@@ -106,9 +111,9 @@ class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         horizontalLine(),
-                        const Text("OR",
+                        Text("OR",
                             style: TextStyle(
-                              fontSize: 13.0,
+                              fontSize: getFontSize(12.0, size),
                             )),
                         horizontalLine()
                       ],
@@ -234,7 +239,7 @@ class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
     Size size = MediaQuery.of(context).size;
     return SizedBox(
         width: double.infinity,
-        height: d.pSH(45),
+        height: d.isTablet ? d.pSH(55) : d.pSH(45),
         child: TextButton(
           onPressed: onTap,
           style: ButtonStyle(
@@ -244,18 +249,18 @@ class _LoginOptionsScreenState extends State<LoginOptionsScreen> {
             children: [
               Image.asset(
                 image,
-                height: 24,
-                width: 24,
+                height: d.isTablet ? 35 : 24,
+                width: d.isTablet ? 35 : 24,
               ),
-              const SizedBox(
-                width: 12,
+              SizedBox(
+                width: d.isTablet ? 17 : 12,
               ),
               Text(
                 text,
                 style: TextStyle(
                     fontFamily: "Popins",
                     color: Colors.black.withOpacity(0.9),
-                    fontSize: getFontSize(15, size)),
+                    fontSize: getFontSize(14, size)),
               )
             ],
           ),

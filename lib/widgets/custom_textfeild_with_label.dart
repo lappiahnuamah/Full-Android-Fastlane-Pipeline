@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/utils/func.dart';
 
 class CustomTextFieldWithLabel extends StatelessWidget {
   const CustomTextFieldWithLabel(
@@ -64,6 +65,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Brightness bright = Theme.of(context).brightness;
+    Size size = MediaQuery.of(context).size;
     d.init(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,14 +73,16 @@ class CustomTextFieldWithLabel extends StatelessWidget {
         labelText == null
             ? const SizedBox()
             : Padding(
-                padding: EdgeInsets.only(bottom: 4, left: d.pSW(4)),
+                padding:
+                    EdgeInsets.only(bottom: d.isTablet ? 8 : 4, left: d.pSW(4)),
                 child: Text(
                   labelText!,
                   style: labelStyle ??
                       TextStyle(
                           color: bright == Brightness.dark
                               ? AppColors.kTrendEmojiColor
-                              : AppColors.kFormLabelColor),
+                              : AppColors.kFormLabelColor,
+                          fontSize: d.isTablet ? getFontSize(11, size) : null),
                 ),
               ),
         TextFormField(
@@ -94,7 +98,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
           initialValue: initialValue,
           obscureText: obscureText ?? false,
           style: TextStyle(
-              fontSize: d.pSH(17),
+              fontSize: getFontSize(d.isTablet ? 13 : 15, size),
               color: bright == Brightness.dark
                   ? Colors.white
                   : AppColors.kTextColor),
@@ -106,7 +110,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
                 color: bright == Brightness.dark
                     ? AppColors.kTrendEmojiColor
                     : AppColors.kFormLabelColor),
-            floatingLabelStyle: TextStyle(fontSize: d.pSH(20)),
+            floatingLabelStyle: TextStyle(fontSize: getFontSize(19, size)),
             suffixIcon: suffixIcon,
             counterText: counterText,
             suffixIconConstraints: BoxConstraints(minWidth: d.pSW(50)),
@@ -117,17 +121,18 @@ class CustomTextFieldWithLabel extends StatelessWidget {
                         ? AppColors.kTrendEmojiColor
                         : AppColors.hintTextBlack),
             contentPadding: EdgeInsets.symmetric(
-                horizontal: d.pSW(10), vertical: d.pSH(10)),
+                horizontal: d.pSW(10),
+                vertical: d.isTablet ? d.pSH(15) : d.pSH(10)),
             prefixIcon: noPrefix != null
                 ? noPrefix!
                     ? null
                     : Icon(prefixIcon,
-                        size: 20,
+                        size: d.isTablet ? 30 : 20,
                         color: bright == Brightness.dark
                             ? AppColors.kTrendEmojiColor
                             : AppColors.kIconColor)
                 : Icon(prefixIcon,
-                    size: 20,
+                    size: d.isTablet ? 32 : 20,
                     color: bright == Brightness.dark
                         ? darkfillColor ?? AppColors.kTrendEmojiColor
                         : AppColors.kIconColor),

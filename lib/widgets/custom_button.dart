@@ -21,7 +21,7 @@ class CustomButton extends StatelessWidget {
     d.init(context);
     return SizedBox(
       width: double.infinity,
-      height: d.pSH(45),
+      height: d.isTablet ? d.pSH(52) : d.pSH(45),
       child: TextButton(
         // key: const Key('customButton'),
         style: TextButton.styleFrom(

@@ -8,6 +8,7 @@ import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_gradients.dart';
 import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
+import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/validator.dart';
 import 'package:savyminds/widgets/custom_button.dart';
 import 'package:savyminds/widgets/custom_text.dart';
@@ -36,14 +37,18 @@ class _ChangeDisplayNameState extends State<ChangeDisplayName> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return PopScope(
       canPop: false,
       child: PageTemplate(
           pageTitle: 'Change Display Name',
           backgroundGradient: AppGradients.landingGradient,
           child: Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: d.pSW(25), vertical: d.pSH(16)),
+            padding: d.isTablet
+                ? EdgeInsets.symmetric(
+                    horizontal: size.width * 0.12, vertical: d.pSH(16))
+                : EdgeInsets.symmetric(
+                    horizontal: d.pSW(25), vertical: d.pSH(16)),
             child: Form(
               key: _nameFormKey,
               child: Column(
@@ -52,7 +57,7 @@ class _ChangeDisplayNameState extends State<ChangeDisplayName> {
                   CustomText(
                     label:
                         "Please choose a display name that will be visible to others. Make sure it's unique, appropriate, and reflects how you'd like to be identified.",
-                    fontSize: d.pSH(17),
+                    fontSize: getFontSize(15, size),
                     fontWeight: FontWeight.w400,
                   ),
                   const SizedBox(height: 20),
@@ -96,7 +101,7 @@ class _ChangeDisplayNameState extends State<ChangeDisplayName> {
                             'Save',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: d.pSH(16),
+                                fontSize: getFontSize(14, size),
                                 fontWeight: FontWeight.w500),
                           ),
                   ),

@@ -21,6 +21,7 @@ import 'package:savyminds/screens/authentication/login_options_screen.dart';
 import 'package:savyminds/screens/authentication/signup_screens/sign_up.dart';
 import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
 import 'package:savyminds/screens/game/game/components/game_background.dart';
+import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/func_new.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/utils/validator.dart';
@@ -57,6 +58,7 @@ class _LoginState extends State<Login> {
     double statusbar = MediaQuery.of(context).viewPadding.top;
     double height = MediaQuery.of(context).size.height - statusbar;
     Brightness bright = Theme.of(context).brightness;
+    Size size = MediaQuery.of(context).size;
 
     return Consumer<DarkThemeProvider>(
         builder: (BuildContext consumerContext, value, child) {
@@ -84,7 +86,8 @@ class _LoginState extends State<Login> {
                           children: [
                             Container(
                               padding: EdgeInsets.symmetric(
-                                horizontal: d.pSW(25),
+                                horizontal:
+                                    d.isTablet ? size.width * 0.12 : d.pSW(25),
                                 // vertical: d.pSH(25),
                               ),
                               child: Column(
@@ -96,7 +99,7 @@ class _LoginState extends State<Login> {
                                       child: Text('Sign In',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                              fontSize: d.pSH(25),
+                                              fontSize: getFontSize(25, size),
                                               color: bright == Brightness.dark
                                                   ? Colors.white
                                                   : AppColors.kPrimaryColor,
@@ -112,10 +115,10 @@ class _LoginState extends State<Login> {
                                         children: [
                                           /////////////////////////////////////////////////////////
                                           //////////////(- Display sign in text -)/////////////////
-
-                                          SizedBox(
-                                            height: d.pSH(25),
-                                          ),
+                                          if (!d.isTablet)
+                                            SizedBox(
+                                              height: d.pSH(25),
+                                            ),
                                           ////////////////////////////////////////////////////
                                           //////////////(- Email textfeild -)/////////////////
                                           CustomTextFieldWithLabel(
@@ -189,154 +192,7 @@ class _LoginState extends State<Login> {
                                             CustomButton(
                                                 key: const Key('login-button'),
                                                 onTap: () async {
-                                                  // final provider =Provider.of<LoadingProvider>(context, listen: false);
-
-                                                  FocusManager
-                                                      .instance.primaryFocus
-                                                      ?.unfocus();
-                                                  if (_loginFormKey
-                                                      .currentState!
-                                                      .validate()) {
-                                                    _loginFormKey.currentState!
-                                                        .save();
-                                                    if ((RegExp(
-                                                            "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]"))
-                                                        .hasMatch(
-                                                            usernameController
-                                                                .text)) {
-                                                      email = usernameController
-                                                          .text
-                                                          .trim();
-                                                      username = "";
-                                                    } else {
-                                                      email = "";
-                                                      username =
-                                                          usernameController
-                                                              .text
-                                                              .trim();
-                                                    }
-                                                    setState(() {
-                                                      isLoading = true;
-                                                    });
-
-                                                    final userDetailsProvider =
-                                                        Provider.of<
-                                                                UserDetailsProvider>(
-                                                            context,
-                                                            listen: false);
-
-                                                    final loginResponse =
-                                                        await Authentications()
-                                                            .loginUser(
-                                                                context:
-                                                                    context,
-                                                                username:
-                                                                    username,
-                                                                email: email,
-                                                                password:
-                                                                    passwordController
-                                                                        .text
-                                                                        .trim(),
-                                                                keepLoggedIn:
-                                                                    keepMeLoggedIn);
-
-                                                    if (loginResponse
-                                                        is AppUser) {
-                                                      userDetailsProvider
-                                                          .setAccessToken(
-                                                              loginResponse
-                                                                  .accessToken!);
-                                                      userDetailsProvider
-                                                          .setUserDetails(
-                                                              loginResponse);
-
-                                                      FirebaseMessaging.instance
-                                                          .getToken(
-                                                              vapidKey: FcmData
-                                                                  .webTOken)
-                                                          .then((value) async {
-                                                        value != null
-                                                            ? await FCMFunctions()
-                                                                .setFCMToken(
-                                                                    value)
-                                                            : null;
-                                                      });
-
-                                                      setState(() {
-                                                        isLoading = false;
-                                                      });
-
-                                                      if (context.mounted) {
-                                                        nextScreen(context,
-                                                            const CustomBottomNav());
-                                                      }
-                                                    }
-                                                    /////////////////////////////////////////// Inactive Account ////////////////
-                                                    else if (loginResponse
-                                                        is ErrorResponse) {
-                                                      if (loginResponse
-                                                              .errorCode ==
-                                                          103) {
-                                                        //////////////////////// If account not activated //////////////
-                                                        //Send Otp
-                                                        if (mounted) {
-                                                          final emailVerifyResponse =
-                                                              await Authentications()
-                                                                  .emailVerify(
-                                                                      context,
-                                                                      username,
-                                                                      email);
-
-                                                          if (emailVerifyResponse ==
-                                                              "success") {
-                                                            //todo: stop dialog from loading
-                                                            setState(() {
-                                                              isLoading = false;
-                                                            });
-                                                            Fluttertoast.showToast(
-                                                                msg: loginResponse
-                                                                        .errorMsg ??
-                                                                    "");
-                                                            if (mounted) {
-                                                              Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder: (context) => EmailVerification(
-                                                                          pageFrom:
-                                                                              'signup',
-                                                                          email:
-                                                                              email,
-                                                                          username:
-                                                                              username)));
-                                                            }
-                                                          } else if (emailVerifyResponse
-                                                              is ErrorResponse) {
-                                                            setState(() {
-                                                              isLoading = false;
-                                                            });
-
-                                                            Fluttertoast.showToast(
-                                                                msg: emailVerifyResponse
-                                                                        .errorMsg ??
-                                                                    "");
-                                                          }
-                                                        }
-                                                      }
-                                                      /////////////// Login Failed //////////////////////////
-                                                      else {
-                                                        setState(() {
-                                                          isLoading = false;
-                                                        });
-                                                        Fluttertoast.showToast(
-                                                            msg: loginResponse
-                                                                    .errorMsg ??
-                                                                '');
-                                                      }
-                                                    }
-                                                    setState(() {
-                                                      isLoading = false;
-                                                    });
-                                                  }
+                                                  await loginFunction(context);
                                                 },
                                                 child: Text(
                                                   'LOGIN',
@@ -346,6 +202,10 @@ class _LoginState extends State<Login> {
                                                       fontWeight:
                                                           FontWeight.w500),
                                                 )),
+                                            if (d.isTablet)
+                                              SizedBox(
+                                                height: d.pSH(20),
+                                              ),
                                             Align(
                                               child: TextButton(
                                                 onPressed: () {
@@ -365,7 +225,8 @@ class _LoginState extends State<Login> {
                                                   'Forgotten password',
                                                   textAlign: TextAlign.start,
                                                   style: TextStyle(
-                                                      fontSize: d.pSH(16),
+                                                      fontSize:
+                                                          getFontSize(15, size),
                                                       color: bright ==
                                                               Brightness.dark
                                                           ? Colors.white
@@ -401,7 +262,8 @@ class _LoginState extends State<Login> {
                                             child: RichText(
                                               text: TextSpan(
                                                   style: TextStyle(
-                                                    fontSize: d.pSH(17),
+                                                    fontSize:
+                                                        getFontSize(16, size),
                                                     color: bright ==
                                                             Brightness.dark
                                                         ? Colors.white
@@ -496,6 +358,97 @@ class _LoginState extends State<Login> {
             ),
           ));
     });
+  }
+
+  Future<void> loginFunction(BuildContext context) async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    if (_loginFormKey.currentState!.validate()) {
+      _loginFormKey.currentState!.save();
+      if ((RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]"))
+          .hasMatch(usernameController.text)) {
+        email = usernameController.text.trim();
+        username = "";
+      } else {
+        email = "";
+        username = usernameController.text.trim();
+      }
+      setState(() {
+        isLoading = true;
+      });
+
+      final userDetailsProvider =
+          Provider.of<UserDetailsProvider>(context, listen: false);
+
+      final loginResponse = await Authentications().loginUser(
+          context: context,
+          username: username,
+          email: email,
+          password: passwordController.text.trim(),
+          keepLoggedIn: keepMeLoggedIn);
+
+      if (loginResponse is AppUser) {
+        userDetailsProvider.setAccessToken(loginResponse.accessToken!);
+        userDetailsProvider.setUserDetails(loginResponse);
+
+        FirebaseMessaging.instance
+            .getToken(vapidKey: FcmData.webTOken)
+            .then((value) async {
+          value != null ? await FCMFunctions().setFCMToken(value) : null;
+        });
+
+        setState(() {
+          isLoading = false;
+        });
+
+        if (context.mounted) {
+          nextScreen(context, const CustomBottomNav());
+        }
+      }
+      /////////////////////////////////////////// Inactive Account ////////////////
+      else if (loginResponse is ErrorResponse) {
+        if (loginResponse.errorCode == 103) {
+          //////////////////////// If account not activated //////////////
+          //Send Otp
+          if (mounted) {
+            final emailVerifyResponse =
+                await Authentications().emailVerify(context, username, email);
+
+            if (emailVerifyResponse == "success") {
+              //todo: stop dialog from loading
+              setState(() {
+                isLoading = false;
+              });
+              Fluttertoast.showToast(msg: loginResponse.errorMsg ?? "");
+              if (mounted) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EmailVerification(
+                            pageFrom: 'signup',
+                            email: email,
+                            username: username)));
+              }
+            } else if (emailVerifyResponse is ErrorResponse) {
+              setState(() {
+                isLoading = false;
+              });
+
+              Fluttertoast.showToast(msg: emailVerifyResponse.errorMsg ?? "");
+            }
+          }
+        }
+        /////////////// Login Failed //////////////////////////
+        else {
+          setState(() {
+            isLoading = false;
+          });
+          Fluttertoast.showToast(msg: loginResponse.errorMsg ?? '');
+        }
+      }
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<bool> onWillPop(bool? value) {

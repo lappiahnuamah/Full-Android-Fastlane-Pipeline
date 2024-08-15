@@ -23,6 +23,7 @@ import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
 import 'package:savyminds/screens/game/game/components/game_background.dart';
 import 'package:savyminds/utils/cache/save_secure.dart';
 import 'package:savyminds/utils/enums/auth_eums.dart';
+import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -56,6 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     d.init(context);
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(
         children: [
@@ -70,11 +72,11 @@ class _SplashScreenState extends State<SplashScreen> {
               padding: EdgeInsets.all(d.pSH(10.0)),
               child: Text(
                 "®Terateck Solutions",
-                style: TextStyle(fontSize: d.pSH(17)),
+                style: TextStyle(fontSize: getFontSize(17, size)),
               ),
             ),
           ),
-          /////////////////////////////////////////®Terateck Solutions
+          /////////////////////////////////////////
           /////////////// APP LOGO ////////////////
           Center(
             child: Column(
@@ -82,22 +84,24 @@ class _SplashScreenState extends State<SplashScreen> {
               children: [
                 Hero(
                   tag: AppHeroTags.savvyMindsLogo,
-                  child: SvgPicture.asset(AppImages.gameLogoSvg),
+                  child: SvgPicture.asset(AppImages.gameLogoSvg,
+                      height: d.isTablet ? d.pSH(120) : null),
                 ),
                 Hero(
                   tag: AppHeroTags.savvyMindsText,
                   child: SvgPicture.asset(
                     AppImages.savvyMinds,
-                    height: d.pSH(50),
+                    height: d.isTablet ? d.pSH(60) : d.pSH(50),
                   ),
                 ),
-                const Text(
+                Text(
                   'Think you are smart?',
                   style: TextStyle(
                       fontFamily: 'Architects_Daughter',
                       fontWeight: FontWeight.w300,
                       letterSpacing: 1.8,
-                      height: 1.5),
+                      height: 1.5,
+                      fontSize: d.isTablet ? getFontSize(18, size) : null),
                 ),
               ],
             ),

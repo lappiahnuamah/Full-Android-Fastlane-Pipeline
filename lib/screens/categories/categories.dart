@@ -144,7 +144,9 @@ class _CategoriesState extends State<Categories> with TickerProviderStateMixin {
                                           crossAxisCount: 2,
                                           crossAxisSpacing: d.pSW(24),
                                           mainAxisSpacing: d.pSW(10),
-                                          childAspectRatio: d.pSW(1.05)),
+                                          childAspectRatio: d.isTablet
+                                              ? d.pSH(1)
+                                              : d.pSW(1.05)),
                                   children: [
                                     ...List.generate(
                                         categoryProvider.favoriteCategories
@@ -182,7 +184,9 @@ class _CategoriesState extends State<Categories> with TickerProviderStateMixin {
                                         crossAxisCount: 2,
                                         crossAxisSpacing: d.pSW(24),
                                         mainAxisSpacing: d.pSW(10),
-                                        childAspectRatio: d.pSW(1.05)),
+                                        childAspectRatio: d.isTablet
+                                            ? d.pSH(1)
+                                            : d.pSW(1.05)),
                                 children: [
                                   ...List.generate(
                                       searchText.isEmpty

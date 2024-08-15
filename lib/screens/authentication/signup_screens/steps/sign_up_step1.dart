@@ -8,6 +8,7 @@ import 'package:savyminds/providers/registration_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/authentication/login.dart';
 import 'package:savyminds/utils/connection_check.dart';
+import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/validator.dart';
 import 'package:savyminds/widgets/custom_button.dart';
 import 'package:savyminds/widgets/custom_intl_textfeild.dart';
@@ -52,11 +53,13 @@ class _SignUpStep1State extends State<SignUpStep1> {
     final userRegister =
         Provider.of<RegistrationProvider>(context, listen: false);
     UserRegisterModel userInfo = userRegister.getUser();
+    Size size = MediaQuery.of(context).size;
 
     d.init(context);
     return Container(
-      padding:
-          EdgeInsets.only(left: d.pSW(25), right: d.pSW(25), top: d.pSH(4)),
+      padding: d.isTablet
+          ? EdgeInsets.symmetric(horizontal: size.width * 0.12)
+          : EdgeInsets.only(left: d.pSW(25), right: d.pSW(25), top: d.pSH(4)),
       child: Form(
         key: _firstSignUpFormKey,
         child: Scaffold(
@@ -80,7 +83,10 @@ class _SignUpStep1State extends State<SignUpStep1> {
                           controller: fullNameController,
                           labelText: 'Full name',
                           hintText: "Full name",
-                          labelStyle: TextStyle(color: getColor(name)),
+                          labelStyle: TextStyle(
+                              color: getColor(name),
+                              fontSize:
+                                  d.isTablet ? getFontSize(10, size) : null),
                           prefixIcon: Icons.edit_outlined,
                           //(Validation)//
                           validator: (value) =>
@@ -99,8 +105,10 @@ class _SignUpStep1State extends State<SignUpStep1> {
                             enabled: enabled,
                             initialValue: userInfo.username,
                             controller: usernameController,
-                            labelStyle:
-                                TextStyle(color: getColor(usernameState)),
+                            labelStyle: TextStyle(
+                                color: getColor(usernameState),
+                                fontSize:
+                                    d.isTablet ? getFontSize(10, size) : null),
                             labelText: usernameState == 0
                                 ? "Username not available"
                                 : 'Username',
@@ -123,8 +131,10 @@ class _SignUpStep1State extends State<SignUpStep1> {
                           enabled: enabled,
                           initialValue: userInfo.phoneNumber,
                           controller: numberController,
-                          labelStyle:
-                              TextStyle(color: getColor(phoneNumberSate)),
+                          labelStyle: TextStyle(
+                              color: getColor(phoneNumberSate),
+                              fontSize:
+                                  d.isTablet ? getFontSize(10, size) : null),
                           labelText: phoneNumberSate == 0
                               ? "Phone number not available"
                               : 'Phone number',
@@ -147,7 +157,10 @@ class _SignUpStep1State extends State<SignUpStep1> {
                           labelText:
                               emailState == 0 ? "Email not available" : 'Email',
                           hintText: "Email",
-                          labelStyle: TextStyle(color: getColor(emailState)),
+                          labelStyle: TextStyle(
+                              color: getColor(emailState),
+                              fontSize:
+                                  d.isTablet ? getFontSize(10, size) : null),
                           prefixIcon: Icons.email_outlined,
                           keyboardType: TextInputType.emailAddress,
                           //(Validation)//
