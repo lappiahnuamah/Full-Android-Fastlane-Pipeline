@@ -64,8 +64,8 @@ jobs:
           git config --global user.email "lappiahnuamahfbc1999@gmail.com"
           git config --global user.name "lappiahnuamah"
           git add version.properties
-          git commit -m "Increment version code to $newVersionCode and update version name to $newVersionName"
-          git push origin DevOps_SavyMinds
+          git commit -m "chore: increment version code to $newVersionCode and update version name to $newVersionName"
+          git push origin uat
 
           echo "::set-output name=new_version_code::$currentVersionCode"
           echo "::set-output name=new_version_name::$newVersionName"
