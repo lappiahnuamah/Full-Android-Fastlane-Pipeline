@@ -2,7 +2,7 @@ name: Android Build & Deploy
 on:
   push:
     branches:
-      - DevOps_SavyMinds
+      - uat
 jobs:
   deploy:
     runs-on: ubuntu-latest
