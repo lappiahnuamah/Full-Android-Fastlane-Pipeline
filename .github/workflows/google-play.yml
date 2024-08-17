@@ -89,7 +89,7 @@ jobs:
           channel: "stable"
 
       - name: Set Keystore Path Environment Variable
-        run: echo "KEYSTORE_PATH=${{github.workspace}}/upload-keystore.jks" >> $GITHUB_ENV
+        run: echo "KEYSTORE_PATH=${{github.workspace}}/playstore.jks" >> $GITHUB_ENV
 
       - name: Increase inotify watch limit
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p

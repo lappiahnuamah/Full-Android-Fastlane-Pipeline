@@ -90,8 +90,8 @@ android {
 
             storePassword '_savvyMinds.Terateck'
             keyPassword '_savvyMinds.Terateck'
-            keyAlias 'upload'
-            storeFile file("../../upload-keystore.jks")
+            keyAlias 'savvyminds'
+            storeFile file("../../playstore.jks")
         }
     }
 
