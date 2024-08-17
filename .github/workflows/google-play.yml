@@ -65,6 +65,7 @@ jobs:
           git config --global user.name "lappiahnuamah"
           git add version.properties
           git commit -m "chore: increment version code to $newVersionCode and update version name to $newVersionName"
+          git pull origin uat
           git push origin uat
 
           echo "::set-output name=new_version_code::$currentVersionCode"
