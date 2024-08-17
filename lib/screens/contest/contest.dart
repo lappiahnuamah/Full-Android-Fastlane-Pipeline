@@ -56,7 +56,7 @@ class ContestState extends State<Contest> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(d.pSH(16)),
+      padding: EdgeInsets.symmetric(horizontal: d.pSW(16), vertical: d.pSH(16)),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         CustomText(
           label: 'Multi Player',

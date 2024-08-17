@@ -8,6 +8,7 @@ import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/authentication/splashscreen.dart';
 import 'package:savyminds/screens/profile/components/key_card.dart';
 import 'package:savyminds/screens/records/components/record_rank_header.dart';
+import 'package:savyminds/screens/settings/settings.dart';
 import 'package:savyminds/utils/cache/content_mgt.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/next_screen.dart';
@@ -38,7 +39,8 @@ class _ProfileState extends State<Profile> {
     return Consumer2<GameItemsProvider, UserDetailsProvider>(
         builder: (context, gameItemsProvider, userDetailsProvider, child) {
       return Padding(
-        padding: EdgeInsets.all(d.pSH(16)),
+        padding:
+            EdgeInsets.symmetric(horizontal: d.pSW(16), vertical: d.pSH(16)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -50,17 +52,17 @@ class _ProfileState extends State<Profile> {
                   fontWeight: FontWeight.w700,
                   fontSize: 24,
                 ),
-
-                // InkWell(
-                //   onTap: () {
-                //     nextScreen(context, const Personalization());
-                //     //ƒ().clearAll();
-                //   },
-                //   child: const Icon(
-                //     Icons.settings,
-                //     color: AppColors.hintTextBlack,
-                //   ),
-                // ),
+                InkWell(
+                  onTap: () {
+                    nextScreen(context, const Settings());
+                    //ƒ().clearAll();
+                  },
+                  child: Icon(
+                    Icons.settings,
+                    color: AppColors.hintTextBlack,
+                    size: d.isTablet ? 50 : null,
+                  ),
+                ),
               ],
             ),
             SizedBox(height: d.pSH(22)),

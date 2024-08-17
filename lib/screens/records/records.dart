@@ -14,7 +14,7 @@ class _RecordsState extends State<Records> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(d.pSH(16)),
+      padding: EdgeInsets.symmetric(horizontal: d.pSW(25), vertical: d.pSH(16)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

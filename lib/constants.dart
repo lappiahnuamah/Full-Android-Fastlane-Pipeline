@@ -56,7 +56,7 @@ const CHATROOM_NOT_FOUND_ERROR_MESSAGE =
 const HALLOA_HELP_URL = "https://bit.ly/terateck-support";
 
 //stage
-const halloaBaseUrl = 'https://savyminds.linklounge.dev';
+const halloaBaseUrl = 'https://api.uat.savyminds.linklounge.dev';
 const halloaBaseTurnSeverUrl = 'turn:turn.stage.linklounge.dev:3478';
 const halloaBaseTurnSeverUrlHost = 'turn:turn.stage.linklounge.dev';
 const halloaBaseTurnSeverUrlUsername = 'halloa_user';

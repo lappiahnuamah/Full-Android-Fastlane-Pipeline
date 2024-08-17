@@ -57,7 +57,7 @@ class _ChangeDisplayNameState extends State<ChangeDisplayName> {
                   CustomText(
                     label:
                         "Please choose a display name that will be visible to others. Make sure it's unique, appropriate, and reflects how you'd like to be identified.",
-                    fontSize: getFontSize(15, size),
+                    fontSize: 15,
                     fontWeight: FontWeight.w400,
                   ),
                   const SizedBox(height: 20),

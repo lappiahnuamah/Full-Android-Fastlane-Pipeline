@@ -36,4 +36,7 @@ class AuthUrl {
 
   ///
   static const String changeDisplayName = "${baseUrl}check-display-name/";
+
+  // Delete Account //
+  static const String deactivate = "${baseUrl}user/deactivate/";
 }

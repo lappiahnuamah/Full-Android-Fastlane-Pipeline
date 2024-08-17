@@ -794,4 +794,41 @@ class Authentications {
       return false;
     }
   }
+
+  ////////////////////////////////////////////////////////
+  //////////////(- Delete Account -)////
+  Future deactivateAccount({
+    required BuildContext context,
+    required String password,
+  }) async {
+    bool hasNetWork = await ConnectionCheck().hasConnection();
+    if (hasNetWork) {
+      final String _accessToken =
+          Provider.of<UserDetailsProvider>(context, listen: false)
+              .getAccessToken();
+
+      try {
+        http.Response _response = await http.post(Uri.parse(AuthUrl.deactivate),
+            headers: {
+              "content-type": "application/json",
+              "accept": "application/json",
+              "Authorization": " Bearer $_accessToken"
+            },
+            body: jsonEncode({'password': password}));
+
+        if (_response.statusCode == 200) {
+          lg('deactivate response: ${_response.body}');
+          return true;
+        } else {
+          lg('deactivate error: ${_response.body}');
+          return ErrorResponse.fromJson(json.decode(_response.body));
+        }
+      } catch (e) {
+        lg('deactivate acoount e :$e');
+        return ErrorResponse(errorCode: 700, errorMsg: 'Unexpected error');
+      }
+    } else {
+      return ErrorResponse(errorCode: 900, errorMsg: 'No internet connection');
+    }
+  }
 }
