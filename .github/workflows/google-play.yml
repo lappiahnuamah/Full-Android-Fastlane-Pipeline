@@ -1,0 +1,121 @@
+name: Android Build & Deploy
+on:
+  push:
+    branches:
+      - uat
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3.3
+
+      - name: Install Fastlane Dependencies
+        run: |
+          cd android
+          bundle install
+
+      - name: Fetch Version Info from Google Play
+        id: fetch_version_info
+        run: |
+          cd android
+          bundle exec fastlane get_version_info
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+
+      - name: Increment Version Code and Update Version Name
+        id: increment_version
+        run: |
+          cd android
+          currentVersionCode=$(grep -o 'flutter.versionCode\s*=\s*[0-9]\+' version.properties | cut -d'=' -f2 | tr -d ' ')
+          currentVersionName=$(grep -o 'flutter.versionName\s*=\s*[^"]\+' version.properties | cut -d'=' -f2 | tr -d ' ')
+
+          if [ -z "$currentVersionCode" ]; then
+            echo "Error: versionCode not found"
+            exit 1
+          fi
+          if [ -z "$currentVersionName" ]; then
+            echo "Error: versionName not found"
+            exit 1
+          fi
+          echo "Current versionCode: $currentVersionCode"
+          echo "Current versionName: $currentVersionName"
+
+          versionNamePrefix="savyminds_alpha."
+          currentSuffix=${currentVersionName#"$versionNamePrefix"}
+          newSuffix=$((currentSuffix + 1))
+          newVersionName="${versionNamePrefix}${newSuffix}"
+          
+          sed -i "s/flutter.versionCode=[0-9]\+/flutter.versionCode=$currentVersionCode/" version.properties
+          sed -i "s/flutter.versionName=[^ ]\+/flutter.versionName=$newVersionName/" version.properties
+
+          echo "Updated version.properties:"
+          cat version.properties
+
+          git config --global user.email "lappiahnuamahfbc1999@gmail.com"
+          git config --global user.name "lappiahnuamah"
+          git add version.properties
+          git commit -m "Increment version code to $newVersionCode and update version name to $newVersionName"
+          git push origin DevOps_SavyMinds
+
+          echo "::set-output name=new_version_code::$currentVersionCode"
+          echo "::set-output name=new_version_name::$newVersionName"
+      - name: Update GitHub Secret with New Version Code
+        run: |
+          echo "Updating GitHub secret with new version code"
+          gh secret set VERSION_CODE -b"${{ steps.increment_version.outputs.new_version_code }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: "19"
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+
+      - name: Set Keystore Path Environment Variable
+        run: echo "KEYSTORE_PATH=${{github.workspace}}/upload-keystore.jks" >> $GITHUB_ENV
+
+      - name: Increase inotify watch limit
+        run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+      - name: Build Android App Package
+        run: |
+          cd android
+          flutter clean
+          flutter build appbundle --release --no-tree-shake-icons
+
+      - name: Sign the Android App Bundle
+        run: |
+          cd build/app/outputs/bundle/release
+          jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 \
+            -keystore $KEYSTORE_PATH \
+            -storepass ${{ secrets.KEYSTORE_STORE_PASSWORD }} \
+            app-release.aab ${{ secrets.KEYSTORE_KEY_ALIAS }}
+
+      - name: Verify the APK
+        run: |
+          cd build/app/outputs/bundle/release
+          jarsigner -verify -verbose -certs app-release.aab
+
+      - name: Deploy to Google Play
+        run: |
+          cd android
+          bundle exec fastlane distribute_alpha_google_play
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
