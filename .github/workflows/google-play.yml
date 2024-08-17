@@ -102,6 +102,9 @@ jobs:
           cd android
           flutter pub get
           flutter clean
+          rm -rf ~/.gradle/caches/
+          rm -rf build/
+          rm -rf android/build/
           flutter build appbundle --release --no-tree-shake-icons
 
       - name: Sign the Android App Bundle
