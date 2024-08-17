@@ -12,6 +12,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install Fastlane Dependencies
+        run: |
+          sudo -i
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
