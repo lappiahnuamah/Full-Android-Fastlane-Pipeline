@@ -119,7 +119,6 @@ jobs:
       #   run: |
       #     cd build/app/outputs/bundle/release
       #     jarsigner -verify -verbose -certs app-release.aab
-
       - name: Deploy to Google Play
         run: |
           cd android
