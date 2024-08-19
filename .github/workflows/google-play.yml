@@ -91,7 +91,7 @@ jobs:
           channel: "stable"
 
       - name: Set Keystore Path Environment Variable
-        run: echo "KEYSTORE_PATH=${{github.workspace}}/savyminds/upload-keystore.jks" >> $GITHUB_ENV
+        run: echo "KEYSTORE_PATH=${{github.workspace}}/upload-keystore.jks" >> $GITHUB_ENV
 
       - name: Increase inotify watch limit
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
@@ -102,9 +102,9 @@ jobs:
           cd android
           flutter pub get
           flutter clean
-          rm -rf ~/.gradle/caches/
-          rm -rf build/
-          rm -rf android/build/
+          # rm -rf ~/.gradle/caches/
+          # rm -rf build/
+          # rm -rf android/build/
           flutter build appbundle --release --no-tree-shake-icons
 
       - name: Sign the Android App Bundle
