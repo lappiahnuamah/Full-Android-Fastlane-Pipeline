@@ -6,6 +6,18 @@ plugins {
 
 }
 
+def versionProperties = new Properties()
+def versionPropertiesFile = rootProject.file('version.properties')
+if (versionPropertiesFile.exists()) {
+    versionProperties.load(new FileInputStream(versionPropertiesFile))
+    println "Version properties loaded successfully"
+    println "flutterVersionCode: ${versionProperties['flutter.versionCode']}"
+    println "flutterVersionName: ${versionProperties['flutter.versionName']}"
+} else {
+    println "Version properties file not found"
+}
+
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -14,14 +26,24 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+// def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+// if (flutterVersionCode == null) {
+//     flutterVersionCode = '1'
+// }
+
+// def flutterVersionName = localProperties.getProperty('flutter.versionName')
+// if (flutterVersionName == null) {
+//     flutterVersionName = '1.0'
+// }
+
+def flutterVersionCode = versionProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
     flutterVersionCode = '1'
 }
-
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
+ 
+def flutterVersionName = versionProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+    flutterVersionName = 'savyminds_alpha.1'
 }
 
 def keystoreProperties = new Properties()
@@ -38,6 +60,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        warning 'Deprecation'
     }
 
     defaultConfig {
@@ -57,10 +83,15 @@ android {
 
     signingConfigs {
         release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword keystoreProperties['storePassword']
+            // keyAlias keystoreProperties['keyAlias']
+            // keyPassword keystoreProperties['keyPassword']
+            // storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            // storePassword keystoreProperties['storePassword']
+
+            storePassword '_savvyMinds.Terateck'
+            keyPassword '_savvyMinds.Terateck'
+            keyAlias 'upload'
+            storeFile file("../../upload-keystore.jks")
         }
     }
 
@@ -69,8 +100,7 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig signingConfigs.release
-            signingConfig signingConfigs.debug
-
+            // signingConfig signingConfigs.debug
         }
     }
 }
