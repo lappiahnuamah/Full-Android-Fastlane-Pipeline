@@ -90,8 +90,8 @@ jobs:
         with:
           channel: "stable"
 
-      # - name: Set Keystore Path Environment Variable
-      #   run: echo "KEYSTORE_PATH=${{github.workspace}}/upload-keystore.jks" >> $GITHUB_ENV
+      - name: Set Keystore Path Environment Variable
+        run: echo "KEYSTORE_PATH=${{github.workspace}}/savyminds/upload-keystore.jks" >> $GITHUB_ENV
 
       - name: Increase inotify watch limit
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
@@ -111,7 +111,7 @@ jobs:
         run: |
           cd build/app/outputs/bundle/release
           jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 \
-            -keystore ../../../upload-keystore.jks \
+            -keystore $KEYSTORE_PATH \
             -storepass ${{ secrets.KEYSTORE_STORE_PASSWORD }} \
             app-release.aab ${{ secrets.KEYSTORE_KEY_ALIAS }}
       # Comment out for now
