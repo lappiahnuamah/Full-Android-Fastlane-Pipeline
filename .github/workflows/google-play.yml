@@ -111,11 +111,11 @@ jobs:
             -keystore $KEYSTORE_PATH \
             -storepass ${{ secrets.KEYSTORE_STORE_PASSWORD }} \
             app-release.aab ${{ secrets.KEYSTORE_KEY_ALIAS }}
-      # Comment out for now
-      # - name: Verify the APK
-      #   run: |
-      #     cd build/app/outputs/bundle/release
-      #     jarsigner -verify -verbose -certs app-release.aab
+
+      - name: Verify the APK
+        run: |
+          cd build/app/outputs/bundle/release
+          jarsigner -verify -verbose -certs app-release.aab
       
       
       - name: Deploy to Google Play
