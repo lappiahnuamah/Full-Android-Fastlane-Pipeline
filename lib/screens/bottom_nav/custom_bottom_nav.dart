@@ -1,9 +1,10 @@
-import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
+import 'package:savyminds/providers/audio_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/categories/categories.dart';
 import 'package:savyminds/screens/contest/contest.dart';
@@ -24,17 +25,14 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
   int currentIndex = 0;
   final GlobalKey<SoloQuestState> _soloQuestKey = GlobalKey<SoloQuestState>();
   final GlobalKey<ContestState> _contestKey = GlobalKey<ContestState>();
+  late AudioProvider audioProvider;
 
   @override
   void initState() {
     currentIndex = widget.currentIndex;
-    playMusic();
+    audioProvider = context.read<AudioProvider>();
+    audioProvider.startGameBackgroundMusic();
     super.initState();
-  }
-
-  void playMusic() async {
-    FlameAudio.bgm.initialize();
-    FlameAudio.bgm.play('game_intro.mp3', volume: 0.5);
   }
 
   @override

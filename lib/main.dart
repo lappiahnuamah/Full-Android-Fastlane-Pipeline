@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/providers/appsocket_provider.dart';
+import 'package:savyminds/providers/audio_provider.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/providers/contest_provider.dart';
 import 'package:savyminds/providers/dark_theme_provider.dart';
@@ -47,7 +48,8 @@ void main() async {
     ChangeNotifierProvider(create: (_) => SoloQuestProvider()),
     ChangeNotifierProvider(create: (_) => ContestProvider()),
     ChangeNotifierProvider(create: (_) => GameItemsProvider()),
-    ChangeNotifierProvider(create: (_) => GameTypeProvider())
+    ChangeNotifierProvider(create: (_) => GameTypeProvider()),
+    ChangeNotifierProvider(create: (_)=> AudioProvider())
   ], child: const MyApp()));
 }
 

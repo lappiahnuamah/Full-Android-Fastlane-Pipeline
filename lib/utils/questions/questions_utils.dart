@@ -57,11 +57,14 @@ class QuestionsUtils {
 
       final levelWeight = double.parse(levelMatrix.levelWeight);
 
-      return (complexityWeight * difficultyWeight * (1 / levelWeight) * 20)
-          .round();
+      final questionTime =
+          (complexityWeight * difficultyWeight * (1 / levelWeight) * 20)
+              .round();
+
+      return questionTime == 0 ? 20 : questionTime;
     } catch (e) {
       lg("getQuestionsTime Error: $e");
-      return 0;
+      return 20;
     }
   }
 

@@ -9,15 +9,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/animations/blink_animation.dart';
-//import 'package:savyminds/animations/increasing_number.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/questions/option_model.dart';
 import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/models/questions/question_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
+import 'package:savyminds/providers/audio_provider.dart';
 import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/providers/game_provider.dart';
+import 'package:savyminds/resources/app_audio_path.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_enums.dart';
 import 'package:savyminds/resources/app_fonts.dart';
@@ -65,6 +66,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
   PageController pageController = PageController(initialPage: 0);
   ValueNotifier<int> seconds = ValueNotifier<int>(10);
   ValueNotifier<List<int>> fiftyfityList = ValueNotifier<List<int>>([]);
+  late AudioProvider audioProvider;
   OptionModel? selectedAnswer;
   int correctAnswers = 0;
 
@@ -110,11 +112,15 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
   //swap
   late NewQuestionModel question;
 
+  //
+  AudioPlayer? countDownPlayer;
+
   startTimer(int? time) {
     seconds.value = time ?? 10;
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       seconds.value = seconds.value - 1;
       if (seconds.value == 0) {
+        countDownPlayer?.stop();
         if (selectedIndex < widget.questionList.length - 1) {
           if (swapQuestion) {
             swapQuestion = false;
@@ -129,14 +135,14 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
             answerStreak = 0;
           }
           timer.cancel();
-          FlameAudio.bgm.stop();
+          audioProvider.stopBackgroundMusic();
         } else {
           if (selectedAnswer == null) {
             answerStreak = 0;
           }
           timer.cancel();
-          FlameAudio.bgm.stop();
-          FlameAudio.play('outro_game_over.mp3');
+          audioProvider.stopBackgroundMusic();
+          audioProvider.startSoundEffect(AppAudioPaths.gameOver);
           if (widget.isDailyTraining) {
             nextScreen(
                 context,
@@ -159,11 +165,10 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
         }
       }
       if (seconds.value == 5) {
-        FlameAudio.bgm.play('five_sec_more.mp3');
+        countDownPlayer =
+            await audioProvider.startSoundEffect(AppAudioPaths.fiveSecondsMore);
       }
-      if (seconds.value == 3) {
-        // shakeGoldenBadge();
-      }
+      if (seconds.value == 3) {}
     });
   }
 
@@ -174,9 +179,10 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
   @override
   void initState() {
     gameItemsProvider = context.read<GameItemsProvider>();
+    audioProvider = context.read<AudioProvider>();
     swapQuestionList = widget.swapQuestions;
     startQuestion(0);
-    FlameAudio.bgm.stop();
+    audioProvider.stopBackgroundMusic();
     controller = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
@@ -193,7 +199,11 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
         context: context,
         gameType: widget.quest.id,
         level: widget.level.name.capitalize());
+
+    dev.log('time:$time');
+
     startTimer(time);
+    playNewQuestionSound();
   }
 
   @override
@@ -223,16 +233,20 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                               onTap: () async {
                                 goBack();
                               },
-                              child: Card(
-                                child: Padding(
-                                  padding: EdgeInsets.all(
-                                      d.isTablet ? d.pSH(12) : d.pSH(6)),
-                                  child: SvgPicture.network(
-                                    widget.quest.icon,
-                                    height: d.isTablet ? d.pSH(25) : d.pSH(22),
-                                    colorFilter: ColorFilter.mode(
-                                      AppColors.borderPrimary,
-                                      BlendMode.srcIn,
+                              child: SizedBox(
+                                width: d.pSH(40), //TODO:Later
+                                child: Card(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(
+                                        d.isTablet ? d.pSH(12) : d.pSH(6)),
+                                    child: SvgPicture.network(
+                                      widget.quest.icon,
+                                      height:
+                                          d.isTablet ? d.pSH(25) : d.pSH(22),
+                                      colorFilter: ColorFilter.mode(
+                                        AppColors.borderPrimary,
+                                        BlendMode.srcIn,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -274,12 +288,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                 selectedIndex = val;
                                 hideDoublePointsKey = false;
                                 hideMysteryBoxKey = false;
-                                if (widget
-                                    .questionList[selectedIndex].isGolden) {
-                                  FlameAudio.play('when_question_is_star.mp3');
-                                } else {
-                                  FlameAudio.play('new_question.mp3');
-                                }
+                                playNewQuestionSound();
                                 final question =
                                     widget.questionList[selectedIndex];
                                 final questionTime =
@@ -413,8 +422,12 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                                 ),
                                                 SizedBox(width: d.pSH(30)),
                                                 GameTopKeysList(
-                                                  showHint:
-                                                      question.hint.isNotEmpty,
+                                                  showHint: question
+                                                          .hint.isNotEmpty &&
+                                                      question.hasHint &&
+                                                      question.hint
+                                                              .toLowerCase() !=
+                                                          'nan',
                                                   showMysteryBox:
                                                       question.hasMysteryBox &&
                                                           !hideMysteryBoxKey,
@@ -451,7 +464,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                                             width: d.pSH(
                                                                 d.isTablet
                                                                     ? 35
-                                                                    : 25),
+                                                                    : 35),
                                                             child: Text(
                                                               '$time',
                                                               textAlign:
@@ -743,6 +756,14 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
         ));
   }
 
+  void playNewQuestionSound() {
+    if (widget.questionList[selectedIndex].isGolden) {
+      audioProvider.startSoundEffect(AppAudioPaths.newStarQuestion);
+    } else {
+      audioProvider.startSoundEffect(AppAudioPaths.newQuestion);
+    }
+  }
+
   void answerButtonPressed(
       {required OptionModel option,
       required NewQuestionModel question,
@@ -752,13 +773,11 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
     selectedAnswer = option;
     breakTime = true;
     timer?.cancel();
-    FlameAudio.bgm.stop();
+    countDownPlayer?.stop();
     setState(() {});
 
-    dev.log('left time: ${seconds.value}');
-
     if (option.isCorrect) {
-      FlameAudio.play('correct_ans.mp3');
+      audioProvider.startSoundEffect(AppAudioPaths.correctAnswer);
       final questionPoint = QuestionsUtils.getQuestionPoint(
         gameType: widget.quest.id,
         level: widget.level.name.capitalize(),
@@ -782,10 +801,8 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
         gameItemsProvider.increaseKeyAmount(GameKeyType.fiftyFifty);
         answerStreak = 0;
       }
-      // gameProvider.increaseAnswerStreak(
-      //     context: context, hasGolden: question.isGolden && seconds.value > 6);
     } else {
-      FlameAudio.play('wong_ans.mp3');
+      audioProvider.startSoundEffect(AppAudioPaths.wrongAnswer);
       if ((gameItemsProvider.userKeys[GameKeyType.retakeKey]?.amount ?? 0) >
           0) {
         setState(() {
@@ -884,7 +901,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
   ////////////////////////////####################////////////////////////
   _showHintDialog(String hint) async {
     timer?.cancel();
-    FlameAudio.bgm.stop();
+    audioProvider.stopBackgroundMusic();
     await showDialog(
       context: context,
       builder: ((context) => AlertDialog(content: GameHintDialog(hint: hint))),
@@ -896,7 +913,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
 
   _showMysteryBox() async {
     timer?.cancel();
-    FlameAudio.bgm.stop();
+    audioProvider.stopBackgroundMusic();
     hideMysteryBoxKey = true;
     setState(() {});
     await showDialog(
@@ -908,7 +925,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
 
   _freezeTime(NewQuestionModel question) {
     try {
-      FlameAudio.bgm.stop();
+      audioProvider.stopBackgroundMusic();
       final questionTime = QuestionsUtils.getQuestionsTime(
           complexityWeight: question.complexityWeight.toDouble(),
           difficultyWeight: question.difficultyWeight.toDouble(),
@@ -944,7 +961,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
         }
       }
       fiftyfityList.value = removeList;
-      FlameAudio.play('when_50_50_clicked.mp3');
+      audioProvider.startSoundEffect(AppAudioPaths.fiftyFiftyClicked);
       setState(() {});
       gameItemsProvider.reduceKeyAmount(GameKeyType.fiftyFifty);
     }
@@ -956,7 +973,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
       required double questionTime}) {
     for (var element in question.options) {
       if (element.isCorrect) {
-        FlameAudio.play('correct_ans.mp3');
+        audioProvider.startSoundEffect(AppAudioPaths.correctAnswer);
         selectedAnswer = element;
         break;
       }
@@ -1020,7 +1037,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
 
   moveToNextScreen({required int index, required int questionId}) {
     timer?.cancel();
-    FlameAudio.bgm.stop();
+    audioProvider.stopBackgroundMusic();
     if (swapQuestion) {
       swapQuestion = false;
       setState(() {});
@@ -1087,7 +1104,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
             TextButton(
               onPressed: () {
                 timer?.cancel();
-                FlameAudio.bgm.stop();
+                audioProvider.stopBackgroundMusic();
                 Navigator.pop(dialogContext, true);
               },
               child: const Text(

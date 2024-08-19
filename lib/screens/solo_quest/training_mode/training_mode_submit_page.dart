@@ -11,6 +11,7 @@ import 'package:savyminds/models/categories/category_level_model.dart';
 import 'package:savyminds/models/categories/category_rank_model.dart';
 import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
+import 'package:savyminds/providers/audio_provider.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_fonts.dart';
@@ -42,6 +43,7 @@ class TrainingModeSubmitPage extends StatefulWidget {
 }
 
 class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
+  late AudioProvider audioProvider;
   LevelName levelName = LevelName.beginner;
   int levelUpperBound = 1999;
   int levelLowerBound = 0;
@@ -52,6 +54,11 @@ class _TrainingModeSubmitPageState extends State<TrainingModeSubmitPage> {
 
   @override
   void initState() {
+    audioProvider = context.read<AudioProvider>();
+    Future.delayed(const Duration(seconds: 1), () {
+      audioProvider.startGameBackgroundMusic();
+    });
+    audioProvider.startGameBackgroundMusic();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       getSomeData();
     });

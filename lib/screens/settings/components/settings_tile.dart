@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/widgets/custom_text.dart';
@@ -10,10 +9,12 @@ class SettingsTile extends StatelessWidget {
     required this.title,
     required this.description,
     required this.onTap,
+    this.trailing,
   });
   final String title;
   final String description;
   final VoidCallback onTap;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -26,21 +27,25 @@ class SettingsTile extends StatelessWidget {
             //  top: BorderSide(color: AppColors.hintTextBlack.withOpacity(0.6)),
           )),
       child: ListTile(
-        title: CustomText(
-          label: title,
-          fontSize: d.isTablet ? 14 : 16,
-          fontWeight: FontWeight.w600,
-        ),
-        subtitle: Padding(
-          padding: EdgeInsets.only(top: d.pSH(5)),
+        title: Padding(
+          padding: EdgeInsets.symmetric(
+              vertical: description.isEmpty ? d.pSH(20) : 0),
           child: CustomText(
-            label: description,
-            fontWeight: FontWeight.w400,
-            color: AppColors.hintTextBlack,
-            fontSize: d.isTablet ? 10 : 12,
+            label: title,
+            fontSize: d.isTablet ? 14 : 16,
+            fontWeight: FontWeight.w600,
           ),
         ),
+        subtitle: description.isEmpty
+            ? null
+            : CustomText(
+                label: description,
+                fontWeight: FontWeight.w400,
+                color: AppColors.hintTextBlack,
+                fontSize: d.isTablet ? 10 : 12,
+              ),
         onTap: onTap,
+        trailing: trailing,
       ),
     );
   }

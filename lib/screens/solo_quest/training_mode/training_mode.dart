@@ -13,6 +13,7 @@ import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/categories/category_level_model.dart';
 import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
+import 'package:savyminds/providers/audio_provider.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
@@ -54,6 +55,7 @@ class _TrainingModeState extends State<TrainingMode> {
   late CategoryProvider categoryProvider;
   late GameProvider gameProvider;
   bool questionsLoading = false;
+  late AudioProvider audioProvider;
 
   CategoryModel? selectedCategory;
   List levelList = [];
@@ -63,6 +65,7 @@ class _TrainingModeState extends State<TrainingMode> {
   void initState() {
     categoryProvider = context.read<CategoryProvider>();
     gameProvider = context.read<GameProvider>();
+    audioProvider = context.read<AudioProvider>();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       selectedCategory = widget.category;
@@ -293,7 +296,9 @@ class _TrainingModeState extends State<TrainingMode> {
               level: level,
               isDailyTraining: widget.isDailyTraining),
           TransitionType.combined,
-        );
+        ).then((value) {
+          audioProvider.startGameBackgroundMusic();
+        });
       }
     } else {
       Fluttertoast.showToast(

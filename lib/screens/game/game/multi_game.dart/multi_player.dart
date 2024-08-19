@@ -6,7 +6,7 @@ import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/game/game/components/game_background.dart';
 import 'package:savyminds/screens/game/game/components/game_header.dart';
 import 'package:savyminds/screens/game/game/multi_game.dart/multi_shared_code.dart';
-import 'package:savyminds/screens/game/players.dart';
+// import 'package:savyminds/screens/game/players.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
@@ -34,7 +34,7 @@ class MultiPlayer extends StatelessWidget {
                     backText: 'Back',
                     isMultiPlayer: true,
                     onTap: () {
-                      nextScreen(context, const PlayersSelect());
+                      // nextScreen(context, const PlayersSelect());
                     },
                   ),
                   Expanded(

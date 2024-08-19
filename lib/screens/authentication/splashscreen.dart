@@ -13,6 +13,7 @@ import 'package:savyminds/database/new_game_db_functions.dart';
 import 'package:savyminds/functions/auth/auth_functions.dart';
 import 'package:savyminds/functions/games/game_function.dart';
 import 'package:savyminds/models/auth/app_user.dart';
+import 'package:savyminds/providers/audio_provider.dart';
 import 'package:savyminds/providers/dark_theme_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_gradients.dart';
@@ -149,15 +150,18 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  void loadAndSendUserHome(context, Map<String, String> allValues) {
+  Future<void> loadAndSendUserHome(
+      BuildContext context, Map<String, String> allValues) async {
     log('access token: ${allValues['accessToken']}');
     log('credentials: ${allValues['credentials']}');
+    AudioProvider audioProvider = context.read<AudioProvider>();
     Provider.of<UserDetailsProvider>(context, listen: false)
         .setAccessToken(allValues['accessToken']!);
     AppUser user =
         AppUser.fromSecureJson(json.decode(allValues['credentials'] ?? ''));
     Provider.of<UserDetailsProvider>(context, listen: false)
         .setUserDetails(user);
+    await audioProvider.loadCachedAudioSettings();
     if (context.mounted) {
       GameFunction().getGameStreaks(context: context);
     }

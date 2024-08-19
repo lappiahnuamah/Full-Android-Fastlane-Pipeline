@@ -25,4 +25,11 @@ class SharedPreferenceValues {
   //Records Ranks
   static const String categoryRanks = 'CATEGORY-RANKS';
   static const String soloAndMultiRanks = 'SOLO-AND-MULTI-';
+
+  /////SETTINGS
+  static const String settingsBackgroundMusic = "SETTINGS_BACKGROUND_MUSIC";
+  static const String settingsSoundEffect = "SETTINGS_SOUND_EFFECT";
+  static const String settingsVolume = "SETTINGS_VOLUME";
+  static const String settingsLanguage = "SETTINGS_LANGUAGE";
+  static const String settingsNotification = "SETTINGS_NOTIFICATION";
 }
