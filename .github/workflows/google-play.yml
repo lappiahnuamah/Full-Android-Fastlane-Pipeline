@@ -2,7 +2,7 @@ name: Android Build & Deploy
 on:
   push:
     branches:
-      - uat
+      - DevOps_SavyMinds
 jobs:
   deploy:
     runs-on: self-hosted
