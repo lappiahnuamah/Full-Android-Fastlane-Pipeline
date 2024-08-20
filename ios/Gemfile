@@ -1,0 +1,7 @@
+source "https://rubygems.org"
+
+gem "fastlane"
+gem 'dotenv'
+gem 'mutex_m'
+gem 'abbrev'
+gem 'bigdecimal'

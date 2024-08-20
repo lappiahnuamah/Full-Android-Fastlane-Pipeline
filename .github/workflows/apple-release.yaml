@@ -1,0 +1,86 @@
+name: Apple Release
+
+on:
+  push:
+    branches:
+      - iosPipeline  
+
+jobs:
+  build-and-deploy-ios:
+    runs-on: macos-latest
+    permissions:
+      contents: write
+       
+
+    steps:
+      - name: Set up git and fetch all history for all branches and tags
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1  # Change to 0 if you need full history
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3.4"
+          bundler-cache: true  # Enable bundler cache
+      
+      - name: Install OpenSSL
+        run: brew install openssl
+
+      - name: Bundle install for iOS Gemfile
+        timeout-minutes: 5
+        run: |
+          cd ios
+          bundle install
+      
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: "3.3.0"
+
+      - name: Set up Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.19.2"
+          channel: "stable"
+          cache: true
+
+      - name: Set up melos
+        run: flutter pub global activate melos
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+            .melos_tool
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
+
+      - name: Melos Bootstrap      
+        run: melos bs
+
+
+      - name: Create and unlock keychain
+        run: |
+          security create-keychain -p ${{ secrets.MATCH_KEYCHAIN_PASSWORD }} build.keychain 
+          echo "${{ secrets.DISTRIBUTION_P12_FILE }}" | base64 --decode > /tmp/distribution.p12
+          security import /tmp/distribution.p12 -k build.keychain -P ${{ secrets.P12_PASSWORD }} -T /usr/bin/codesign
+          security list-keychains -s build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p ${{ secrets.MATCH_KEYCHAIN_PASSWORD }} build.keychain
+          security set-keychain-settings -t 1200 -u build.keychain
+
+      - name: Find Code Signing Identities
+        run: security find-identity -v -p codesigning
+      
+      - name: Build and Deploy to TestFlight
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.GIT_PAT_TOKEN }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          cd ios
+          bundle exec fastlane release_beta
