@@ -58,7 +58,15 @@ jobs:
 
       - name: Melos Bootstrap      
         run: melos bs
+      
+      - name: Pass .env values to file
+        run: |
+          echo "$API_CONFIG_VARIABLES" >> .env.default
 
+        shell: bash
+        env:
+          API_CONFIG_VARIABLES: ${{secrets.ENV}}
+          CI: false
 
       - name: Create and unlock keychain
         run: |
