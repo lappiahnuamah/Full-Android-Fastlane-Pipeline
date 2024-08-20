@@ -5,8 +5,8 @@ default_platform(:ios)
 
 platform :ios do
   lane :create_and_unlock_keychain do
-    keychain_name = "login.keychain-db"
-    keychain_password = "    "
+    keychain_name = "fastlane_temp.keychain-db"
+    keychain_password = "fastlane"
 
     # Create the keychain
     sh "security create-keychain -p #{keychain_password} #{keychain_name}"
