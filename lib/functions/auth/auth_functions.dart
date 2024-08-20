@@ -831,4 +831,67 @@ class Authentications {
       return ErrorResponse(errorCode: 900, errorMsg: 'No internet connection');
     }
   }
+
+  ////
+  Future<dynamic> deactivateOtpSend(
+      {required BuildContext context, required String email}) async {
+    final String _accessToken =
+        Provider.of<UserDetailsProvider>(context, listen: false)
+            .getAccessToken();
+    log('accessToken: $_accessToken');
+    log('email: $email');
+    try {
+      http.Response response = await http.post(
+        Uri.parse(AuthUrl.deactivateOtpSend),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "Authorization": " Bearer $_accessToken"
+        },
+        body: json.encode({
+          "email": email,
+        }),
+      );
+      log('response.body: ${response.body}');
+      if (response.statusCode == 200) {
+        return true;
+      } else if (response.statusCode == 400) {
+        return ErrorResponse.fromJson(json.decode(response.body));
+      }
+    } catch (e) {
+      return ErrorResponse(errorCode: 700, errorMsg: 'Unexpected error');
+    }
+  }
+
+//   {
+//   "success": true,
+//   "message": "OTP has been sent to your email or phone number."
+// }
+
+  Future<dynamic> deactivateOtpVerify(
+      {required BuildContext context, required String otp}) async {
+    final String _accessToken =
+        Provider.of<UserDetailsProvider>(context, listen: false)
+            .getAccessToken();
+    try {
+      http.Response response = await http.post(
+        Uri.parse(AuthUrl.deactivateOtpSend),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json",
+          "Authorization": " Bearer $_accessToken"
+        },
+        body: json.encode({
+          "otp": otp,
+        }),
+      );
+      if (response.statusCode == 200) {
+        return true;
+      } else if (response.statusCode == 400) {
+        return ErrorResponse.fromJson(json.decode(response.body));
+      }
+    } catch (e) {
+      return ErrorResponse(errorCode: 700, errorMsg: 'Unexpected error');
+    }
+  }
 }

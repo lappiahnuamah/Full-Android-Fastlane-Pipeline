@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:savyminds/constants.dart';
+import 'package:savyminds/functions/auth/auth_functions.dart';
+import 'package:savyminds/models/error_response.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/screens/authentication/deactivate_otp_verify.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/func_new.dart';
 import 'package:savyminds/utils/validator.dart';
@@ -19,12 +23,16 @@ class DeactivateAccount extends StatefulWidget {
 }
 
 class _DeactivateAccountState extends State<DeactivateAccount> {
-  TextEditingController passwordController = TextEditingController();
-  final GlobalKey<FormState> _deactivatepasswordFormKey =
-      GlobalKey<FormState>();
-  bool hidePassword = true;
-  String password = '';
+  TextEditingController EmailController = TextEditingController();
+  final GlobalKey<FormState> _deactivateEmailFormKey = GlobalKey<FormState>();
+  String email = '';
   bool isLoading = false;
+
+  String otpVerifyErrorMsg = '';
+
+  bool isEmailVerified = false;
+
+  String otp = '';
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -130,39 +138,25 @@ class _DeactivateAccountState extends State<DeactivateAccount> {
                   height: d.pSH(24),
                 ),
                 ///////////////////////////////////////////////////////
-                //////////////(- Password textfeild -)/////////////////
+                //////////////(- Email textfeild -)/////////////////
                 Form(
-                  key: _deactivatepasswordFormKey,
+                  key: _deactivateEmailFormKey,
                   child: CustomTextFieldWithLabel(
-                    key: const ValueKey('password-deactivate'),
-                    controller: passwordController,
-                    labelText: 'Password',
-                    hintText: "Enter password",
-                    obscureText: hidePassword,
-                    prefixIcon: Icons.lock_outline,
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        setState(() {
-                          hidePassword = !hidePassword;
-                        });
-                      },
-                      icon: Icon(
-                        hidePassword
-                            ? Icons.remove_red_eye_outlined
-                            : Icons.visibility_off,
-                        size: d.pSH(22),
-                        color: AppColors.kIconColor,
-                      ),
-                    ),
-                    validator: (value) =>
-                        AuthValidate().validateLoginPassword(value),
+                    controller: EmailController,
+                    labelText: 'Email',
+                    hintText: "Enter your email",
+                    prefixIcon: Icons.mail_outlined,
+                    validator: (value) => AuthValidate().validateEmail(value),
                     onChanged: (value) {
-                      password = value ?? '';
+                      email = value ?? '';
                       setState(() {});
                       return '';
                     },
+                    onSaved: (p0) {
+                      email = p0 ?? "";
+                    },
                     onTap: () {
-                      _deactivatepasswordFormKey.currentState?.reset();
+                      _deactivateEmailFormKey.currentState?.reset();
                       setState(() {});
                     },
                   ),
@@ -171,36 +165,34 @@ class _DeactivateAccountState extends State<DeactivateAccount> {
                   height: d.pSH(24),
                 ),
 
-                ///Deactivate button
+                ///Verify / Deactivate button
                 SizedBox(
                   height: d.isTablet ? d.pSH(45) : null,
                   width: double.infinity,
                   child: CustomButton(
-                    onTap: password.isEmpty
-                        ? () {
-                            _deactivatepasswordFormKey.currentState?.validate();
-                            setState(() {});
-                            (() {});
-                          }
-                        : () {
-                            _deactivateAccount();
-                          },
+                    onTap: () {
+                      if (isEmailVerified) {
+                        _deactivateAccount();
+                      } else {
+                        _sendEmailOTP();
+                      }
+                    },
                     height: d.isTablet ? d.pSH(60) : null,
                     child: Padding(
                       padding: EdgeInsets.all(d.pSH(6)),
                       child: Text(
-                        'Deactivate',
+                        isEmailVerified ? 'Deactivate' : 'Verify Email',
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w700,
                             fontSize: d.pSH(17)),
                       ),
                     ),
-                    // style: TextButton.styleFrom(
-                    //   backgroundColor: AppColors.kPrimaryColor,
-                    // ),
                   ),
-                )
+                ),
+                SizedBox(
+                  height: d.pSH(24),
+                ),
               ],
             ),
           ),
@@ -213,21 +205,21 @@ class _DeactivateAccountState extends State<DeactivateAccount> {
           ? LoadIndicator(
               child: appDialog(
                   context: context,
-                  loadingMessage: ' Deactivating account ...'))
+                  loadingMessage: isEmailVerified
+                      ? ' Deactivating account ...'
+                      : 'Loading ...'),
+            )
           : const SizedBox()
     ]);
   }
 
   ///
   ////Deactivate Accounts
-  Future _deactivateAccount() async {
+  Future<void> _deactivateAccount() async {
     FocusManager.instance.primaryFocus?.unfocus();
-    setState(() {
-      isLoading = true;
-    });
 
     // var response = await AcccountFunctions()
-    //     .deactivateAccount(context: context, password: password.trim());
+    //     .deactivateAccount(context: context, Email: Email.trim());
 
     // if (response == true) {
     //   ContentManagement().clearAll();
@@ -251,5 +243,72 @@ class _DeactivateAccountState extends State<DeactivateAccount> {
     //     showSnackBar(context, response.errorMsg);
     //   }
     // }
+  }
+
+  Future<void> _sendEmailOTP() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    if (_deactivateEmailFormKey.currentState?.validate() ?? false) {
+      _deactivateEmailFormKey.currentState?.save();
+      setState(() {
+        isLoading = true;
+      });
+
+      var response = await Authentications()
+          .deactivateOtpSend(context: context, email: email);
+      setState(() {
+        isLoading = false;
+      });
+      if (response == true) {
+        showOTPVerifyDialog();
+      } else if (response is ErrorResponse) {
+        Fluttertoast.showToast(msg: response.errorMsg ?? 'Failed to send otp');
+      }
+    }
+  }
+
+  Future<void> _verifyOTP() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    if (_deactivateEmailFormKey.currentState?.validate() ?? false) {
+      _deactivateEmailFormKey.currentState?.save();
+      setState(() {
+        isLoading = true;
+      });
+
+      var response = await Authentications()
+          .deactivateOtpVerify(context: context, otp: otp);
+      setState(() {
+        isLoading = false;
+      });
+      if (response == true) {
+        //Log correct OTP
+      } else if (response is ErrorResponse) {
+        Fluttertoast.showToast(msg: response.errorMsg ?? 'Failed to send otp');
+      }
+    }
+  }
+
+  showOTPVerifyDialog() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          insetPadding: EdgeInsets.symmetric(horizontal: d.pSW(15)),
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: d.pSW(15), vertical: d.pSH(25)),
+          content: DeactivateOTPVerify(
+            onResendOTP: () {},
+            verifyOTP: (otpValue) {
+              Navigator.pop(context);
+              otp = otpValue;
+              _verifyOTP();
+            },
+            isLoading: isLoading,
+            errorMsg: otpVerifyErrorMsg,
+          ),
+        );
+      },
+    );
   }
 }

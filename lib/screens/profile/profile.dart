@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/games/game_function.dart';
@@ -269,6 +270,8 @@ class _ProfileState extends State<Profile> {
     gameItemsProvider.clearStreaks();
     ContentManagement().clearAll();
     SharedPreferencesHelper.clearCache();
+    final GoogleSignIn _googleSignIn = GoogleSignIn();
+    await _googleSignIn.signOut();
     nextScreenCloseOthers(context, const SplashScreen());
   }
 }
