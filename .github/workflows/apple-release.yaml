@@ -91,4 +91,4 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           cd ios
-          bundle exec fastlane release_beta
+          bundle exec fastlane release_beta --verbose
