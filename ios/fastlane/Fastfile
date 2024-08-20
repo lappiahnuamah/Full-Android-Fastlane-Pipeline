@@ -61,6 +61,10 @@ platform :ios do
   end
  
   lane :load_asc_api_token do
+    puts "ASC_KEY_ID: #{ENV['ASC_KEY_ID']}"
+    puts "ASC_ISSUER_ID: #{ENV['ASC_ISSUER_ID']}"
+    puts "ASC_KEY_P8: #{ENV['ASC_KEY_P8'] ? 'set' : 'not set'}"
+    
     api_key = app_store_connect_api_key(
       key_id: ENV["ASC_KEY_ID"],
       issuer_id: ENV["ASC_ISSUER_ID"],
@@ -95,14 +99,7 @@ platform :ios do
     commit = last_git_commit
     puts "*** Starting iOS release for commit(#{commit[:abbreviated_commit_hash]}) ***"
  
-    # api_key = lane_context[SharedValues::APP_STORE_CONNECT_API_KEY]
-    api_key = app_store_connect_api_key(
-      key_id: ENV["ASC_KEY_ID"],
-      issuer_id: ENV["ASC_ISSUER_ID"],
-      key_content: ENV["ASC_KEY_P8"],
-      is_key_content_base64: true,
-      in_house: false
-    )
+    api_key = lane_context[SharedValues::APP_STORE_CONNECT_API_KEY]
  
     sync_code_signing(
       api_key: api_key,
