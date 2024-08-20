@@ -1,4 +1,4 @@
-equire 'dotenv'
+require 'dotenv'
 Dotenv.load('.env.default')
  
 default_platform(:ios)
