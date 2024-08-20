@@ -9,8 +9,8 @@ class AuthUrl {
 
   static const String activateOtp = "${baseUrl}activate-account/";
   static const String passwordResetOtp = "${baseUrl}password-reset-otp/";
-  static const String confirmPasswordResetOtp =
-      "${baseUrl}confirm-password-reset-otp/";
+  static const String verifyPasswordResetOtp =
+      "${baseUrl}verify-password-reset-otp/";
   static const String resendActivationOtp = "${baseUrl}resend-activation-otp/";
   static const String resetPassword = "${baseUrl}password-reset/";
 

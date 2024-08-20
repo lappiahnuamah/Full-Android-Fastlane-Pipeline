@@ -11,7 +11,6 @@ import 'package:savyminds/widgets/custom_button.dart';
 import 'package:savyminds/widgets/custom_textfeild_with_label.dart';
 import 'package:savyminds/widgets/load_indicator.dart';
 import 'package:savyminds/widgets/page_template.dart';
-
 import '../../utils/func_new.dart';
 import '../../widgets/default_snackbar.dart';
 import 'email_verification.dart';
@@ -122,7 +121,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                 }
                                 final passwordRequestResponse =
                                     await Authentications().passwordRequestOTP(
-                                        context, userName!, email!);
+                                        context, userName??'', email??'');
 
                                 ///////////////// OTP sent successfully ////////////////
                                 if (passwordRequestResponse == 201) {

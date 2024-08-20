@@ -230,11 +230,11 @@ class Authentications {
         Uri.parse(AuthUrl.passwordResetOtp),
         headers: apiHeader,
         body: json.encode({
-          "email": email,
-          "username": username,
+          "username_email": email.isEmpty ? username : email,
         }),
       );
-      if (response.statusCode == 201) {
+
+      if (response.statusCode == 200) {
         return 201;
       } else {
         return ErrorResponse.fromJson(jsonDecode(response.body));
@@ -250,9 +250,10 @@ class Authentications {
       BuildContext context, String username, String email, String otp) async {
     try {
       http.Response response = await http.post(
-        Uri.parse(AuthUrl.confirmPasswordResetOtp),
+        Uri.parse(AuthUrl.verifyPasswordResetOtp),
         headers: apiHeader,
-        body: json.encode({"email": email, "username": username, "otp": otp}),
+        body: json.encode(
+            {"username_email": email.isEmpty ? username : email, "otp": otp}),
       );
       if (response.statusCode == 200) {
         return 200;
@@ -432,19 +433,18 @@ class Authentications {
   ///////////////////////////////////////////////////////
   //////////////(- Reset Password -)//////
   Future resetLoginPassword(BuildContext context, String password1,
-      String email, String username, String password2) async {
+      String email, String username,String otp, String password2) async {
     try {
       http.Response response = await http.post(
         Uri.parse(AuthUrl.resetPassword),
         headers: apiHeader,
         body: json.encode({
-          "email": email,
-          "username": username,
-          "new_password1": password1,
-          "new_password2": password2,
+          "username_email": email.isEmpty ? username:email,
+          "new_password": password2,
+          "otp":otp 
         }),
       );
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         return 201;
       } else {
         return ErrorResponse.fromJson(json.decode(response.body));
