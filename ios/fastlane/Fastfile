@@ -74,8 +74,21 @@ platform :ios do
     Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY] = api_key
     UI.message("Loaded App Store Connect API token")
   end
+
+  lane :app_store_connect_api_key do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_content: ENV["ASC_KEY_P8"],
+      is_key_content_base64: true,
+      in_house: false
+    )
+    Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY] = api_key
+    UI.message("Loaded App Store Connect API token")
+  end
  
   before_all do
+    app_store_connect_api_key
     load_asc_api_token
     create_and_unlock_keychain
     fetch_certificates
