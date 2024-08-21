@@ -3,6 +3,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/utils/validator.dart';
+import 'package:savyminds/widgets/custom_text.dart';
 
 class DeactivateOTPVerify extends StatefulWidget {
   const DeactivateOTPVerify(
@@ -82,7 +83,9 @@ class _DeactivateOTPVerifyState extends State<DeactivateOTPVerify> {
                 animationType: AnimationType.fade,
                 onCompleted: (v) async {
                   //Verify OTP entered
-                  if (otpFormKey.currentState?.validate() ?? false) {}
+                  if (otpFormKey.currentState?.validate() ?? false) {
+                    widget.verifyOTP(otpText);
+                  }
                 },
                 validator: (value) => (AuthValidate().validateOTP(value)),
                 onChanged: (value) {
@@ -101,6 +104,14 @@ class _DeactivateOTPVerifyState extends State<DeactivateOTPVerify> {
               ),
             ),
           ),
+          if (widget.errorMsg.isNotEmpty)
+            Padding(
+              padding: EdgeInsets.only(top: d.pSH(10)),
+              child: CustomText(
+                label: widget.errorMsg,
+                color: AppColors.kGameRed,
+              ),
+            ),
 
           SizedBox(
             height: d.pSH(10),
