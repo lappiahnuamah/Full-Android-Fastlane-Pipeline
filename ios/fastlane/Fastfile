@@ -1,5 +1,5 @@
 require 'dotenv'
-require 'fastlane/plugin/app_store_connect_api_key'
+# require 'fastlane/plugin/app_store_connect_api_key'
 
 
 Dotenv.load('.env.default')
