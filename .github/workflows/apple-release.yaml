@@ -93,4 +93,4 @@ jobs:
           APP_IDENTIFIER: ${{secrets.APP_IDENTIER}}
         run: |
           cd ios
-          bundle exec fastlane release_beta --verbose
+          bundle exec fastlane release_beta
