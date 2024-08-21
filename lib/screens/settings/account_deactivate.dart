@@ -1,19 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/auth/auth_functions.dart';
 import 'package:savyminds/models/error_response.dart';
+import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/authentication/deactivate_otp_verify.dart';
+import 'package:savyminds/screens/authentication/login_options_screen.dart';
+import 'package:savyminds/utils/cache/content_mgt.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/func_new.dart';
+import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/utils/validator.dart';
 import 'package:savyminds/widgets/custom_button.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 import 'package:savyminds/widgets/custom_textfeild_with_label.dart';
 import 'package:savyminds/widgets/load_indicator.dart';
 import 'package:savyminds/widgets/page_template.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DeactivateAccount extends StatefulWidget {
   const DeactivateAccount({super.key});
@@ -139,31 +146,33 @@ class _DeactivateAccountState extends State<DeactivateAccount> {
                 ),
                 ///////////////////////////////////////////////////////
                 //////////////(- Email textfeild -)/////////////////
-                Form(
-                  key: _deactivateEmailFormKey,
-                  child: CustomTextFieldWithLabel(
-                    controller: EmailController,
-                    labelText: 'Email',
-                    hintText: "Enter your email",
-                    prefixIcon: Icons.mail_outlined,
-                    validator: (value) => AuthValidate().validateEmail(value),
-                    onChanged: (value) {
-                      email = value ?? '';
-                      setState(() {});
-                      return '';
-                    },
-                    onSaved: (p0) {
-                      email = p0 ?? "";
-                    },
-                    onTap: () {
-                      _deactivateEmailFormKey.currentState?.reset();
-                      setState(() {});
-                    },
+                if (!isEmailVerified)
+                  Form(
+                    key: _deactivateEmailFormKey,
+                    child: CustomTextFieldWithLabel(
+                      controller: EmailController,
+                      labelText: 'Email',
+                      hintText: "Enter your email",
+                      prefixIcon: Icons.mail_outlined,
+                      validator: (value) => AuthValidate().validateEmail(value),
+                      onChanged: (value) {
+                        email = value ?? '';
+                        setState(() {});
+                        return '';
+                      },
+                      onSaved: (p0) {
+                        email = p0 ?? "";
+                      },
+                      onTap: () {
+                        _deactivateEmailFormKey.currentState?.reset();
+                        setState(() {});
+                      },
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: d.pSH(24),
-                ),
+                if (!isEmailVerified)
+                  SizedBox(
+                    height: d.pSH(24),
+                  ),
 
                 ///Verify / Deactivate button
                 SizedBox(
@@ -216,33 +225,40 @@ class _DeactivateAccountState extends State<DeactivateAccount> {
   ///
   ////Deactivate Accounts
   Future<void> _deactivateAccount() async {
-    FocusManager.instance.primaryFocus?.unfocus();
+    setState(() {
+      isLoading = true;
+    });
+    var response = await Authentications()
+        .deactivateAccount(context: context, email: email);
 
-    // var response = await AcccountFunctions()
-    //     .deactivateAccount(context: context, Email: Email.trim());
-
-    // if (response == true) {
-    //   ContentManagement().clearAll();
-    //   SharedPreferences prefs = await SharedPreferences.getInstance();
-    //   prefs.clear();
-    //   setState(() {
-    //     isLoading = false;
-    //   });
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) => const Login(),
-    //     ),
-    //   );
-    // } else {
-    //   setState(() {
-    //     isLoading = false;
-    //   });
-    //   if (response.runtimeType == ErrorResponse) {
-    //     response = response as ErrorResponse;
-    //     showSnackBar(context, response.errorMsg);
-    //   }
-    // }
+    if (response == true) {
+      ContentManagement().clearAll();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.clear();
+      final gameItemsProvider = context.read<GameItemsProvider>();
+      gameItemsProvider.clearStreaks();
+      final GoogleSignIn _googleSignIn = GoogleSignIn();
+      await _googleSignIn.signOut();
+      setState(() {
+        isLoading = false;
+      });
+      Fluttertoast.showToast(msg: 'Account deactivated successfully');
+      nextScreenCloseOthers(context, const LoginOptionsScreen());
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+      if (response.runtimeType == ErrorResponse) {
+        response = response as ErrorResponse;
+        if (response.errorCode == 112) {
+          setState(() {
+            isEmailVerified = false;
+          });
+        }
+        Fluttertoast.showToast(
+            msg: response.errorMsg ?? 'Failed to deactivate account');
+      }
+    }
   }
 
   Future<void> _sendEmailOTP() async {
@@ -283,8 +299,13 @@ class _DeactivateAccountState extends State<DeactivateAccount> {
       });
       if (response == true) {
         //Log correct OTP
+        Fluttertoast.showToast(msg: 'Email verified successfully');
+        setState(() {
+          isEmailVerified = true;
+        });
       } else if (response is ErrorResponse) {
-        Fluttertoast.showToast(msg: response.errorMsg ?? 'Failed to send otp');
+        otpVerifyErrorMsg = response.errorMsg ?? 'Failed to very otp';
+        showOTPVerifyDialog();
       }
     }
   }

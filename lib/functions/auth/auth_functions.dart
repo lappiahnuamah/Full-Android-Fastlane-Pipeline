@@ -799,7 +799,7 @@ class Authentications {
   //////////////(- Delete Account -)////
   Future deactivateAccount({
     required BuildContext context,
-    required String password,
+    required String email,
   }) async {
     bool hasNetWork = await ConnectionCheck().hasConnection();
     if (hasNetWork) {
@@ -814,10 +814,9 @@ class Authentications {
               "accept": "application/json",
               "Authorization": " Bearer $_accessToken"
             },
-            body: jsonEncode({'password': password}));
-
+            body: jsonEncode({'email': email}));
+        lg('deactivate response: ${_response.body}');
         if (_response.statusCode == 200) {
-          lg('deactivate response: ${_response.body}');
           return true;
         } else {
           lg('deactivate error: ${_response.body}');
@@ -875,7 +874,7 @@ class Authentications {
             .getAccessToken();
     try {
       http.Response response = await http.post(
-        Uri.parse(AuthUrl.deactivateOtpSend),
+        Uri.parse(AuthUrl.deactivateOtpVerify),
         headers: {
           "content-type": "application/json",
           "accept": "application/json",
@@ -885,6 +884,8 @@ class Authentications {
           "otp": otp,
         }),
       );
+      log('otp: ${response.body}');
+      log('response.body: ${response.body}');
       if (response.statusCode == 200) {
         return true;
       } else if (response.statusCode == 400) {
