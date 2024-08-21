@@ -39,4 +39,6 @@ class AuthUrl {
 
   // Delete Account //
   static const String deactivate = "${baseUrl}user/deactivate/";
+  static const String deactivateOtpSend = "${baseUrl}genrics/send-otp/";
+  static const String deactivateOtpVerify = "${baseUrl}genrics/verify-otp/";
 }

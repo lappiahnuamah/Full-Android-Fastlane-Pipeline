@@ -1,0 +1,163 @@
+require 'dotenv'
+Dotenv.load('.env.default')
+ 
+default_platform(:ios)
+ 
+platform :ios do
+  lane :create_and_unlock_keychain do
+    keychain_name = "fastlane_temp.keychain-db"
+    keychain_password = "fastlane"
+ 
+    # Create the keychain
+    sh "security create-keychain -p #{keychain_password} #{keychain_name}"
+    UI.message("Created keychain #{keychain_name}")
+   
+    # Set the keychain as default and unlock it
+    sh "security unlock-keychain -p #{keychain_password} #{keychain_name}"
+    UI.message("Unlocked keychain #{keychain_name}")
+ 
+    sh "security list-keychains -s #{keychain_name} login.keychain-db"
+    UI.message("Set #{keychain_name} as default keychain")
+ 
+    sh "security default-keychain -s #{keychain_name}"
+    sh "security set-keychain-settings -t 1200 -u #{keychain_name}"
+    UI.message("Configured keychain settings for #{keychain_name}")
+ 
+    # Verify keychain creation
+    sh "security list-keychains"
+    sh "security show-keychain-info #{keychain_name}"
+    UI.message("Verified keychain creation for #{keychain_name}")
+ 
+    # Check if DISTRIBUTION_P12_FILE is set and decode it
+    puts "DISTRIBUTION_P12_FILE: #{ENV['DISTRIBUTION_P12_FILE'].nil? ? 'nil' : 'set'}"
+    if ENV['DISTRIBUTION_P12_FILE'].nil? || ENV['DISTRIBUTION_P12_FILE'].empty?
+      UI.user_error!("DISTRIBUTION_P12_FILE environment variable is missing. Please set it in your environment or .env file.")
+    else
+      sh "echo \"#{ENV['DISTRIBUTION_P12_FILE']}\" | base64 --decode > /tmp/distribution.p12"
+      UI.message("Decoded DISTRIBUTION_P12_FILE to /tmp/distribution.p12")
+    end
+ 
+    # Verify that the file has been created
+    sh "ls -l /tmp/distribution.p12"
+    file_permissions = File.stat("/tmp/distribution.p12").mode
+    puts "File permissions: #{sprintf("%o", file_permissions)}"
+    unless file_permissions & 0444 != 0
+      UI.user_error!("Insufficient read permissions for /tmp/distribution.p12")
+    end
+ 
+    # Import certificate
+    p12_password = ENV['P12_PASSWORD']
+    password_option = p12_password.nil? || p12_password.empty? ? "" : "-P #{p12_password}"
+   
+    begin
+      UI.message("Importing certificate to keychain...")
+      import_output = sh "security import /tmp/distribution.p12 -k #{keychain_name} #{password_option} -T /usr/bin/codesign 2>&1"
+      UI.message("Security import output: #{import_output}")
+      UI.message("Imported certificate into #{keychain_name}")
+    rescue => e
+      UI.error("Failed to import certificate: #{e.message}")
+      raise e
+    end
+  end
+ 
+  lane :load_asc_api_token do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_content: ENV["ASC_KEY_P8"],
+      is_key_content_base64: true,
+      in_house: false
+    )
+    Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY] = api_key
+    UI.message("Loaded App Store Connect API token")
+  end
+ 
+  before_all do
+    load_asc_api_token
+    create_and_unlock_keychain
+    fetch_certificates
+  end
+ 
+  desc "Fetch provisioning profiles and certificates from the repository"
+  lane :fetch_certificates do
+    match(
+      type: "appstore",
+      readonly: true,
+      git_url: ENV['FASTLANE_MATCH_GIT_URL'],
+      keychain_name: "fastlane_temp.keychain-db",
+      keychain_password: ENV['MATCH_KEYCHAIN_PASSWORD']
+    )
+    UI.message("Fetched provisioning profiles and certificates")
+  end
+ 
+  desc "Release a new build to TestFlight"
+  lane :release_beta do
+    commit = last_git_commit
+    puts "*** Starting iOS release for commit(#{commit[:abbreviated_commit_hash]}) ***"
+ 
+    api_key = lane_context[SharedValues::APP_STORE_CONNECT_API_KEY]
+ 
+    sync_code_signing(
+      api_key: api_key,
+      type: "appstore",
+      git_url: ENV['FASTLANE_MATCH_GIT_URL'],
+      app_identifier: "com.terateck.games.savyminds",
+      team_id: "65X7U7HQLZ",
+      keychain_password: ENV['MATCH_KEYCHAIN_PASSWORD'],
+      clone_branch_directly: true
+    )
+ 
+    build_number = bump_build_number()
+    version_name = get_version_name()
+ 
+    # Capture the original directory
+    original_dir = Dir.pwd
+ 
+   
+    begin
+      # Change to the Flutter project directory
+      Dir.chdir("../..") do
+        puts "*** Build flutter iOS release for version #{version_name}+#{build_number} ***"
+        sh("flutter build ipa --release --build-number=#{build_number} --build-name=#{version_name}")
+      end
+    rescue => e
+      UI.error("Flutter build failed: #{e.message}")
+      raise e
+    ensure
+      # Change back to the original directory
+      Dir.chdir(original_dir)
+    end
+ 
+    puts "*** Build and sign iOS app release ***"
+    build_app(
+      skip_build_archive: true,
+      archive_path: "../build/ios/archive/Runner.xcarchive"
+    )
+ 
+    puts "*** Upload app to TestFlight ***"
+    upload_to_testflight(
+      api_key: api_key,
+      team_id: ENV['ITC_TEAM_ID']
+    )
+  end
+ 
+  def bump_build_number()
+    latest_build_number = latest_testflight_build_number(
+      initial_build_number: 0,
+      app_identifier: "com.terateck.games.savyminds"
+    )
+    return (latest_build_number + 1)
+  end
+ 
+  def get_version_name()
+    version_name = lane_context[SharedValues::LATEST_TESTFLIGHT_VERSION]
+ 
+    if version_name.nil? || version_name.empty?
+      puts "*** Version name is empty, add version 1.0.0 ***"
+      version_name = "1.0.0"
+    end
+ 
+    return version_name
+  end
+end
+ 
