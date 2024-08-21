@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/games/game_function.dart';
 import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
-import 'package:savyminds/screens/authentication/splashscreen.dart';
 import 'package:savyminds/screens/profile/components/key_card.dart';
 import 'package:savyminds/screens/records/components/record_rank_header.dart';
 import 'package:savyminds/screens/settings/settings.dart';
-import 'package:savyminds/utils/cache/content_mgt.dart';
-import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
@@ -35,8 +31,6 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Consumer2<GameItemsProvider, UserDetailsProvider>(
         builder: (context, gameItemsProvider, userDetailsProvider, child) {
       return Padding(
@@ -114,32 +108,6 @@ class _ProfileState extends State<Profile> {
                           fontSize: 16,
                         ),
                       ],
-                    ),
-                    SizedBox(height: d.pSH(20)),
-
-                    InkWell(
-                      onTap: () {
-                        showLogoutDialog();
-                      },
-                      child: Container(
-                        width: size.width * 0.3,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: d.pSW(10), vertical: d.pSH(4)),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: AppColors.kGameRed,
-                          ),
-                        ),
-                        child: Center(
-                          child: CustomText(
-                            label: 'Log Out',
-                            fontSize: 13,
-                            color: AppColors.kGameRed,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
                     ),
                     SizedBox(height: d.pSH(35)),
 
@@ -233,45 +201,5 @@ class _ProfileState extends State<Profile> {
         ),
       );
     });
-  }
-
-  Future<void> showLogoutDialog() async {
-    await showAdaptiveDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Log Out'),
-          content: const Text('Are you sure you want to log out?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child:
-                  const Text('Cancel', style: TextStyle(color: Colors.black)),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                logout();
-              },
-              child: const Text(
-                'Log Out',
-                style: TextStyle(color: AppColors.kGameRed),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> logout() async {
-    gameItemsProvider.clearStreaks();
-    ContentManagement().clearAll();
-    SharedPreferencesHelper.clearCache();
-    final GoogleSignIn _googleSignIn = GoogleSignIn();
-    await _googleSignIn.signOut();
-    nextScreenCloseOthers(context, const SplashScreen());
   }
 }
