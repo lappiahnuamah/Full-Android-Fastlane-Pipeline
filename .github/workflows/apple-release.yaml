@@ -11,7 +11,6 @@ jobs:
     permissions:
       contents: write
        
-
     steps:
       - name: Set up git and fetch all history for all branches and tags
         uses: actions/checkout@v4
