@@ -81,8 +81,6 @@ platform :ios do
     Actions.lane_context[SharedValues::APP_STORE_CONNECT_API_KEY] = api_key
     UI.message("Loaded App Store Connect API token")
   end
-
-
  
   desc "Fetch provisioning profiles and certificates from the repository"
   lane :fetch_certificates do
