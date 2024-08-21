@@ -109,6 +109,7 @@ platform :ios do
       git_url: ENV['FASTLANE_MATCH_GIT_URL'],
       app_identifier: "com.terateck.games.savyminds",
       team_id: "65X7U7HQLZ",
+      git_private_key: "SHA256:bKxWmqgIXMyqIp0R0Md1Lv7skAvRHd7Y75OmOM80QlQ",
       keychain_password: ENV['MATCH_KEYCHAIN_PASSWORD'],
       clone_branch_directly: true
     )
