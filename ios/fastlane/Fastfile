@@ -5,12 +5,6 @@ require 'dotenv'
 Dotenv.load('.env.default')
  
 default_platform(:ios)
-
-before_all do
-  load_asc_api_token
-  create_and_unlock_keychain
-  fetch_certificates
-end
  
 platform :ios do
   lane :create_and_unlock_keychain do
@@ -69,11 +63,11 @@ platform :ios do
     end
   end
  
-  lane :load_asc_api_token do
+  lane :app_store_connect_api_key do
     api_key = app_store_connect_api_key(
-      key_id: "#{ENV["ASC_KEY_ID"]}",
-      issuer_id: "#{ENV["ASC_ISSUER_ID"]}",
-      key_content: "#{ENV["ASC_KEY_P8"]}".gsub('\n', '\\n'),
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_content: ENV["ASC_KEY_P8"],
       is_key_content_base64: true,
       in_house: false
     )
@@ -82,7 +76,11 @@ platform :ios do
   end
 
  
- 
+  before_all do
+    app_store_connect_api_key
+    create_and_unlock_keychain
+    fetch_certificates
+  end
  
   desc "Fetch provisioning profiles and certificates from the repository"
   lane :fetch_certificates do
