@@ -87,7 +87,7 @@ platform :ios do
     match(
       type: "appstore",
       readonly: true,
-      team_id: "65X7U7HQLZ",
+      # team_id: "65X7U7HQLZ",
       # username: "terateck",
       git_url: ENV['FASTLANE_MATCH_GIT_URL'],
       keychain_name: "fastlane_temp.keychain-db",
