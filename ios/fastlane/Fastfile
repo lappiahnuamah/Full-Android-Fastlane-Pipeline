@@ -7,6 +7,12 @@ Dotenv.load('.env.default')
 default_platform(:ios)
  
 platform :ios do
+  before_all do
+    create_and_unlock_keychain
+    fetch_certificates
+    load_asc_api_token
+  end
+
   lane :create_and_unlock_keychain do
     keychain_name = "fastlane_temp.keychain-db"
     keychain_password = "fastlane"
@@ -63,7 +69,7 @@ platform :ios do
     end
   end
  
-  lane :app_store_connect_api_key do
+  lane :load_asc_api_token do
     api_key = app_store_connect_api_key(
       key_id: ENV["ASC_KEY_ID"],
       issuer_id: ENV["ASC_ISSUER_ID"],
@@ -75,12 +81,7 @@ platform :ios do
     UI.message("Loaded App Store Connect API token")
   end
 
- 
-  # before_all do
-  #   load_asc_api_token
-  #   create_and_unlock_keychain
-  #   fetch_certificates
-  # end
+
  
   desc "Fetch provisioning profiles and certificates from the repository"
   lane :fetch_certificates do
