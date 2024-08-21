@@ -51,7 +51,6 @@ platform :ios do
     # Import certificate
     p12_password = ENV['P12_PASSWORD']
     password_option = p12_password.nil? || p12_password.empty? ? "" : "-P #{p12_password}"
-   
     begin
       UI.message("Importing certificate to keychain...")
       import_output = sh "security import /tmp/distribution.p12 -k #{keychain_name} #{password_option} -T /usr/bin/codesign 2>&1"
