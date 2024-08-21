@@ -61,6 +61,7 @@ jobs:
       
       - name: Pass .env values to file
         run: |
+          cd ios/fastlane
           echo "$API_CONFIG_VARIABLES" >> .env.default
 
         shell: bash
