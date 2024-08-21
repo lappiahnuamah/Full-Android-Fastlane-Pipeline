@@ -5,6 +5,12 @@ require 'dotenv'
 Dotenv.load('.env.default')
  
 default_platform(:ios)
+
+before_all do
+  load_asc_api_token
+  create_and_unlock_keychain
+  fetch_certificates
+end
  
 platform :ios do
   lane :create_and_unlock_keychain do
@@ -76,11 +82,7 @@ platform :ios do
   end
 
  
-  before_all do
-    load_asc_api_token
-    create_and_unlock_keychain
-    fetch_certificates
-  end
+ 
  
   desc "Fetch provisioning profiles and certificates from the repository"
   lane :fetch_certificates do
