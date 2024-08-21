@@ -6,8 +6,23 @@ GEM
       nkf
       rexml
     abbrev (0.1.2)
+    activesupport (7.2.0)
+      base64
+      bigdecimal
+      concurrent-ruby (~> 1.0, >= 1.3.1)
+      connection_pool (>= 2.2.5)
+      drb
+      i18n (>= 1.6, < 2)
+      logger (>= 1.4.2)
+      minitest (>= 5.1)
+      securerandom (>= 0.3)
+      tzinfo (~> 2.0, >= 2.0.5)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
+    app_store_connect (0.18.0)
+      activesupport
+      jwt (>= 1.4, <= 2.2.1)
+      mixpanel-ruby (<= 2.2.0)
     atomos (0.1.3)
     babosa (1.0.2)
     base64 (0.2.0)
@@ -20,6 +35,8 @@ GEM
     colored2 (3.1.2)
     commander (4.6.0)
       highline (~> 2.0.0)
+    concurrent-ruby (1.3.4)
+    connection_pool (2.4.1)
     credentials_manager (0.16.4)
       colored
       commander (>= 4.3.5)
@@ -33,6 +50,7 @@ GEM
       spaceship (>= 0.38.5, < 1.0.0)
     domain_name (0.6.20240107)
     dotenv (3.1.2)
+    drb (2.2.1)
     excon (0.111.0)
     faraday (0.17.6)
       multipart-post (>= 1.2, < 3)
@@ -70,6 +88,8 @@ GEM
       xcode-install (~> 1.4.0)
       xcodeproj (>= 0.20, < 2.0.0)
       xcpretty (>= 0.2.1)
+    fastlane-plugin-connected (0.1.3)
+      app_store_connect (~> 0.18.0)
     fastlane_core (0.59.0)
       colored
       commander (>= 4.4.0, <= 5.0.0)
@@ -116,9 +136,10 @@ GEM
       domain_name (~> 0.5)
     httpclient (2.8.3)
     hurley (0.2)
+    i18n (1.14.5)
+      concurrent-ruby (~> 1.0)
     json (1.8.6)
-    jwt (2.8.2)
-      base64
+    jwt (2.2.1)
     krausefx-shenzhen (0.14.11)
       commander (>= 4.3, < 5.0)
       dotenv (>= 0.7)
@@ -131,6 +152,7 @@ GEM
       rubyzip (~> 1.1)
       security (~> 0.1.3)
       terminal-table (~> 1.4.5)
+    logger (1.6.0)
     match (0.11.1)
       cert (>= 1.4.4, < 2.0.0)
       credentials_manager (>= 0.16.2, < 1.0.0)
@@ -143,6 +165,8 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2024.0820)
     mini_magick (4.5.1)
+    minitest (5.25.1)
+    mixpanel-ruby (2.2.0)
     multi_json (1.15.0)
     multi_xml (0.7.1)
       bigdecimal (~> 3.1)
@@ -182,6 +206,7 @@ GEM
       xcpretty-travis-formatter (>= 0.0.3)
     screengrab (0.5.6)
       fastlane_core (>= 0.55.0, < 1.0.0)
+    securerandom (0.3.1)
     security (0.1.5)
     sigh (1.12.1)
       fastlane_core (>= 0.57.2, < 1.0.0)
@@ -216,6 +241,8 @@ GEM
     terminal-notifier (1.6.3)
     terminal-table (1.4.5)
     thor (0.20.3)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
     uber (0.0.15)
     xcode-install (1.4.0)
       claide (>= 0.9.1, < 1.1.0)
@@ -242,6 +269,7 @@ DEPENDENCIES
   bigdecimal
   dotenv
   fastlane
+  fastlane-plugin-connected (~> 0.1.3)
   mutex_m
 
 BUNDLED WITH

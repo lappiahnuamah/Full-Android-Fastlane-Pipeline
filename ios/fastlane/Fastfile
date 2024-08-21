@@ -1,4 +1,6 @@
 require 'dotenv'
+require 'fastlane-plugin-connected'
+
 Dotenv.load('.env.default')
  
 default_platform(:ios)
