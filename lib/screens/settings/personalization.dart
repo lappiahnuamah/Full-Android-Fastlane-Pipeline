@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
@@ -11,6 +13,7 @@ import 'package:savyminds/screens/settings/components/interest_badge.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 import 'package:savyminds/widgets/custom_textfeild_with_label.dart';
 import 'package:savyminds/widgets/page_template.dart';
+import 'package:savyminds/widgets/transparent_button.dart';
 import '../../../utils/func_new.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/load_indicator.dart';
@@ -71,8 +74,47 @@ class _PersonalizationState extends State<Personalization> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Row(
+                        children: [
+                          CustomText(
+                            label: 'Avatar',
+                            fontWeight: FontWeight.w500,
+                            fontSize: d.pSH(15),
+                          ),
+                          SizedBox(width: d.pSW(30)),
+                          Expanded(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: d.pSH(100),
+                                  height: d.pSH(100),
+                                  clipBehavior: Clip.hardEdge,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: AppColors.textBlack,
+                                    ),
+                                  ),
+                                  child: SvgPicture.asset(
+                                    'assets/icons/Avatar.svg',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                SizedBox(width: d.pSW(30)),
+                                TransparentButton(
+                                  title: 'Change',
+                                  onTapped: () {},
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: d.pSH(30)),
                       CustomText(
-                        label: 'Select Favorite Categories',
+                        label: 'Select your age group',
                         fontWeight: FontWeight.w500,
                         fontSize: d.pSH(15),
                       ),
