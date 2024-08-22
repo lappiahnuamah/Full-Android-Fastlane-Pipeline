@@ -8,6 +8,7 @@ import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_gradients.dart';
 import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
+import 'package:savyminds/screens/settings/personalization.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/validator.dart';
 import 'package:savyminds/widgets/custom_button.dart';
@@ -114,7 +115,7 @@ class _ChangeDisplayNameState extends State<ChangeDisplayName> {
                           onTap: () {
                             Navigator.of(context).push(PageRouteBuilder(
                                 pageBuilder: (_, __, ___) =>
-                                    const CustomBottomNav()));
+                                    const Personalization()));
                           },
                           child: CustomText(
                             label: 'Skip',

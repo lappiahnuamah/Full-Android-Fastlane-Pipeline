@@ -21,7 +21,9 @@ import '../../../widgets/load_indicator.dart';
 class Personalization extends StatefulWidget {
   const Personalization({
     Key? key,
+    this.fromSettingsPage = false,
   }) : super(key: key);
+  final bool fromSettingsPage;
 
   @override
   State<Personalization> createState() => _PersonalizationState();
@@ -217,69 +219,63 @@ class _PersonalizationState extends State<Personalization> {
                   ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: d.pSH(35),
-                    width: d.pSW(120),
-                    child: CustomButton(
-                        color: AppColors.kWhite,
-                        key: const Key('skip-button'),
-                        onTap: () async {},
-                        child: Text(
-                          'Skip',
-                          style: TextStyle(
-                              color: AppColors.hintTextBlack,
-                              fontSize: d.pSH(16),
-                              fontWeight: FontWeight.w500),
-                        )),
-                  ),
-                  SizedBox(width: d.pSW(30)),
-                  SizedBox(
-                    height: d.pSH(35),
-                    width: d.pSW(120),
-                    child: CustomButton(
-                        color: AppColors.blueBird,
-                        key: const Key('proceed-button'),
-                        onTap: () async {
-                          setState(() {
-                            savingCategories = true;
-                          });
-
-                          final selectedIds =
-                              selectedCategories.map((e) => e.id).toList();
-
-                          final result = await CategoryFunctions()
-                              .favoriteCategories(context, selectedIds);
-
-                          setState(() {
-                            savingCategories = false;
-                          });
-
-                          if (result) {
-                            Fluttertoast.showToast(
-                                msg: 'Changes saved successfully');
-
-                            categoryProvider
-                                .setFavoriteCategories(selectedCategories);
-                            if (!mounted) return;
-                            Navigator.pop(context);
-                          } else {
-                            Fluttertoast.showToast(
-                                msg: 'Failed to save changes');
-                          }
-                        },
-                        child: Text(
-                          'Proceed',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: d.pSH(16),
-                              fontWeight: FontWeight.w500),
-                        )),
-                  ),
-                ],
-              ),
+              if (widget.fromSettingsPage)
+                SizedBox(
+                  height: d.pSH(45),
+                  width: double.infinity,
+                  child: CustomButton(
+                      color: AppColors.blueBird,
+                      key: const Key('proceed-button'),
+                      onTap: () async {
+                        saveChanges();
+                      },
+                      child: Text(
+                        'Done',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: d.pSH(16),
+                            fontWeight: FontWeight.w500),
+                      )),
+                ),
+              if (!widget.fromSettingsPage)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: d.pSH(35),
+                      width: d.pSW(120),
+                      child: CustomButton(
+                          color: AppColors.kWhite,
+                          key: const Key('skip-button'),
+                          onTap: () async {},
+                          child: Text(
+                            'Skip',
+                            style: TextStyle(
+                                color: AppColors.hintTextBlack,
+                                fontSize: d.pSH(16),
+                                fontWeight: FontWeight.w500),
+                          )),
+                    ),
+                    SizedBox(width: d.pSW(30)),
+                    SizedBox(
+                      height: d.pSH(35),
+                      width: d.pSW(120),
+                      child: CustomButton(
+                          color: AppColors.blueBird,
+                          key: const Key('proceed-button'),
+                          onTap: () async {
+                            _proceedToHome();
+                          },
+                          child: Text(
+                            'Proceed',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: d.pSH(16),
+                                fontWeight: FontWeight.w500),
+                          )),
+                    ),
+                  ],
+                ),
               SizedBox(
                 height: d.pSH(50),
               )
@@ -297,5 +293,55 @@ class _PersonalizationState extends State<Personalization> {
                   context: context, loadingMessage: "Saving Changes ..."))
           : const SizedBox()
     ]);
+  }
+
+  saveChanges() async {
+    setState(() {
+      savingCategories = true;
+    });
+
+    final selectedIds = selectedCategories.map((e) => e.id).toList();
+
+    final result =
+        await CategoryFunctions().favoriteCategories(context, selectedIds);
+
+    setState(() {
+      savingCategories = false;
+    });
+
+    if (result) {
+      Fluttertoast.showToast(msg: 'Changes saved successfully');
+
+      categoryProvider.setFavoriteCategories(selectedCategories);
+      if (!mounted) return;
+      Navigator.pop(context);
+    } else {
+      Fluttertoast.showToast(msg: 'Failed to save changes');
+    }
+  }
+
+  _proceedToHome() async {
+    setState(() {
+      savingCategories = true;
+    });
+
+    final selectedIds = selectedCategories.map((e) => e.id).toList();
+
+    final result =
+        await CategoryFunctions().favoriteCategories(context, selectedIds);
+
+    setState(() {
+      savingCategories = false;
+    });
+
+    if (result) {
+      Fluttertoast.showToast(msg: 'Changes saved successfully');
+
+      categoryProvider.setFavoriteCategories(selectedCategories);
+      if (!mounted) return;
+      Navigator.pop(context);
+    } else {
+      Fluttertoast.showToast(msg: 'Failed to save changes');
+    }
   }
 }

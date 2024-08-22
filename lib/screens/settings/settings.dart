@@ -59,7 +59,11 @@ class _SettingsState extends State<Settings> {
                   title: 'Personalization',
                   description: 'Personalize your experience',
                   onTap: () {
-                    nextScreen(context, Personalization());
+                    nextScreen(
+                        context,
+                        Personalization(
+                          fromSettingsPage: true,
+                        ));
                   }),
               SettingsTile(
                 title: 'Background Music',

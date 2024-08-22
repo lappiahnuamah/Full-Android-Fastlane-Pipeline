@@ -8,7 +8,7 @@ import 'package:savyminds/models/error_response.dart';
 import 'package:savyminds/models/user_register_model.dart';
 import 'package:savyminds/providers/registration_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
-import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
+import 'package:savyminds/screens/settings/personalization.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/func_new.dart';
 import 'package:savyminds/utils/next_screen.dart';
@@ -268,7 +268,7 @@ class _SignUpStep3State extends State<SignUpStep3>
             });
             Fluttertoast.showToast(msg: "Activated successfully");
             if (context.mounted) {
-              nextScreen(context, const CustomBottomNav());
+              nextScreen(context, const Personalization());
             }
           } else {
             setState(() {
