@@ -45,6 +45,7 @@ class _ChangeDisplayNameState extends State<ChangeDisplayName> {
       canPop: widget.fromSettingsPage,
       child: PageTemplate(
           pageTitle: 'Change Display Name',
+          showBackBtn: widget.fromSettingsPage,
           backgroundGradient: AppGradients.landingGradient,
           child: Padding(
             padding: d.isTablet

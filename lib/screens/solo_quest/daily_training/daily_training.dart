@@ -129,7 +129,7 @@ class _DailyTrainingState extends State<DailyTraining> {
                                 duration: Duration(seconds: 1),
                                 curve: Curves.easeInOut,
                                 top: _isExpanded
-                                    ? index * d.pSW(d.isTablet ? 170 : 156)
+                                    ? index * d.pSW(d.isTablet ? 173 : 156)
                                     : _isExpanded
                                         ? index == 0
                                             ? 0
@@ -137,7 +137,7 @@ class _DailyTrainingState extends State<DailyTraining> {
                                         : d.pSW(176),
                                 child: Container(
                                   height:
-                                      d.isTablet ? d.pSW(170) : d.pSH(156.5),
+                                      d.isTablet ? d.pSW(173) : d.pSH(156.5),
                                   width: d.isTablet ? d.pSW(230) : d.pSW(160.2),
                                   margin: EdgeInsets.only(bottom: d.pSW(8)),
                                   child: CategoryCard(
