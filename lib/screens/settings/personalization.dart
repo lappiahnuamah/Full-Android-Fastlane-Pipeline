@@ -9,7 +9,9 @@ import 'package:savyminds/functions/categories/categories_functions.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/screens/settings/change_avatar.dart';
 import 'package:savyminds/screens/settings/components/interest_badge.dart';
+import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 import 'package:savyminds/widgets/custom_textfeild_with_label.dart';
 import 'package:savyminds/widgets/page_template.dart';
@@ -63,7 +65,6 @@ class _PersonalizationState extends State<Personalization> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      
       canPop: widget.fromSettingsPage,
       child: Stack(children: [
         PageTemplate(
@@ -111,7 +112,9 @@ class _PersonalizationState extends State<Personalization> {
                                   SizedBox(width: d.pSW(30)),
                                   TransparentButton(
                                     title: 'Change',
-                                    onTapped: () {},
+                                    onTapped: () {
+                                      nextScreen(context, ChangeAvatar());
+                                    },
                                   ),
                                 ],
                               ),
@@ -130,7 +133,8 @@ class _PersonalizationState extends State<Personalization> {
                           hintText: 'Age Group',
                           noPrefix: true,
                           enabled: false,
-                          suffixIcon: const Icon(Icons.arrow_drop_down_outlined),
+                          suffixIcon:
+                              const Icon(Icons.arrow_drop_down_outlined),
                           onTap: () {},
                         ),
                         SizedBox(height: d.pSH(40)),
@@ -157,7 +161,8 @@ class _PersonalizationState extends State<Personalization> {
                                     ...List.generate(
                                       selectedCategories.length,
                                       (index) => Padding(
-                                        padding: EdgeInsets.only(right: d.pSW(8)),
+                                        padding:
+                                            EdgeInsets.only(right: d.pSW(8)),
                                         child: CategoryBadge(
                                             onTap: () {
                                               selectedCategories.remove(
@@ -166,7 +171,8 @@ class _PersonalizationState extends State<Personalization> {
                                             },
                                             isSelected: true,
                                             isFavorites: true,
-                                            text: selectedCategories[index].name),
+                                            text:
+                                                selectedCategories[index].name),
                                       ),
                                     )
                                   ],
@@ -287,7 +293,7 @@ class _PersonalizationState extends State<Personalization> {
             ),
           ),
         ),
-      
+
         ///////////////////////////////////////////////////////////
         ///////////// CIRCULAR PROGRESS INDICATOR///////////////////
         /////////////////////////////////////////////////////////
