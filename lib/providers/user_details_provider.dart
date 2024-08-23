@@ -1,8 +1,10 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:savyminds/data/fcm_data.dart';
+import 'package:savyminds/data/shared_preference_values.dart';
 import 'package:savyminds/functions/auth/fcm_functions.dart';
 import 'package:savyminds/models/auth/app_user.dart';
+import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 
 class UserDetailsProvider extends ChangeNotifier {
   // ignore: prefer_final_fields
@@ -15,11 +17,17 @@ class UserDetailsProvider extends ChangeNotifier {
 
   void setUserDetails(AppUser user) {
     _user = user;
+        _user?.avatarImage = SharedPreferencesHelper.getString(SharedPreferenceValues.avatarImage);
+
     notifyListeners();
   }
 
   void setDisplayName(String name) {
     _user?.displayName = name;
+    notifyListeners();
+  }
+  void setAvatarImage(String avatar) {
+    _user?.avatarImage = avatar;
     notifyListeners();
   }
 

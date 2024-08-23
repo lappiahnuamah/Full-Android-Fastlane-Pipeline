@@ -8,6 +8,7 @@ import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/categories/categories_functions.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
+import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/settings/change_avatar.dart';
 import 'package:savyminds/screens/settings/components/interest_badge.dart';
@@ -90,33 +91,37 @@ class _PersonalizationState extends State<Personalization> {
                             ),
                             SizedBox(width: d.pSW(30)),
                             Expanded(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: d.pSH(100),
-                                    height: d.pSH(100),
-                                    clipBehavior: Clip.hardEdge,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: AppColors.textBlack,
+                              child:   Consumer<UserDetailsProvider>(
+                                    builder: (context,value,child) {
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: d.pSH(100),
+                                        height: d.pSH(100),
+                                        clipBehavior: Clip.hardEdge,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: AppColors.textBlack,
+                                          ),
+                                        ),
+                                        child: SvgPicture.asset(
+                                          'assets/images/avatars/${(value.getUserDetails().avatarImage??'').isEmpty ? 'default-avatar.svg':value.getUserDetails().avatarImage}',
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                    ),
-                                    child: SvgPicture.asset(
-                                      'assets/icons/Avatar.svg',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  SizedBox(width: d.pSW(30)),
-                                  TransparentButton(
-                                    title: 'Change',
-                                    onTapped: () {
-                                      nextScreen(context, ChangeAvatar());
-                                    },
-                                  ),
-                                ],
+                                      SizedBox(width: d.pSW(30)),
+                                      TransparentButton(
+                                        title: 'Change',
+                                        onTapped: () {
+                                          nextScreen(context, ChangeAvatar(selectedAvatar: value.getUserDetails().avatarImage??'',));
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                }
                               ),
                             ),
                           ],

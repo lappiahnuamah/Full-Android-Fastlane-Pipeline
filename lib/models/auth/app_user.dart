@@ -18,6 +18,7 @@ class AppUser {
   String? refreshToken;
   final String? city;
   String? profileImage;
+  String? avatarImage;
   String? coverImage;
   String? aTokenExpireDate;
   String? rTokenExpireDate;
@@ -51,6 +52,7 @@ class AppUser {
       this.refreshToken,
       this.city,
       this.profileImage,
+      this.avatarImage,
       this.coverImage,
       this.outerId,
       this.displayName,

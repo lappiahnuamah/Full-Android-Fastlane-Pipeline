@@ -1,6 +1,7 @@
 class SharedPreferenceValues {
   //user
   static const String accessToken = "ACCESS_TOKEN";
+  static const String avatarImage = "AVATAR_IMAGE";
   static const String refreshToken = "REFRESH_TOKEN";
   static const String user = "USER";
   static const String keepMeLoggedIn = "KEEP_ME_LOGGED_IN";
