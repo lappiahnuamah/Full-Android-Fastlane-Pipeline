@@ -5,7 +5,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
+import 'package:file_picker/file_picker.dart';
+
 import 'package:savyminds/functions/categories/categories_functions.dart';
+import 'package:savyminds/functions/files_function.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
@@ -84,45 +87,102 @@ class _PersonalizationState extends State<Personalization> {
                       children: [
                         Row(
                           children: [
-                            CustomText(
-                              label: 'Avatar',
-                              fontWeight: FontWeight.w500,
-                              fontSize: d.pSH(15),
-                            ),
-                            SizedBox(width: d.pSW(30)),
+                            // CustomText(
+                            //   label: 'Avatar',
+                            //   fontWeight: FontWeight.w500,
+                            //   fontSize: d.pSH(15),
+                            // ),
+                            SizedBox(width: d.pSW(50)),
                             Expanded(
-                              child:   Consumer<UserDetailsProvider>(
-                                    builder: (context,value,child) {
-                                  return Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: d.pSH(100),
-                                        height: d.pSH(100),
-                                        clipBehavior: Clip.hardEdge,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color: AppColors.textBlack,
-                                          ),
-                                        ),
-                                        child: SvgPicture.asset(
-                                          'assets/images/avatars/${(value.getUserDetails().avatarImage??'').isEmpty ? 'default-avatar.svg':value.getUserDetails().avatarImage}',
-                                          fit: BoxFit.cover,
+                              child: Consumer<UserDetailsProvider>(
+                                  builder: (context, value, child) {
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: d.pSH(100),
+                                      height: d.pSH(100),
+                                      clipBehavior: Clip.hardEdge,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: AppColors.textBlack,
                                         ),
                                       ),
-                                      SizedBox(width: d.pSW(30)),
-                                      TransparentButton(
-                                        title: 'Change',
-                                        onTapped: () {
-                                          nextScreen(context, ChangeAvatar(selectedAvatar: value.getUserDetails().avatarImage??'',));
-                                        },
+                                      child: SvgPicture.asset(
+                                        'assets/images/avatars/${(value.getUserDetails().avatarImage ?? '').isEmpty ? 'default-avatar.svg' : value.getUserDetails().avatarImage}',
+                                        fit: BoxFit.cover,
                                       ),
-                                    ],
-                                  );
-                                }
-                              ),
+                                    ),
+                                    SizedBox(width: d.pSW(30)),
+                                    TransparentButton(
+                                      title: 'Change',
+                                      onTapped: () async {
+                                        final result =
+                                            await showModalBottomSheet(
+                                          context: context,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(d.pSH(10)),
+                                            topRight:
+                                                Radius.circular(d.pSH(10)),
+                                          )),
+                                          isDismissible: true,
+                                          builder: (context) {
+                                            return Container(
+                                              decoration: BoxDecoration(),
+                                              padding:
+                                                  EdgeInsets.all(d.pSH(10)),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  TransparentButton(
+                                                      showBorder: false,
+                                                      title: "Select an Avatar",
+                                                      onTapped: () {
+                                                        Navigator.pop(
+                                                            context, "avatar");
+                                                      }),
+                                                  SizedBox(height: d.pSH(10)),
+                                                  TransparentButton(
+                                                      showBorder: false,
+                                                      title:
+                                                          "Select from Gallery",
+                                                      onTapped: () {
+                                                        Navigator.pop(
+                                                            context, "gallery");
+                                                      }),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        );
+
+                                        if ((result ?? '') == "avatar") {
+                                          nextScreen(
+                                              context,
+                                              ChangeAvatar(
+                                                selectedAvatar: value
+                                                        .getUserDetails()
+                                                        .avatarImage ??
+                                                    '',
+                                              ));
+                                        } else if ((result ?? '') ==
+                                            "gallery") {
+                                          final fileResult =
+                                              await FilesFunction.pickFile(
+                                                  extensions: imageExtensions,
+                                                  fileType: FileType.image);
+                                          lg("File picked : $fileResult");
+                                          //Todo: Upload file to server
+
+                                        } else {}
+                                      },
+                                    ),
+                                  ],
+                                );
+                              }),
                             ),
                           ],
                         ),

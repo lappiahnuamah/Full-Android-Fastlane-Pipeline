@@ -23,6 +23,15 @@ import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/theme_manager.dart';
 import 'firebase_options.dart';
 
+ class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+  }
+}
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -31,10 +40,14 @@ void main() async {
   SecurityContext.defaultContext
       .setTrustedCertificatesBytes(data.buffer.asUint8List());
 
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await SharedPreferencesHelper().init();
+
+   HttpOverrides.global = MyHttpOverrides();
+
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => UserDetailsProvider()),
