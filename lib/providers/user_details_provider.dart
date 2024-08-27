@@ -31,6 +31,11 @@ class UserDetailsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setProfileImage(String image) {
+    _user?.profileImage = image;
+    notifyListeners();
+  }
+
   ///////////////////////////////////////////////////////////
   /////////////////// Access Token Functions  ///////////////
   String getAccessToken() {

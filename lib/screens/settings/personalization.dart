@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -17,6 +18,7 @@ import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/settings/change_avatar.dart';
 import 'package:savyminds/screens/settings/components/interest_badge.dart';
 import 'package:savyminds/utils/camera/camera_screen.dart';
+import 'package:savyminds/utils/camera/fullview.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 import 'package:savyminds/widgets/custom_textfeild_with_label.dart';
@@ -25,6 +27,8 @@ import 'package:savyminds/widgets/transparent_button.dart';
 import '../../../utils/func_new.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/load_indicator.dart';
+import '../../functions/user_functions.dart';
+import '../../utils/camera/camera_preview.dart';
 
 class Personalization extends StatefulWidget {
   const Personalization({
@@ -101,6 +105,7 @@ class _PersonalizationState extends State<Personalization> {
                                 return Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+
                                     Container(
                                       width: d.pSH(100),
                                       height: d.pSH(100),
@@ -112,9 +117,31 @@ class _PersonalizationState extends State<Personalization> {
                                           color: AppColors.textBlack,
                                         ),
                                       ),
-                                      child: SvgPicture.asset(
+                                      child: (value.getUserDetails().profileImage ??'').isEmpty ? SvgPicture.asset(
                                         'assets/images/avatars/${(value.getUserDetails().avatarImage ?? '').isEmpty ? 'default-avatar.svg' : value.getUserDetails().avatarImage}',
                                         fit: BoxFit.cover,
+                                      ) :  CachedNetworkImage(
+                                        placeholder: (context, url) =>
+                                        Stack(
+                                          key:UniqueKey(),
+                                          alignment:Alignment.center,
+                                          children: [
+                                            SvgPicture.asset(
+                                              'assets/images/avatars/default-avatar.svg',
+                                              fit: BoxFit.cover,
+                                            ),
+                                            SizedBox(
+                                                height: d.pSH(25),
+                                                width: d.pSH(25),
+                                                child:CircularProgressIndicator())
+                                          ],
+                                        ),
+                                        imageUrl: value.getUserDetails().profileImage??'',
+                                        fit:BoxFit.cover,
+                                        errorWidget: (context, url, error) => SvgPicture.asset(
+                                          'assets/images/avatars/default-avatar.svg',
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                     SizedBox(width: d.pSW(30)),
@@ -126,16 +153,16 @@ class _PersonalizationState extends State<Personalization> {
                                           context: context,
                                           shape: RoundedRectangleBorder(
                                               borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(d.pSH(10)),
+                                            topLeft: Radius.circular(d.pSH(20)),
                                             topRight:
-                                                Radius.circular(d.pSH(10)),
+                                                Radius.circular(d.pSH(20)),
                                           )),
                                           isDismissible: true,
                                           builder: (context) {
                                             return Container(
                                               decoration: BoxDecoration(),
                                               padding:
-                                                  EdgeInsets.all(d.pSH(15)),
+                                                  EdgeInsets.all(d.pSH(10)),
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
@@ -150,7 +177,6 @@ class _PersonalizationState extends State<Personalization> {
                                                         label:
                                                             "Select an Avatar"),
                                                   ),
-                                                  SizedBox(height: d.pSH(10)),
                                                   ListTile(
                                                     onTap: () {
                                                       Navigator.pop(
@@ -162,7 +188,6 @@ class _PersonalizationState extends State<Personalization> {
                                                         label:
                                                             "Select from Gallery"),
                                                   ),
-                                                  SizedBox(height: d.pSH(10)),
                                                   ListTile(
                                                     onTap: () {
                                                       Navigator.pop(
@@ -196,7 +221,15 @@ class _PersonalizationState extends State<Personalization> {
                                                     extensions: imageExtensions,
                                                     fileType: FileType.image);
                                             lg("File picked : $fileResult");
-                                            //Todo: Upload file to server
+                                            if (fileResult!=null){
+                                              nextScreen(context, //////////////////// Image or Video Preview ///////////////
+                                                  FullViewScreen(
+                                                    file: fileResult,
+
+                                                  ));
+                                              //Todo: Upload file to server
+                                            }
+
                                             break;
                                           case "camera":
                                             final cameras =

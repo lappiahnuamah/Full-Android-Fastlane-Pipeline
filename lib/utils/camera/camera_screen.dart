@@ -4,11 +4,15 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:savyminds/functions/user_functions.dart';
 
 import '../../constants.dart';
 import '../../resources/app_colors.dart';
+import '../../widgets/load_indicator.dart';
+import '../func_new.dart';
 import 'camera_preview.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -25,6 +29,7 @@ class _CameraScreenState extends State<CameraScreen> {
   int currentIndex = 0;
   File file = File('');
   bool hideRedDot = false;
+  bool updatingPhoto =false;
 
   @override
   void initState() {
@@ -38,178 +43,201 @@ class _CameraScreenState extends State<CameraScreen> {
       return Container();
     }
     return Scaffold(
+
       body: SafeArea(
-        child: PageView(
-          controller: controller,
-          physics: const NeverScrollableScrollPhysics(),
-          onPageChanged: (val) {
-            currentIndex = val;
-          },
+        child: Stack(
           children: [
-            Stack(
+            PageView(
+              controller: controller,
+              physics: const NeverScrollableScrollPhysics(),
+              onPageChanged: (val) {
+                currentIndex = val;
+              },
               children: [
-                Positioned(
-                  right: 0,
-                  left: 0,
-                  top: 0,
-                  bottom: 0,
-                  child: CameraPreview(
-                    _cameraController,
-                  ),
-                ),
-
-
-                ///////////////////////// Gallery, Camera, Switch Camera /////////////////
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: 90,
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 25, vertical: d.pSH(15)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-
-                        SizedBox(
-                          height: d.pSH(40),
-                          width: d.pSH(40),
-                        ),
-                        ////////////// Take Picture /////////////////
-                        TextButton(
-                          onPressed:takePicture,
-
-                          style: TextButton.styleFrom(
-                            shape: const CircleBorder(
-                              side: BorderSide(color: Colors.white),
-                            ),
-                            visualDensity: VisualDensity.comfortable,
-                          ),
-                          child: Icon(
-                            Icons.circle,
-                            color: Colors.white,
-                            size: 50,
-                          ),
-                        ),
-                        /////// / Rotate Camera /////////
-                        _cameraController.value.isRecordingVideo
-                            ? const SizedBox(height: 20, width: 30)
-                            : IconButton(
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                          iconSize: 32,
-                          icon: Icon(
-                              _isRearCameraSelected
-                                  ? CupertinoIcons.switch_camera
-                                  : CupertinoIcons.switch_camera_solid,
-                              color: Colors.white),
-                          onPressed: () {
-                            setState(() => _isRearCameraSelected =
-                            !_isRearCameraSelected);
-                            initCamera(widget
-                                .cameras![_isRearCameraSelected ? 0 : 1]);
-                          },
-                        )
-                      ],
+                Stack(
+                  children: [
+                    Positioned(
+                      right: 0,
+                      left: 0,
+                      top: 0,
+                      bottom: 0,
+                      child: CameraPreview(
+                        _cameraController,
+                      ),
                     ),
-                  ),
-                ),
 
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Container(
-                    height: 60,
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ////////////////////////////////////////////
-                        ////////////// Pop /////////////////
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context, file);
-                          },
-                          padding: EdgeInsets.zero,
-                          iconSize: 30,
-                          constraints: const BoxConstraints(),
-                          icon:
-                          const Icon(Icons.arrow_back, color: Colors.white),
+
+                    ///////////////////////// Gallery, Camera, Switch Camera /////////////////
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: 90,
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 25, vertical: d.pSH(15)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+
+                            SizedBox(
+                              height: d.pSH(40),
+                              width: d.pSH(40),
+                            ),
+                            ////////////// Take Picture /////////////////
+                            TextButton(
+                              onPressed:takePicture,
+
+                              style: TextButton.styleFrom(
+                                shape: const CircleBorder(
+                                  side: BorderSide(color: Colors.white),
+                                ),
+                                visualDensity: VisualDensity.comfortable,
+                              ),
+                              child: Icon(
+                                Icons.circle,
+                                color: Colors.white,
+                                size: 50,
+                              ),
+                            ),
+                            /////// / Rotate Camera /////////
+                            _cameraController.value.isRecordingVideo
+                                ? const SizedBox(height: 20, width: 30)
+                                : IconButton(
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                              iconSize: 32,
+                              icon: Icon(
+                                  _isRearCameraSelected
+                                      ? CupertinoIcons.switch_camera
+                                      : CupertinoIcons.switch_camera_solid,
+                                  color: Colors.white),
+                              onPressed: () {
+                                setState(() => _isRearCameraSelected =
+                                !_isRearCameraSelected);
+                                initCamera(widget
+                                    .cameras![_isRearCameraSelected ? 0 : 1]);
+                              },
+                            )
+                          ],
                         ),
+                      ),
+                    ),
 
-                        /////// / Flash Light /////////
-                        _cameraController.value.isRecordingVideo
-                            ? hideRedDot
-                            ? const SizedBox()
-                            : Container(
-                          height: d.pSH(20),
-                          width: d.pSH(20),
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.kPrimaryColor),
-                        )
-                            : IconButton(
-                          padding: EdgeInsets.zero,
-                          constraints: const BoxConstraints(),
-                          iconSize: 30,
-                          icon: Icon(
-                              _cameraController.value.flashMode ==
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        height: 60,
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ////////////////////////////////////////////
+                            ////////////// Pop /////////////////
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pop(context, file);
+                              },
+                              padding: EdgeInsets.zero,
+                              iconSize: 30,
+                              constraints: const BoxConstraints(),
+                              icon:
+                              const Icon(Icons.arrow_back, color: Colors.white),
+                            ),
+
+                            /////// / Flash Light /////////
+                            _cameraController.value.isRecordingVideo
+                                ? hideRedDot
+                                ? const SizedBox()
+                                : Container(
+                              height: d.pSH(20),
+                              width: d.pSH(20),
+                              decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.kPrimaryColor),
+                            )
+                                : IconButton(
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                              iconSize: 30,
+                              icon: Icon(
+                                  _cameraController.value.flashMode ==
+                                      FlashMode.off
+                                      ? Icons.flash_off
+                                      : _cameraController.value.flashMode ==
+                                      FlashMode.torch
+                                      ? Icons.flash_on
+                                      : Icons.flash_auto,
+                                  color: Colors.white),
+                              onPressed: _cameraController.value.flashMode ==
                                   FlashMode.off
-                                  ? Icons.flash_off
+                                  ? () {
+                                _cameraController
+                                    .setFlashMode(FlashMode.torch)
+                                    .then((value) {
+                                  setState(() {});
+                                });
+                              }
                                   : _cameraController.value.flashMode ==
                                   FlashMode.torch
-                                  ? Icons.flash_on
-                                  : Icons.flash_auto,
-                              color: Colors.white),
-                          onPressed: _cameraController.value.flashMode ==
-                              FlashMode.off
-                              ? () {
-                            _cameraController
-                                .setFlashMode(FlashMode.torch)
-                                .then((value) {
-                              setState(() {});
-                            });
-                          }
-                              : _cameraController.value.flashMode ==
-                              FlashMode.torch
-                              ? () {
-                            _cameraController
-                                .setFlashMode(FlashMode.auto)
-                                .then((value) {
-                              setState(() {});
-                            });
-                          }
-                              : () {
-                            _cameraController
-                                .setFlashMode(FlashMode.off)
-                                .then((value) {
-                              setState(() {});
-                            });
-                          },
-                        )
-                      ],
+                                  ? () {
+                                _cameraController
+                                    .setFlashMode(FlashMode.auto)
+                                    .then((value) {
+                                  setState(() {});
+                                });
+                              }
+                                  : () {
+                                _cameraController
+                                    .setFlashMode(FlashMode.off)
+                                    .then((value) {
+                                  setState(() {});
+                                });
+                              },
+                            )
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
+
+                //////////////////// Image or Video Preview ///////////////
+                ImagePreview(
+                  file: file,
+                  onCancelled: () {
+                    Navigator.of(context).pop();
+
+                  },
+                  onProceed: () async {
+                    //TODO: Upload file to server
+                    setState(() {
+                      updatingPhoto = true;
+                    });
+                    final result = await UserFunctions.updateProfilePicture(context: context, displayImage: file.path);
+                    if (result!=null){
+                      Fluttertoast.showToast(msg: 'Profile Photo updated successfully');
+                      Navigator.pop(context, file);
+
+                    }else {
+                      Fluttertoast.showToast(msg: 'Oops something went wrong. Please try again.');
+
+                    }
+                  },
+                )
               ],
             ),
-
-            //////////////////// Image or Video Preview ///////////////
-            CameraImagePreview(
-              file: file,
-              onCancelled: () {
-                controller.animateToPage(0,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.linear);
-              },
-              onProceed: () {
-                //TODO: Upload file to server
-                Navigator.pop(context, file);
-              },
-            )
+///////////////////////////////////////////////////////////
+            ///////////// CIRCULAR PROGRESS INDICATOR///////////////////
+            /////////////////////////////////////////////////////////
+            updatingPhoto
+                ? LoadIndicator(
+                child: appDialog(
+                    context: context, loadingMessage: "Updating profile photo..."))
+                : const SizedBox()
           ],
-        ),
+        )
       ),
     );
   }

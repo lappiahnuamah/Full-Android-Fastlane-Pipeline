@@ -6,27 +6,25 @@ import '../../../../widgets/page_template.dart';
 import '../../constants.dart';
 import '../../resources/app_colors.dart';
 
-class CameraImagePreview extends StatefulWidget {
-  const CameraImagePreview(
+class ImagePreview extends StatefulWidget {
+  const ImagePreview(
       {Key? key,
-        required this.file,
-        required this.onCancelled,
-        required this.onProceed})
+      required this.file,
+      required this.onCancelled,
+      required this.onProceed})
       : super(key: key);
   final File file;
   final VoidCallback onCancelled;
   final VoidCallback onProceed;
 
   @override
-  State<CameraImagePreview> createState() => _CameraImagePreviewState();
+  State<ImagePreview> createState() => _ImagePreviewState();
 }
 
-class _CameraImagePreviewState extends State<CameraImagePreview> {
-
+class _ImagePreviewState extends State<ImagePreview> {
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -38,62 +36,40 @@ class _CameraImagePreviewState extends State<CameraImagePreview> {
   Widget build(BuildContext context) {
     return PageTemplate(
       hasTopNav: false,
-      child: SizedBox(
+      child: Container(
+        color: Colors.black,
         height: d.getPhoneScreenHeight(),
         width: double.infinity,
         child: Stack(
           children: [
-            SizedBox(
-              height: d.getPhoneScreenHeight(),
-              width: double.infinity,
-              child:
-                   Image.file(
+            Align(
+              alignment: Alignment.center,
+              child: SizedBox(
+                  height: d.getPhoneScreenHeight()*(1/2),
+                  width: double.infinity,
+                  child: Image.file(
                     widget.file,
                     height: d.getPhoneScreenHeight(),
                     fit: BoxFit.fill,
-                  )
+                  )),
             ),
             Positioned(
-              bottom: d.pSH(5),
-              left: 0,
-              right: 0,
-              child: SizedBox(
-                height: d.pSH(80),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    SizedBox(
-                      height: d.pSH(60),
-                      width: d.pSH(60),
-                      child: TextButton(
-                        onPressed: widget.onCancelled,
-                        style: TextButton.styleFrom(
-                            shape: const CircleBorder(),
-                            backgroundColor: AppColors.kGameRed ),
-                        child: const Icon(
-                          Icons.close,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: d.pSH(60),
-                      width: d.pSH(60),
-                      child: TextButton(
-                        onPressed: widget.onProceed,
-                        style: TextButton.styleFrom(
-                            shape: const CircleBorder(),
-                            backgroundColor: AppColors.kPrimaryColor),
-                        child: const Icon(
-                          Icons.done,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
+                bottom: d.pSH(25),
+                right: d.pSH(20),
+                child: FloatingActionButton(
+                  onPressed: widget.onProceed,
+                  heroTag: 'camera-upload-picture',
+                  child: Icon(Icons.upload),
+                )),
+            Positioned(
+                top: d.pSH(10),
+                left: d.pSH(5),
+                child: IconButton(
+                    onPressed: widget.onCancelled,
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ))),
           ],
         ),
       ),
