@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
@@ -15,6 +16,7 @@ import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/settings/change_avatar.dart';
 import 'package:savyminds/screens/settings/components/interest_badge.dart';
+import 'package:savyminds/utils/camera/camera_screen.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 import 'package:savyminds/widgets/custom_textfeild_with_label.dart';
@@ -133,51 +135,82 @@ class _PersonalizationState extends State<Personalization> {
                                             return Container(
                                               decoration: BoxDecoration(),
                                               padding:
-                                                  EdgeInsets.all(d.pSH(10)),
+                                                  EdgeInsets.all(d.pSH(15)),
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
-                                                  TransparentButton(
-                                                      showBorder: false,
-                                                      title: "Select an Avatar",
-                                                      onTapped: () {
-                                                        Navigator.pop(
-                                                            context, "avatar");
-                                                      }),
+                                                  ListTile(
+                                                    onTap: () {
+                                                      Navigator.pop(
+                                                          context, "avatar");
+                                                    },
+                                                    title: CustomText(
+                                                        color: AppColors
+                                                            .borderPrimary,
+                                                        label:
+                                                            "Select an Avatar"),
+                                                  ),
                                                   SizedBox(height: d.pSH(10)),
-                                                  TransparentButton(
-                                                      showBorder: false,
-                                                      title:
-                                                          "Select from Gallery",
-                                                      onTapped: () {
-                                                        Navigator.pop(
-                                                            context, "gallery");
-                                                      }),
+                                                  ListTile(
+                                                    onTap: () {
+                                                      Navigator.pop(
+                                                          context, "gallery");
+                                                    },
+                                                    title: CustomText(
+                                                        color: AppColors
+                                                            .borderPrimary,
+                                                        label:
+                                                            "Select from Gallery"),
+                                                  ),
+                                                  SizedBox(height: d.pSH(10)),
+                                                  ListTile(
+                                                    onTap: () {
+                                                      Navigator.pop(
+                                                          context, "camera");
+                                                    },
+                                                    title: CustomText(
+                                                        color: AppColors
+                                                            .borderPrimary,
+                                                        label: "Take a Photo"),
+                                                  ),
                                                 ],
                                               ),
                                             );
                                           },
                                         );
 
-                                        if ((result ?? '') == "avatar") {
-                                          nextScreen(
-                                              context,
-                                              ChangeAvatar(
-                                                selectedAvatar: value
-                                                        .getUserDetails()
-                                                        .avatarImage ??
-                                                    '',
-                                              ));
-                                        } else if ((result ?? '') ==
-                                            "gallery") {
-                                          final fileResult =
-                                              await FilesFunction.pickFile(
-                                                  extensions: imageExtensions,
-                                                  fileType: FileType.image);
-                                          lg("File picked : $fileResult");
-                                          //Todo: Upload file to server
+                                        switch ((result ?? '')) {
+                                          case "avatar":
+                                            nextScreen(
+                                                context,
+                                                ChangeAvatar(
+                                                  selectedAvatar: value
+                                                          .getUserDetails()
+                                                          .avatarImage ??
+                                                      '',
+                                                ));
+                                            break;
+                                          case "gallery":
+                                            final fileResult =
+                                                await FilesFunction.pickFile(
+                                                    extensions: imageExtensions,
+                                                    fileType: FileType.image);
+                                            lg("File picked : $fileResult");
+                                            //Todo: Upload file to server
+                                            break;
+                                          case "camera":
+                                            final cameras =
+                                                await availableCameras();
 
-                                        } else {}
+                                            final fileResult = await nextScreen(
+                                                context,
+                                                CameraScreen(cameras: cameras));
+                                            lg("Camera file: ${fileResult}");
+
+                                            break;
+
+                                          default:
+                                        }
                                       },
                                     ),
                                   ],

@@ -1,7 +1,12 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+
+import '../constants.dart';
+import '../utils/connection_check.dart';
 
 List<String> imageExtensions = ['jpg','jpeg','png'];
 
@@ -75,4 +80,52 @@ class FilesFunction {
       return [];
     }
   }
+
+
+  Future createGroupChat(
+      {required BuildContext context,
+        required String displayTitle,
+        required String displayImage,
+        required String accessToken,
+        required String groupDescription,
+        required List<int> members}) async {
+    if (await ConnectionCheck().hasConnection()) {
+      try {
+
+        Map<String, dynamic> _data = {
+          "members": members,
+          "title": displayTitle,
+          "chatroom_type": "Group",
+          "description": groupDescription,
+          'image': await MultipartFile.fromFile(displayImage)
+        };
+
+        var formData = FormData.fromMap(_data);
+
+        var _res = await Dio().post('',
+            data: formData,
+            options: Options(
+              contentType: 'multipart/form-data',
+              headers: {"Authorization": "Bearer  $accessToken"},
+              responseType: ResponseType.json,
+            ));
+        if (_res.statusCode == 201) {
+          return true;
+        } else {
+          lg('${_res.data}');
+          // showSnackBar(context, 'Failed to create chatroom');
+          return false;
+        }
+      } catch (e) {
+        //showSnackBar(context, 'Failed to create chatroom');
+        lg('e: $e');
+        return false;
+      }
+    } else {
+      //showSnackBar(context, 'No internet connection');
+      return false;
+    }
+  }
+
+
 }
