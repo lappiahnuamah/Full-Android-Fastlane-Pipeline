@@ -36,6 +36,11 @@ class UserDetailsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  setAgeGroup(String ageGroup) {
+    _user?.ageGroup = ageGroup;
+    notifyListeners();
+  }
+
   ///////////////////////////////////////////////////////////
   /////////////////// Access Token Functions  ///////////////
   String getAccessToken() {

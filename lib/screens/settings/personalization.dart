@@ -12,10 +12,12 @@ import 'package:file_picker/file_picker.dart';
 
 import 'package:savyminds/functions/categories/categories_functions.dart';
 import 'package:savyminds/functions/files_function.dart';
+import 'package:savyminds/functions/user_functions.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
 import 'package:savyminds/screens/settings/change_avatar.dart';
 import 'package:savyminds/screens/settings/components/interest_badge.dart';
 import 'package:savyminds/utils/camera/camera_screen.dart';
@@ -41,6 +43,7 @@ class Personalization extends StatefulWidget {
 }
 
 class _PersonalizationState extends State<Personalization> {
+  late UserDetailsProvider userProvider;
   late CategoryProvider categoryProvider;
   List<CategoryModel> interests = [];
   List<CategoryModel> selectedCategories = [];
@@ -54,8 +57,10 @@ class _PersonalizationState extends State<Personalization> {
 
   @override
   void initState() {
+    userProvider = context.read<UserDetailsProvider>();
     categoryProvider = context.read<CategoryProvider>();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      ageController.text = userProvider.getUserDetails().ageGroup ?? '';
       getFavoriteFromApi();
       selectedCategories = categoryProvider.favoriteCategories;
       setState(() {});
@@ -118,44 +123,43 @@ class _PersonalizationState extends State<Personalization> {
                                           color: AppColors.textBlack,
                                         ),
                                       ),
-                                      child: (value
-                                                      .getUserDetails()
-                                                      .profileImage ??
-                                                  '')
-                                              .isEmpty
-                                          ? SvgPicture.asset(
-                                              'assets/images/avatars/${(value.getUserDetails().avatarImage ?? '').isEmpty ? 'default-avatar.svg' : value.getUserDetails().avatarImage}',
-                                              fit: BoxFit.cover,
-                                            )
-                                          : CachedNetworkImage(
-                                              placeholder: (context, url) =>
-                                                  Stack(
-                                                key: UniqueKey(),
-                                                alignment: Alignment.center,
-                                                children: [
-                                                  SvgPicture.asset(
+                                      child:
+                                          (value.getUserDetails().avatarImage ??
+                                                      '')
+                                                  .isNotEmpty
+                                              ? SvgPicture.asset(
+                                                  'assets/images/avatars/${(value.getUserDetails().avatarImage ?? '').isEmpty ? 'default-avatar.svg' : value.getUserDetails().avatarImage}',
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : CachedNetworkImage(
+                                                  placeholder: (context, url) =>
+                                                      Stack(
+                                                    key: UniqueKey(),
+                                                    alignment: Alignment.center,
+                                                    children: [
+                                                      SvgPicture.asset(
+                                                        'assets/images/avatars/default-avatar.svg',
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                      SizedBox(
+                                                          height: d.pSH(25),
+                                                          width: d.pSH(25),
+                                                          child:
+                                                              CircularProgressIndicator())
+                                                    ],
+                                                  ),
+                                                  imageUrl: value
+                                                          .getUserDetails()
+                                                          .profileImage ??
+                                                      '',
+                                                  fit: BoxFit.cover,
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          SvgPicture.asset(
                                                     'assets/images/avatars/default-avatar.svg',
                                                     fit: BoxFit.cover,
                                                   ),
-                                                  SizedBox(
-                                                      height: d.pSH(25),
-                                                      width: d.pSH(25),
-                                                      child:
-                                                          CircularProgressIndicator())
-                                                ],
-                                              ),
-                                              imageUrl: value
-                                                      .getUserDetails()
-                                                      .profileImage ??
-                                                  '',
-                                              fit: BoxFit.cover,
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      SvgPicture.asset(
-                                                'assets/images/avatars/default-avatar.svg',
-                                                fit: BoxFit.cover,
-                                              ),
-                                            ),
+                                                ),
                                     ),
                                     SizedBox(width: d.pSW(30)),
                                     TransparentButton(
@@ -308,7 +312,9 @@ class _PersonalizationState extends State<Personalization> {
                         child: CustomButton(
                             color: AppColors.kWhite,
                             key: const Key('skip-button'),
-                            onTap: () async {},
+                            onTap: () async {
+                              nextScreen(context, CustomBottomNav());
+                            },
                             child: Text(
                               'Skip',
                               style: TextStyle(
@@ -325,7 +331,7 @@ class _PersonalizationState extends State<Personalization> {
                             color: AppColors.blueBird,
                             key: const Key('proceed-button'),
                             onTap: () async {
-                              _proceedToHome();
+                              saveChanges();
                             },
                             child: Text(
                               'Proceed',
@@ -480,44 +486,28 @@ class _PersonalizationState extends State<Personalization> {
 
     final selectedIds = selectedCategories.map((e) => e.id).toList();
 
-    final result =
-        await CategoryFunctions().favoriteCategories(context, selectedIds);
+    final result = await Future.wait([
+      if (selectedIds.isNotEmpty)
+        CategoryFunctions().favoriteCategories(context, selectedIds),
+      if (ageController.text.isNotEmpty)
+        UserFunctions.updateAgeGroup(
+            context: context, ageGroup: ageController.text),
+    ]);
 
     setState(() {
       savingCategories = false;
     });
 
-    if (result) {
+    if (result.any((element) => element == true)) {
       Fluttertoast.showToast(msg: 'Changes saved successfully');
 
       categoryProvider.setFavoriteCategories(selectedCategories);
       if (!mounted) return;
-      Navigator.pop(context);
-    } else {
-      Fluttertoast.showToast(msg: 'Failed to save changes');
-    }
-  }
-
-  _proceedToHome() async {
-    setState(() {
-      savingCategories = true;
-    });
-
-    final selectedIds = selectedCategories.map((e) => e.id).toList();
-
-    final result =
-        await CategoryFunctions().favoriteCategories(context, selectedIds);
-
-    setState(() {
-      savingCategories = false;
-    });
-
-    if (result) {
-      Fluttertoast.showToast(msg: 'Changes saved successfully');
-
-      categoryProvider.setFavoriteCategories(selectedCategories);
-      if (!mounted) return;
-      Navigator.pop(context);
+      if (widget.fromSettingsPage) {
+        Navigator.pop(context);
+      } else {
+        nextScreen(context, CustomBottomNav());
+      }
     } else {
       Fluttertoast.showToast(msg: 'Failed to save changes');
     }

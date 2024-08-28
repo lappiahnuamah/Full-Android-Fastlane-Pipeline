@@ -143,6 +143,8 @@ class CategoryFunctions {
     final String accessToken =
         Provider.of<UserDetailsProvider>(context, listen: false)
             .getAccessToken();
+
+    log('accessToken: $accessToken');
     try {
       final response =
           await http.post(Uri.parse('${CategoryUrl.categories}favorite/'),

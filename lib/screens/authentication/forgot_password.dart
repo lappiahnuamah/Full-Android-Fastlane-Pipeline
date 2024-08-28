@@ -33,6 +33,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   bool isLoading = false;
 
   @override
+  void initState() {
+    widget.username != "" ? emailController.text = widget.username : null;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     d.init(context);
     Size size = MediaQuery.of(context).size;
@@ -74,8 +80,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         noPrefix: true,
                         controller: emailController,
                         labelText: 'Email / username',
-                        initialValue:
-                            widget.username != "" ? widget.username : null,
+                        // initialValue:
+                        //     widget.username != "" ? widget.username : null,
                         //(Validation)//
                         validator: (value) =>
                             authValidate.validateEmailUsername(value),
@@ -121,7 +127,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                 }
                                 final passwordRequestResponse =
                                     await Authentications().passwordRequestOTP(
-                                        context, userName??'', email??'');
+                                        context, userName ?? '', email ?? '');
 
                                 ///////////////// OTP sent successfully ////////////////
                                 if (passwordRequestResponse == 201) {

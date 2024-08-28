@@ -6,7 +6,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../../../../widgets/page_template.dart';
 import '../../constants.dart';
 import '../../functions/user_functions.dart';
-import '../../resources/app_colors.dart';
 import '../../widgets/load_indicator.dart';
 import '../func_new.dart';
 

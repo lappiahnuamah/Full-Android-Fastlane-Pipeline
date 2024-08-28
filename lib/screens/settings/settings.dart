@@ -50,8 +50,9 @@ class _SettingsState extends State<Settings> {
                     nextScreen(
                         context,
                         ChangeDisplayName(
-                          username:
-                              userProvider.getUserDetails().displayName ?? '',
+                          username: userProvider.getUserDetails().displayName ??
+                              userProvider.getUserDetails().username ??
+                              '',
                           fromSettingsPage: true,
                         ));
                   }),

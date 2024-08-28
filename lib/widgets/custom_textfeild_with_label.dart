@@ -8,7 +8,6 @@ class CustomTextFieldWithLabel extends StatelessWidget {
       {Key? key,
       required this.controller,
       this.labelText,
-      this.initialValue,
       this.suffixIcon,
       this.validator,
       this.onChanged,
@@ -37,7 +36,6 @@ class CustomTextFieldWithLabel extends StatelessWidget {
 
   final TextEditingController controller;
   final String? labelText;
-  final String? initialValue;
   final Widget? suffixIcon;
   final Widget? suffix;
   final Color? darkfillColor;
@@ -86,17 +84,17 @@ class CustomTextFieldWithLabel extends StatelessWidget {
                 ),
               ),
         TextFormField(
+          controller: controller,
           minLines: minLines ?? 1,
           validator: validator,
           onSaved: onSaved,
           onChanged: onChanged,
           enabled: enabled ?? true,
-          controller: controller,
           onTap: onTap,
           onEditingComplete: onEditingComplete,
           onFieldSubmitted: onFieldSubmitted,
           keyboardType: keyboardType,
-          initialValue: initialValue,
+          //initialValue: initialValue,
           obscureText: obscureText ?? false,
           style: TextStyle(
               fontSize: getFontSize(d.isTablet ? 13 : 15, size),

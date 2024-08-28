@@ -68,7 +68,7 @@ class _ChangeDisplayNameState extends State<ChangeDisplayName> {
                   ////////////////////////////////////////////////////
                   //////////////(- Email textfeild -)/////////////////
                   CustomTextFieldWithLabel(
-                    initialValue: widget.username,
+                    //initialValue: widget.username,
                     controller: usernameController,
                     labelText: 'Display Name',
                     hintText: "Enter display name",

@@ -34,6 +34,7 @@ class AppUser {
   bool? isBlocked;
   String? isBlockedUntil;
   String? blockReason;
+  String? ageGroup;
 
   AppUser(
       {this.id,
@@ -68,7 +69,9 @@ class AppUser {
       this.isAssociatedToHalloa,
       this.blockReason,
       this.isBlocked,
-      this.isBlockedUntil});
+      this.isBlockedUntil,
+      this.ageGroup
+      });
 
 // Receive from login
   static AppUser fromJson(Map<String, dynamic> json) => AppUser(
