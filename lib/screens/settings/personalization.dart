@@ -1,8 +1,9 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -27,8 +28,6 @@ import 'package:savyminds/widgets/transparent_button.dart';
 import '../../../utils/func_new.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/load_indicator.dart';
-import '../../functions/user_functions.dart';
-import '../../utils/camera/camera_preview.dart';
 
 class Personalization extends StatefulWidget {
   const Personalization({
@@ -49,6 +48,7 @@ class _PersonalizationState extends State<Personalization> {
   bool categoriesReady = true;
 
   TextEditingController searchController = TextEditingController();
+  TextEditingController ageController = TextEditingController();
 
   Future getFavoriteCategories() async {}
 
@@ -65,6 +65,8 @@ class _PersonalizationState extends State<Personalization> {
   }
 
   bool savingCategories = false;
+
+  List<String> ageGroups = ["12-15", "16-18", "19-22", ">22"];
 
   getFavoriteFromApi() async {
     selectedCategories =
@@ -93,11 +95,11 @@ class _PersonalizationState extends State<Personalization> {
                       children: [
                         Row(
                           children: [
-                            // CustomText(
-                            //   label: 'Avatar',
-                            //   fontWeight: FontWeight.w500,
-                            //   fontSize: d.pSH(15),
-                            // ),
+                            CustomText(
+                              label: 'Avatar',
+                              fontWeight: FontWeight.w500,
+                              fontSize: d.pSH(15),
+                            ),
                             SizedBox(width: d.pSW(50)),
                             Expanded(
                               child: Consumer<UserDetailsProvider>(
@@ -105,7 +107,6 @@ class _PersonalizationState extends State<Personalization> {
                                 return Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-
                                     Container(
                                       width: d.pSH(100),
                                       height: d.pSH(100),
@@ -117,133 +118,50 @@ class _PersonalizationState extends State<Personalization> {
                                           color: AppColors.textBlack,
                                         ),
                                       ),
-                                      child: (value.getUserDetails().profileImage ??'').isEmpty ? SvgPicture.asset(
-                                        'assets/images/avatars/${(value.getUserDetails().avatarImage ?? '').isEmpty ? 'default-avatar.svg' : value.getUserDetails().avatarImage}',
-                                        fit: BoxFit.cover,
-                                      ) :  CachedNetworkImage(
-                                        placeholder: (context, url) =>
-                                        Stack(
-                                          key:UniqueKey(),
-                                          alignment:Alignment.center,
-                                          children: [
-                                            SvgPicture.asset(
-                                              'assets/images/avatars/default-avatar.svg',
+                                      child: (value
+                                                      .getUserDetails()
+                                                      .profileImage ??
+                                                  '')
+                                              .isEmpty
+                                          ? SvgPicture.asset(
+                                              'assets/images/avatars/${(value.getUserDetails().avatarImage ?? '').isEmpty ? 'default-avatar.svg' : value.getUserDetails().avatarImage}',
                                               fit: BoxFit.cover,
+                                            )
+                                          : CachedNetworkImage(
+                                              placeholder: (context, url) =>
+                                                  Stack(
+                                                key: UniqueKey(),
+                                                alignment: Alignment.center,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    'assets/images/avatars/default-avatar.svg',
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                  SizedBox(
+                                                      height: d.pSH(25),
+                                                      width: d.pSH(25),
+                                                      child:
+                                                          CircularProgressIndicator())
+                                                ],
+                                              ),
+                                              imageUrl: value
+                                                      .getUserDetails()
+                                                      .profileImage ??
+                                                  '',
+                                              fit: BoxFit.cover,
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      SvgPicture.asset(
+                                                'assets/images/avatars/default-avatar.svg',
+                                                fit: BoxFit.cover,
+                                              ),
                                             ),
-                                            SizedBox(
-                                                height: d.pSH(25),
-                                                width: d.pSH(25),
-                                                child:CircularProgressIndicator())
-                                          ],
-                                        ),
-                                        imageUrl: value.getUserDetails().profileImage??'',
-                                        fit:BoxFit.cover,
-                                        errorWidget: (context, url, error) => SvgPicture.asset(
-                                          'assets/images/avatars/default-avatar.svg',
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
                                     ),
                                     SizedBox(width: d.pSW(30)),
                                     TransparentButton(
                                       title: 'Change',
                                       onTapped: () async {
-                                        final result =
-                                            await showModalBottomSheet(
-                                          context: context,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(d.pSH(20)),
-                                            topRight:
-                                                Radius.circular(d.pSH(20)),
-                                          )),
-                                          isDismissible: true,
-                                          builder: (context) {
-                                            return Container(
-                                              decoration: BoxDecoration(),
-                                              padding:
-                                                  EdgeInsets.all(d.pSH(10)),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  ListTile(
-                                                    onTap: () {
-                                                      Navigator.pop(
-                                                          context, "avatar");
-                                                    },
-                                                    title: CustomText(
-                                                        color: AppColors
-                                                            .borderPrimary,
-                                                        label:
-                                                            "Select an Avatar"),
-                                                  ),
-                                                  ListTile(
-                                                    onTap: () {
-                                                      Navigator.pop(
-                                                          context, "gallery");
-                                                    },
-                                                    title: CustomText(
-                                                        color: AppColors
-                                                            .borderPrimary,
-                                                        label:
-                                                            "Select from Gallery"),
-                                                  ),
-                                                  ListTile(
-                                                    onTap: () {
-                                                      Navigator.pop(
-                                                          context, "camera");
-                                                    },
-                                                    title: CustomText(
-                                                        color: AppColors
-                                                            .borderPrimary,
-                                                        label: "Take a Photo"),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        );
-
-                                        switch ((result ?? '')) {
-                                          case "avatar":
-                                            nextScreen(
-                                                context,
-                                                ChangeAvatar(
-                                                  selectedAvatar: value
-                                                          .getUserDetails()
-                                                          .avatarImage ??
-                                                      '',
-                                                ));
-                                            break;
-                                          case "gallery":
-                                            final fileResult =
-                                                await FilesFunction.pickFile(
-                                                    extensions: imageExtensions,
-                                                    fileType: FileType.image);
-                                            lg("File picked : $fileResult");
-                                            if (fileResult!=null){
-                                              nextScreen(context, //////////////////// Image or Video Preview ///////////////
-                                                  FullViewScreen(
-                                                    file: fileResult,
-
-                                                  ));
-                                              //Todo: Upload file to server
-                                            }
-
-                                            break;
-                                          case "camera":
-                                            final cameras =
-                                                await availableCameras();
-
-                                            final fileResult = await nextScreen(
-                                                context,
-                                                CameraScreen(cameras: cameras));
-                                            lg("Camera file: ${fileResult}");
-
-                                            break;
-
-                                          default:
-                                        }
+                                        await changeAvatar(context, value);
                                       },
                                     ),
                                   ],
@@ -260,13 +178,15 @@ class _PersonalizationState extends State<Personalization> {
                         ),
                         SizedBox(height: d.pSH(20)),
                         CustomTextFieldWithLabel(
-                          controller: searchController,
+                          controller: ageController,
                           hintText: 'Age Group',
                           noPrefix: true,
-                          enabled: false,
+                          readOnly: true,
                           suffixIcon:
                               const Icon(Icons.arrow_drop_down_outlined),
-                          onTap: () {},
+                          onTap: () {
+                            showAgeDialog();
+                          },
                         ),
                         SizedBox(height: d.pSH(40)),
                         CustomText(
@@ -435,6 +355,122 @@ class _PersonalizationState extends State<Personalization> {
             : const SizedBox()
       ]),
     );
+  }
+
+  showAgeDialog() {
+    showModalBottomSheet(
+        context: context,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(d.pSH(20)),
+          topRight: Radius.circular(d.pSH(20)),
+        )),
+        builder: (context) {
+          return ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: ageGroups.length,
+              separatorBuilder: (context, index) {
+                return Divider();
+              },
+              itemBuilder: (context, index) {
+                return ListTile(
+                  onTap: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      ageController.text = ageGroups[index];
+                    });
+                  },
+                  title: CustomText(
+                    label: ageGroups[index],
+                    fontSize: d.pSH(16),
+                  ),
+                );
+              });
+        });
+  }
+
+  Future<void> changeAvatar(
+      BuildContext context, UserDetailsProvider value) async {
+    final result = await showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(d.pSH(20)),
+        topRight: Radius.circular(d.pSH(20)),
+      )),
+      isDismissible: true,
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(),
+          padding: EdgeInsets.all(d.pSH(10)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                onTap: () {
+                  Navigator.pop(context, "avatar");
+                },
+                title: CustomText(
+                    color: AppColors.borderPrimary, label: "Select an Avatar"),
+              ),
+              Divider(),
+              ListTile(
+                onTap: () {
+                  Navigator.pop(context, "gallery");
+                },
+                title: CustomText(
+                    color: AppColors.borderPrimary,
+                    label: "Select from Gallery"),
+              ),
+              Divider(),
+              ListTile(
+                onTap: () {
+                  Navigator.pop(context, "camera");
+                },
+                title: CustomText(
+                    color: AppColors.borderPrimary, label: "Take a Photo"),
+              ),
+              if (Platform.isIOS) SizedBox(height: d.pSH(10))
+            ],
+          ),
+        );
+      },
+    );
+
+    switch ((result ?? '')) {
+      case "avatar":
+        nextScreen(
+            context,
+            ChangeAvatar(
+              selectedAvatar: value.getUserDetails().avatarImage ?? '',
+            ));
+        break;
+      case "gallery":
+        final fileResult = await FilesFunction.pickFile(
+            extensions: imageExtensions, fileType: FileType.image);
+        lg("File picked : $fileResult");
+        if (fileResult != null) {
+          nextScreen(
+              context, //////////////////// Image or Video Preview ///////////////
+              FullViewScreen(
+                file: fileResult,
+              ));
+          //Todo: Upload file to server
+        }
+
+        break;
+      case "camera":
+        final cameras = await availableCameras();
+
+        final fileResult =
+            await nextScreen(context, CameraScreen(cameras: cameras));
+        lg("Camera file: ${fileResult}");
+
+        break;
+
+      default:
+    }
   }
 
   saveChanges() async {

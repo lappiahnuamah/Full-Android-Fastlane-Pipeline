@@ -91,6 +91,7 @@ class CustomTextFieldWithLabel extends StatelessWidget {
           onSaved: onSaved,
           onChanged: onChanged,
           enabled: enabled ?? true,
+          controller: controller,
           onTap: onTap,
           onEditingComplete: onEditingComplete,
           onFieldSubmitted: onFieldSubmitted,
