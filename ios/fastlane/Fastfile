@@ -76,7 +76,7 @@ default_platform(:ios)
     match(
       type: "appstore",
       app_identifier: "com.terateck.games.savyminds",
-      readonly: true,
+      readonly: false,
       git_url: ENV['FASTLANE_MATCH_GIT_URL'],
       keychain_name: "fastlane_temp.keychain-db",
       keychain_password: ENV['MATCH_KEYCHAIN_PASSWORD']
@@ -127,6 +127,7 @@ default_platform(:ios)
     build_app(
       skip_build_archive: true,
       archive_path: "../build/ios/archive/Runner.xcarchive",
+
     )
  
     puts "*** Upload app to TestFlight ***"
