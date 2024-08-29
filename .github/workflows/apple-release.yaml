@@ -76,7 +76,7 @@ jobs:
           cd ios
           sudo gem install cocoapods --pre
           flutter pub get
-          bundle exec pod install
+          # bundle exec pod install
           pod --version # Verify installation
 
       - name: Cache Flutter and Cocoapods dependencies
