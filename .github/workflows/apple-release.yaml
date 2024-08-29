@@ -35,14 +35,6 @@ jobs:
         run: |
           cd ios
           bundle install
-          
-      - name: Install CocoaPods
-        run: |
-          cd ios
-          sudo gem install cocoapods
-          flutter pub get
-          bundle exec pod install
-          pod --version # Verify installation
 
       - name: Set MATCH_PASSWORD
         run: echo "MATCH_PASSWORD=${{ secrets.MATCH_PASSWORD }}" >> $GITHUB_ENV
@@ -78,6 +70,14 @@ jobs:
 
       - name: Set up melos
         run: flutter pub global activate melos
+
+      - name: Install CocoaPods
+        run: |
+          cd ios
+          sudo gem install cocoapods
+          flutter pub get
+          bundle exec pod install
+          pod --version # Verify installation
 
       - name: Cache Flutter and Cocoapods dependencies
         uses: actions/cache@v3
