@@ -1,7 +1,16 @@
-
 require 'dotenv'
 
+Dotenv.load('.env.default')
+ 
 default_platform(:ios)
+ 
+platform :ios do
+  before_all do
+    create_and_unlock_keychain
+    fetch_certificates
+    load_asc_api_token
+  end
+
   lane :create_and_unlock_keychain do
     keychain_name = "fastlane_temp.keychain-db"
     keychain_password = "fastlane"
@@ -86,7 +95,7 @@ default_platform(:ios)
  
   desc "Release a new build to TestFlight"
   lane :release_beta do
-    branch = 'iosPipeline'
+    branch = 'DevOps_IOS'
     commit = last_git_commit
     puts "*** Starting iOS release for commit(#{commit[:abbreviated_commit_hash]}) ***"
  
@@ -128,7 +137,6 @@ default_platform(:ios)
     build_app(
       skip_build_archive: true,
       archive_path: "../build/ios/archive/Runner.xcarchive",
-
     )
  
     puts "*** Upload app to TestFlight ***"
@@ -156,4 +164,4 @@ default_platform(:ios)
  
     return version_name
   end
-
+end

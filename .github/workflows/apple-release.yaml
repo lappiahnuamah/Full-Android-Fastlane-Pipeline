@@ -43,9 +43,9 @@ jobs:
 
       - name: Set App Store Connect Credentials
         run: |
-          echo "FASTLANE_USER=${{ secrets.APPSTORE_USER }}" >> $GITHUB_ENV
-          echo "FASTLANE_PASSWORD=${{ secrets.APPSTORE_PASSWORD }}" >> $GITHUB_ENV
-  
+          echo "ASC_KEY_ID=${{ secrets.ASC_KEY_ID }}" >> $GITHUB_ENV
+          echo "ASC_ISSUER_ID=${{ secrets.ASC_ISSUER_ID }}" >> $GITHUB_ENV
+          echo "ASC_KEY_P8=${{ secrets.ASC_KEY_P8 }}" >> $GITHUB_ENV
     
       - name: Set up fastlane
         run: |
@@ -116,7 +116,7 @@ jobs:
       - name: Find Code Signing Identities
         run: security find-identity -v -p codesigning
          
-        
+
       - name: Build and Deploy to TestFlight
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
