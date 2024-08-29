@@ -28,6 +28,12 @@ jobs:
         with:
           ruby-version: "3.3.3"
           bundler-cache: true  # Enable bundler cache
+
+      - name: Install CocoaPods
+        run: |
+            cd ios
+            sudo gem install cocoapods
+            pod --version # Verify installation
       
       - name: Install OpenSSL
         run: brew install openssl
@@ -73,14 +79,17 @@ jobs:
       - name: Set up melos
         run: flutter pub global activate melos
 
-      - name: Cache Flutter dependencies
+      - name: Cache Flutter and Cocoapods dependencies
         uses: actions/cache@v3
         with:
           path: |
             ~/.pub-cache
             .melos_tool
-          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
-
+            ios/Pods
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}-cocoapods-${{ hashFiles('ios/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}-cocoapods
+            
       - name: Melos Bootstrap      
         run: melos bs
       

@@ -7,3 +7,5 @@ gem 'abbrev'
 gem 'bigdecimal'
 gem 'fastlane-plugin-connected', '~> 0.1.3'
 gem 'json', '~> 2.7', '>= 2.7.2'
+plugins_path = File.join(File.dirname(__FILE__), 'fastlane', 'Pluginfile')
+eval_gemfile(plugins_path) if File.exist?(plugins_path)
