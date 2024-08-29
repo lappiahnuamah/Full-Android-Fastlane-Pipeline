@@ -40,6 +40,12 @@ jobs:
       
       - name: Set MATCH_PASSWORD
         run: echo "MATCH_PASSWORD=${{ secrets.MATCH_PASSWORD }}" >> $GITHUB_ENV
+
+      - name: Set App Store Connect Credentials
+        run: |
+          echo "FASTLANE_USER=${{ secrets.APPSTORE_USER }}" >> $GITHUB_ENV
+          echo "FASTLANE_PASSWORD=${{ secrets.APPSTORE_PASSWORD }}" >> $GITHUB_ENV
+  
     
       - name: Set up fastlane
         run: |
@@ -106,16 +112,6 @@ jobs:
   
       - name: List Installed Provisioning Profiles
         run: ls /Users/runner/Library/MobileDevice/Provisioning\ Profiles/
-   
-      # - name: Create and unlock keychain
-      #   run: |
-      #     security create-keychain -p ${{ secrets.MATCH_KEYCHAIN_PASSWORD }} build.keychain 
-      #     echo "${{ secrets.DISTRIBUTION_P12_FILE }}" | base64 --decode > /tmp/distribution.p12
-      #     security import /tmp/distribution.p12 -k build.keychain -P ${{ secrets.P12_PASSWORD }} -T /usr/bin/codesign
-      #     security list-keychains -s build.keychain
-      #     security default-keychain -s build.keychain
-      #     security unlock-keychain -p ${{ secrets.MATCH_KEYCHAIN_PASSWORD }} build.keychain
-      #     security set-keychain-settings -t 1200 -u build.keychain
 
       - name: Find Code Signing Identities
         run: security find-identity -v -p codesigning
