@@ -39,7 +39,9 @@ jobs:
           bundle install
     
       - name: Set up fastlane
-        run: bundle exec fastlane match --readonly
+        run: |
+          cd ios
+          bundle exec fastlane match --readonly
       
       - name: Update json gem
         run: |
