@@ -85,7 +85,7 @@ platform :ios do
     match(
       type: "appstore",
       app_identifier: "com.terateck.games.savyminds",
-      readonly: false,
+      readonly: true,
       git_url: ENV['FASTLANE_MATCH_GIT_URL'],
       keychain_name: "fastlane_temp.keychain-db",
       keychain_password: ENV['MATCH_KEYCHAIN_PASSWORD']
@@ -95,7 +95,7 @@ platform :ios do
  
   desc "Release a new build to TestFlight"
   lane :release_beta do
-    branch = 'DevOps_IOS'
+    branch = 'iosPipeline'
     commit = last_git_commit
     puts "*** Starting iOS release for commit(#{commit[:abbreviated_commit_hash]}) ***"
  
