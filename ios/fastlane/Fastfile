@@ -154,5 +154,4 @@ default_platform(:ios)
  
     return version_name
   end
-end
 
