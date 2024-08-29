@@ -1,6 +1,4 @@
 require 'dotenv'
-# require 'fastlane/plugin/app_store_connect_api_key'
-
 
 Dotenv.load('.env.default')
  
@@ -14,8 +12,8 @@ platform :ios do
   end
 
   lane :create_and_unlock_keychain do
-    keychain_name = "fastlane_temp.keychain-db"
-    keychain_password = "fastlane"
+    keychain_name = "login.keychain-db"
+    keychain_password = "savvyMinds.Fastlane"
  
     # Create the keychain
     sh "security create-keychain -p #{keychain_password} #{keychain_name}"
@@ -86,9 +84,8 @@ platform :ios do
   lane :fetch_certificates do
     match(
       type: "appstore",
+      app_identifier: "com.terateck.games.savyminds",
       readonly: true,
-      team_id: "65X7U7HQLZ",
-      # username: "terateck",
       git_url: ENV['FASTLANE_MATCH_GIT_URL'],
       keychain_name: "fastlane_temp.keychain-db",
       keychain_password: ENV['MATCH_KEYCHAIN_PASSWORD']
@@ -98,6 +95,7 @@ platform :ios do
  
   desc "Release a new build to TestFlight"
   lane :release_beta do
+    branch = 'iosPipeline'
     commit = last_git_commit
     puts "*** Starting iOS release for commit(#{commit[:abbreviated_commit_hash]}) ***"
  
@@ -109,7 +107,6 @@ platform :ios do
       git_url: ENV['FASTLANE_MATCH_GIT_URL'],
       app_identifier: "com.terateck.games.savyminds",
       team_id: "65X7U7HQLZ",
-      git_private_key: "SHA256:bKxWmqgIXMyqIp0R0Md1Lv7skAvRHd7Y75OmOM80QlQ",
       keychain_password: ENV['MATCH_KEYCHAIN_PASSWORD'],
       clone_branch_directly: true
     )
@@ -138,7 +135,7 @@ platform :ios do
     puts "*** Build and sign iOS app release ***"
     build_app(
       skip_build_archive: true,
-      archive_path: "../build/ios/archive/Runner.xcarchive"
+      archive_path: "../build/ios/archive/Runner.xcarchive",
     )
  
     puts "*** Upload app to TestFlight ***"
@@ -167,4 +164,3 @@ platform :ios do
     return version_name
   end
 end
- 

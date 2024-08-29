@@ -3,7 +3,7 @@ name: Apple Release
 on:
   push:
     branches:
-      - iosPipeline  
+      - iosPipeline
 
 jobs:
   build-and-deploy-ios:
@@ -17,10 +17,16 @@ jobs:
         with:
           fetch-depth: 1  # Change to 0 if you need full history
 
+      
+      - name: webfactory/ssh-agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{secrets.SSH_PRIVATE_KEY }}
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.3.4"
+          ruby-version: "3.3.3"
           bundler-cache: true  # Enable bundler cache
       
       - name: Install OpenSSL
@@ -31,6 +37,12 @@ jobs:
         run: |
           cd ios
           bundle install
+      
+      - name: Update json gem
+        run: |
+          cd ios
+          gem install json -v 2.7.2
+          bundle update json
       
       - name: Set up Dart
         uses: dart-lang/setup-dart@v1
@@ -68,29 +80,54 @@ jobs:
           API_CONFIG_VARIABLES: ${{secrets.ENV}}
           CI: false
 
-      - name: Create and unlock keychain
+      # - name: Set up SSH for Git
+      #   run: |
+      #       mkdir -p ~/.ssh
+      #       echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+      #       chmod 600 ~/.ssh/id_rsa
+      #       ssh-keyscan github.com >> ~/.ssh/known_hosts
+      #       eval "$(ssh-agent -s)"
+      #       ssh-add ~/.ssh/id_rsa
+      
+      - name: Decode and Install Provisioning Profile
+        env:
+          IOS_PROVISIONING_PROFILE: ${{ secrets.IOS_PROVISIONING_PROFILE }}
         run: |
-          security create-keychain -p ${{ secrets.MATCH_KEYCHAIN_PASSWORD }} build.keychain 
-          echo "${{ secrets.DISTRIBUTION_P12_FILE }}" | base64 --decode > /tmp/distribution.p12
-          security import /tmp/distribution.p12 -k build.keychain -P ${{ secrets.P12_PASSWORD }} -T /usr/bin/codesign
-          security list-keychains -s build.keychain
-          security default-keychain -s build.keychain
-          security unlock-keychain -p ${{ secrets.MATCH_KEYCHAIN_PASSWORD }} build.keychain
-          security set-keychain-settings -t 1200 -u build.keychain
+            mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+            echo $IOS_PROVISIONING_PROFILE | base64 --decode > /Users/runner/Library/MobileDevice/Provisioning\ Profiles/$(uuidgen).mobileprovision
+  
+      - name: List Installed Provisioning Profiles
+        run: ls /Users/runner/Library/MobileDevice/Provisioning\ Profiles/
+   
+      # - name: Create and unlock keychain
+      #   run: |
+      #     security create-keychain -p ${{ secrets.MATCH_KEYCHAIN_PASSWORD }} build.keychain 
+      #     echo "${{ secrets.DISTRIBUTION_P12_FILE }}" | base64 --decode > /tmp/distribution.p12
+      #     security import /tmp/distribution.p12 -k build.keychain -P ${{ secrets.P12_PASSWORD }} -T /usr/bin/codesign
+      #     security list-keychains -s build.keychain
+      #     security default-keychain -s build.keychain
+      #     security unlock-keychain -p ${{ secrets.MATCH_KEYCHAIN_PASSWORD }} build.keychain
+      #     security set-keychain-settings -t 1200 -u build.keychain
 
       - name: Find Code Signing Identities
         run: security find-identity -v -p codesigning
-      
-        
+         
       - name: Build and Deploy to TestFlight
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.TOKEN_GITHUB }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.GIT_PAT_TOKEN }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           APP_IDENTIFIER: ${{secrets.APP_IDENTIER}}
+          FASTLANE_MATCH_GIT_PASSWORD: ${{secrets.TOKEN_GITHUB}}
+          DISTRIBUTION_P12_FILE: ${{ secrets.DISTRIBUTION_P12_FILE }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+          MATCH_KEYCHAIN_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
+          FASTLANE_MATCH_GIT_URL: ${{ secrets.FASTLANE_MATCH_GIT_URL }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          ITC_TEAM_ID: ${{ secrets.ITC_TEAM_ID }}
         run: |
           cd ios
           bundle exec fastlane release_beta
