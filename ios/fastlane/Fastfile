@@ -1,16 +1,7 @@
+
 require 'dotenv'
 
-Dotenv.load('.env.default')
- 
 default_platform(:ios)
- 
-platform :ios do
-  before_all do
-    create_and_unlock_keychain
-    fetch_certificates
-    load_asc_api_token
-  end
-
   lane :create_and_unlock_keychain do
     keychain_name = "login.keychain-db"
     keychain_password = "savvyMinds.Fastlane"
@@ -164,3 +155,4 @@ platform :ios do
     return version_name
   end
 end
+
