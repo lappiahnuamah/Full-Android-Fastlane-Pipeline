@@ -123,6 +123,11 @@ jobs:
 
       - name: Find Code Signing Identities
         run: security find-identity -v -p codesigning
+      
+      - name: Clean Flutter build
+        run: |
+          cd ios
+          flutter clean
          
       - name: Build and Deploy to TestFlight
         run: |
