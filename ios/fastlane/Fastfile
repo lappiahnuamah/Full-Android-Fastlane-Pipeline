@@ -3,8 +3,8 @@ require 'dotenv'
 
 default_platform(:ios)
   lane :create_and_unlock_keychain do
-    keychain_name = "login.keychain-db"
-    keychain_password = "savvyMinds.Fastlane"
+    keychain_name = "fastlane_temp.keychain-db"
+    keychain_password = "fastlane"
  
     # Create the keychain
     sh "security create-keychain -p #{keychain_password} #{keychain_name}"
@@ -76,7 +76,7 @@ default_platform(:ios)
     match(
       type: "appstore",
       app_identifier: "com.terateck.games.savyminds",
-      readonly: false,
+      readonly: true,
       git_url: ENV['FASTLANE_MATCH_GIT_URL'],
       keychain_name: "fastlane_temp.keychain-db",
       keychain_password: ENV['MATCH_KEYCHAIN_PASSWORD']
@@ -95,6 +95,7 @@ default_platform(:ios)
     sync_code_signing(
       api_key: api_key,
       type: "appstore",
+      readonly: true,
       git_url: ENV['FASTLANE_MATCH_GIT_URL'],
       app_identifier: "com.terateck.games.savyminds",
       team_id: "65X7U7HQLZ",
