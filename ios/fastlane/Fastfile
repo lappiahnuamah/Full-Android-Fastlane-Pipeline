@@ -123,7 +123,7 @@ platform :ios do
       # Change to the Flutter project directory
       Dir.chdir("../..") do
         puts "*** Build flutter iOS release for version #{version_name}+#{build_number} ***"
-        sh("flutter build ipa --release --build-number=#{build_number} --build-name=#{version_name}")
+        sh("flutter", "build", "ipa", "--release", "--build-number=#{build_number}", "--build-name=#{version_name}")
       end
     rescue => e
       UI.error("Flutter build failed: #{e.message}")
