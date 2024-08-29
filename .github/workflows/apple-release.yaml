@@ -1,5 +1,4 @@
 name: Apple Release
-
 on:
   push:
     branches:
@@ -89,7 +88,7 @@ jobs:
           key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}-cocoapods-${{ hashFiles('ios/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}-cocoapods
-            
+
       - name: Melos Bootstrap      
         run: melos bs
       
@@ -126,21 +125,18 @@ jobs:
         run: security find-identity -v -p codesigning
          
       - name: Build and Deploy to TestFlight
+        run: |
+          cd ios
+          bundle exec fastlane release_beta
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.GIT_PAT_TOKEN }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
           ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          APP_IDENTIFIER: ${{secrets.APP_IDENTIER}}
-          FASTLANE_MATCH_GIT_PASSWORD: ${{secrets.TOKEN_GITHUB}}
           DISTRIBUTION_P12_FILE: ${{ secrets.DISTRIBUTION_P12_FILE }}
           P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
           MATCH_KEYCHAIN_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
           FASTLANE_MATCH_GIT_URL: ${{ secrets.FASTLANE_MATCH_GIT_URL }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           ITC_TEAM_ID: ${{ secrets.ITC_TEAM_ID }}
-        run: |
-          cd ios
-          bundle exec fastlane release_beta
