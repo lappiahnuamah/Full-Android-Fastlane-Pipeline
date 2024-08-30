@@ -2,7 +2,7 @@ name: Apple Release
 on:
   push:
     branches:
-      - iosPipeline
+      - gameAndPipelineMerge
 
 jobs:
   build-and-deploy-ios:
