@@ -11,7 +11,6 @@ import 'package:savyminds/screens/authentication/splashscreen.dart';
 import 'package:savyminds/screens/settings/account_deactivate.dart';
 import 'package:savyminds/screens/settings/components/settings_tile.dart';
 import 'package:savyminds/screens/settings/personalization.dart';
-import 'package:savyminds/utils/cache/content_mgt.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/savvy_webview.dart';
@@ -184,7 +183,6 @@ class _SettingsState extends State<Settings> {
 
   Future<void> logout() async {
     gameItemsProvider.clearStreaks();
-    ContentManagement().clearAll();
     SharedPreferencesHelper.clearCache();
     final GoogleSignIn _googleSignIn = GoogleSignIn();
     await _googleSignIn.signOut();

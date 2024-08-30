@@ -9,6 +9,8 @@ class SharedPreferenceValues {
   static const String authType = "AUTH_TYPE";
   static const String fcmToken = "FCM_TOKEN";
 
+  static const String credentials = "CREDENTIALS";
+
   //category
   static const String allCategories = 'ALL_CATEGORIES';
   static const String favoriteCategories = 'FAVORITE_CATEGORIES';
