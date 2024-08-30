@@ -125,7 +125,7 @@ class _EmailVerificationState extends State<EmailVerification> {
                               //////// Allow password reset
                               final otpVerifyResponse = await Authentications()
                                   .confirmPasswordRequestOTP(context,
-                                      widget.username, widget.email, otpText);
+                                      widget.username , widget.email, otpText);
                               if (otpVerifyResponse == 200) {
                                 Navigator.of(context).pushReplacement(
                                   PageRouteBuilder(
@@ -133,6 +133,7 @@ class _EmailVerificationState extends State<EmailVerification> {
                                           ResetPassword(
                                             email: widget.email,
                                             username: widget.username,
+                                            otp: otpText,
                                           )),
                                 );
                               } else if (otpVerifyResponse is ErrorResponse) {

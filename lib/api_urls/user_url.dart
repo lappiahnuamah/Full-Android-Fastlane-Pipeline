@@ -8,6 +8,10 @@ class UserUrl {
   ///Profile
   static const String profile = "${baseUrl}profile/";
 
+  //Profile Update
+  static const String profileUpdate = "${halloaBaseUrl}/accounts/v1/profile/";
+
+
   static const String userDetails = "${baseUrl}user_accounts/";
   static const String updateInfo1 = "${profile}update-info-1/";
   static const String userContactInfo = "${baseUrl}user-contacts/";

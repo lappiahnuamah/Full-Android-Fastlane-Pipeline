@@ -16,9 +16,11 @@ import '../../widgets/default_snackbar.dart';
 import 'login.dart';
 
 class ResetPassword extends StatefulWidget {
-  const ResetPassword({Key? key, this.email, this.username}) : super(key: key);
+  const ResetPassword({Key? key, this.email, this.username, this.otp})
+      : super(key: key);
   final String? email;
   final String? username;
+  final String? otp;
 
   @override
   State<ResetPassword> createState() => _ResetPasswordState();
@@ -156,8 +158,9 @@ class _ResetPasswordState extends State<ResetPassword> {
                                   .resetLoginPassword(
                                       context,
                                       passwordController.text.trim(),
-                                      widget.email!,
-                                      widget.username!,
+                                      widget.email ?? '',
+                                      widget.username ?? '',
+                                      widget.otp ?? '',
                                       confirmPasswordController.text.trim());
 
                               if (resetResponse == 201) {

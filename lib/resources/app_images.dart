@@ -61,4 +61,6 @@ class AppImages {
 
   //
   static String freezeSnowIcon = "assets/icons/freeze_snow.svg";
+
+  static String avataar = "assets/icons/Avatar.svg";
 }

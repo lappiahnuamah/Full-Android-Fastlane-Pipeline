@@ -18,7 +18,7 @@ import 'package:savyminds/models/error_response.dart';
 import 'package:savyminds/providers/registration_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/utils/block_utils.dart';
-import 'package:savyminds/utils/cache/save_secure.dart';
+import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/connection_check.dart';
 import 'package:savyminds/utils/enums/auth_eums.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -51,9 +51,10 @@ class Authentications {
           AppUser user0 = AppUser.fromJson(jsonDecode(response.body));
           userDetailsProvider.setAccessToken(user0.accessToken ?? '');
           userDetailsProvider.setUserDetails(user0);
-          userSecureStorage(user0, true, json.decode(response.body)['user']);
+          SharedPreferencesHelper.userSecureStorage(
+              user0, true, json.decode(response.body)['user']);
 
-          saveAuthType(AuthType.api);
+          SharedPreferencesHelper.saveAuthType(AuthType.api);
 
           return true;
         } else {
@@ -99,7 +100,8 @@ class Authentications {
 
         AppUser user = AppUser.fromJson(jsonDecode(response.body));
         //Successful login
-        userSecureStorage(user, true, json.decode(response.body)['user']);
+        SharedPreferencesHelper.userSecureStorage(
+            user, true, json.decode(response.body)['user']);
         userDetailsProvider.setAccessToken(user.accessToken!);
         userDetailsProvider.setUserDetails(user);
         return 200;
@@ -230,11 +232,11 @@ class Authentications {
         Uri.parse(AuthUrl.passwordResetOtp),
         headers: apiHeader,
         body: json.encode({
-          "email": email,
-          "username": username,
+          "username_email": email.isEmpty ? username : email,
         }),
       );
-      if (response.statusCode == 201) {
+
+      if (response.statusCode == 200) {
         return 201;
       } else {
         return ErrorResponse.fromJson(jsonDecode(response.body));
@@ -250,9 +252,10 @@ class Authentications {
       BuildContext context, String username, String email, String otp) async {
     try {
       http.Response response = await http.post(
-        Uri.parse(AuthUrl.confirmPasswordResetOtp),
+        Uri.parse(AuthUrl.verifyPasswordResetOtp),
         headers: apiHeader,
-        body: json.encode({"email": email, "username": username, "otp": otp}),
+        body: json.encode(
+            {"username_email": email.isEmpty ? username : email, "otp": otp}),
       );
       if (response.statusCode == 200) {
         return 200;
@@ -298,7 +301,7 @@ class Authentications {
               GameFunction().getGameStreaks(context: context);
             }
             //Successful login
-            userSecureStorage(
+            SharedPreferencesHelper.userSecureStorage(
                 user0, keepLoggedIn, json.decode(response.body)['user']);
 
             return user0;
@@ -432,19 +435,18 @@ class Authentications {
   ///////////////////////////////////////////////////////
   //////////////(- Reset Password -)//////
   Future resetLoginPassword(BuildContext context, String password1,
-      String email, String username, String password2) async {
+      String email, String username, String otp, String password2) async {
     try {
       http.Response response = await http.post(
         Uri.parse(AuthUrl.resetPassword),
         headers: apiHeader,
         body: json.encode({
-          "email": email,
-          "username": username,
-          "new_password1": password1,
-          "new_password2": password2,
+          "username_email": email.isEmpty ? username : email,
+          "new_password": password2,
+          "otp": otp
         }),
       );
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         return 201;
       } else {
         return ErrorResponse.fromJson(json.decode(response.body));
@@ -513,7 +515,7 @@ class Authentications {
               responseType: ResponseType.json,
             ));
         if (res.statusCode == 200) {
-          await clearStorageData();
+          await SharedPreferencesHelper.clearCache();
           return true;
         } else {
           return false;
@@ -694,8 +696,9 @@ class Authentications {
         userDetailsProvider.setAccessToken(user.accessToken!);
         userDetailsProvider.setUserDetails(user);
         //Successful login
-        userSecureStorage(user, true, json.decode(response.body)['user']);
-        saveAuthType(AuthType.google);
+        SharedPreferencesHelper.userSecureStorage(
+            user, true, json.decode(response.body)['user']);
+        SharedPreferencesHelper.saveAuthType(AuthType.google);
         FirebaseMessaging.instance
             .getToken(vapidKey: FcmData.webTOken)
             .then((value) async {
@@ -763,8 +766,9 @@ class Authentications {
         userDetailsProvider.setAccessToken(user.accessToken!);
         userDetailsProvider.setUserDetails(user);
         //Successful login
-        userSecureStorage(user, true, json.decode(response.body)['user']);
-        saveAuthType(AuthType.google);
+        SharedPreferencesHelper.userSecureStorage(
+            user, true, json.decode(response.body)['user']);
+        SharedPreferencesHelper.saveAuthType(AuthType.google);
 
         FirebaseMessaging.instance
             .getToken(vapidKey: FcmData.webTOken)

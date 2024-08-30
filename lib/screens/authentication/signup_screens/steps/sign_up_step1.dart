@@ -33,6 +33,10 @@ class _SignUpStep1State extends State<SignUpStep1> {
 
   PhoneNumber? phoneNumber;
 
+  late RegistrationProvider userRegister;
+
+  UserRegisterModel? userInfo;
+
   int usernameState = -1;
   int emailState = -1;
   int phoneNumberSate = -1;
@@ -44,15 +48,19 @@ class _SignUpStep1State extends State<SignUpStep1> {
 
   @override
   void initState() {
+    userRegister = context.read<RegistrationProvider>();
+    userInfo = userRegister.getUser();
+
+    emailController.text = userInfo?.email ?? '';
+    usernameController.text = userInfo?.username ?? '';
+    fullNameController.text = userInfo?.fullname ?? '';
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     Brightness bright = Theme.of(context).brightness;
-    final userRegister =
-        Provider.of<RegistrationProvider>(context, listen: false);
-    UserRegisterModel userInfo = userRegister.getUser();
+
     Size size = MediaQuery.of(context).size;
 
     d.init(context);
@@ -79,7 +87,6 @@ class _SignUpStep1State extends State<SignUpStep1> {
                         //////////////(- Firstname textfeild -)/////////////////
                         CustomTextFieldWithLabel(
                           enabled: enabled,
-                          initialValue: userInfo.fullname,
                           controller: fullNameController,
                           labelText: 'Full name',
                           hintText: "Full name",
@@ -88,10 +95,8 @@ class _SignUpStep1State extends State<SignUpStep1> {
                               fontSize:
                                   d.isTablet ? getFontSize(10, size) : null),
                           prefixIcon: Icons.edit_outlined,
-                          //(Validation)//
                           validator: (value) =>
                               authValidate.validateFullName(value),
-
                           onSaved: (value) {
                             fullNameController.text = value!;
                           },
@@ -103,7 +108,6 @@ class _SignUpStep1State extends State<SignUpStep1> {
                         //////////////(- Middle textfeild -)/////////////////
                         CustomTextFieldWithLabel(
                             enabled: enabled,
-                            initialValue: userInfo.username,
                             controller: usernameController,
                             labelStyle: TextStyle(
                                 color: getColor(usernameState),
@@ -129,7 +133,7 @@ class _SignUpStep1State extends State<SignUpStep1> {
                         //////////////(- Phone number textfeild -)/////////////////
                         CustomIntlTextFeild(
                           enabled: enabled,
-                          initialValue: userInfo.phoneNumber,
+                          initialValue: userInfo?.phoneNumber,
                           controller: numberController,
                           labelStyle: TextStyle(
                               color: getColor(phoneNumberSate),
@@ -152,7 +156,6 @@ class _SignUpStep1State extends State<SignUpStep1> {
                         //////////////(- Email textfeild -)/////////////////
                         CustomTextFieldWithLabel(
                           enabled: enabled,
-                          initialValue: userInfo.email,
                           controller: emailController,
                           labelText:
                               emailState == 0 ? "Email not available" : 'Email',

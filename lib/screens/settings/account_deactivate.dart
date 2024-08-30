@@ -10,7 +10,6 @@ import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/authentication/deactivate_otp_verify.dart';
 import 'package:savyminds/screens/authentication/login_options_screen.dart';
-import 'package:savyminds/utils/cache/content_mgt.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/func_new.dart';
 import 'package:savyminds/utils/next_screen.dart';
@@ -232,7 +231,6 @@ class _DeactivateAccountState extends State<DeactivateAccount> {
         .deactivateAccount(context: context, email: email);
 
     if (response == true) {
-      ContentManagement().clearAll();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.clear();
       final gameItemsProvider = context.read<GameItemsProvider>();

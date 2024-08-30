@@ -234,7 +234,8 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                 goBack();
                               },
                               child: SizedBox(
-                                width: d.pSH(40), //TODO:Later
+                                width:
+                                    d.isTablet ? null : d.pSH(40), //TODO:Later
                                 child: Card(
                                   child: Padding(
                                     padding: EdgeInsets.all(
@@ -247,6 +248,7 @@ class _TrainingModeGamePageState extends State<TrainingModeGamePage>
                                         AppColors.borderPrimary,
                                         BlendMode.srcIn,
                                       ),
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),

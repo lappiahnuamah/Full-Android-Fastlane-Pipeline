@@ -19,33 +19,33 @@ class SettingsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: d.isTablet ? d.pSH(8) : 0),
+      height: d.isTablet ? d.pSH(80) : d.pSH(60),
+
+      ///  padding: EdgeInsets.symmetric(vertical: d.isTablet ? d.pSH(8) : 0),
       decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.3),
           border: Border(
             bottom: BorderSide(color: AppColors.hintTextBlack.withOpacity(0.6)),
             //  top: BorderSide(color: AppColors.hintTextBlack.withOpacity(0.6)),
           )),
-      child: ListTile(
-        title: Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: description.isEmpty ? d.pSH(20) : 0),
-          child: CustomText(
+      child: Center(
+        child: ListTile(
+          title: CustomText(
             label: title,
             fontSize: d.isTablet ? 14 : 16,
             fontWeight: FontWeight.w600,
           ),
+          subtitle: description.isEmpty
+              ? null
+              : CustomText(
+                  label: description,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.hintTextBlack,
+                  fontSize: d.isTablet ? 10 : 12,
+                ),
+          onTap: onTap,
+          trailing: trailing,
         ),
-        subtitle: description.isEmpty
-            ? null
-            : CustomText(
-                label: description,
-                fontWeight: FontWeight.w400,
-                color: AppColors.hintTextBlack,
-                fontSize: d.isTablet ? 10 : 12,
-              ),
-        onTap: onTap,
-        trailing: trailing,
       ),
     );
   }
