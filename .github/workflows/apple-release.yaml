@@ -74,10 +74,10 @@ jobs:
       - name: Install CocoaPods
         run: |
           cd ios
-          sudo gem install cocoapods --pre
-          flutter pub get
-          # bundle exec pod install
-          pod --version # Verify installation
+          gem list
+          sudo gem uninstall cocoapods && sudo gem install cocoapods
+          pod install
+          pod --version
 
       - name: Cache Flutter and Cocoapods dependencies
         uses: actions/cache@v3
