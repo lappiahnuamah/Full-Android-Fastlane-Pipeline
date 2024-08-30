@@ -12,7 +12,6 @@ class AppUser {
   final String? gender;
   final String? country;
   final String? countryCode;
-  final String? status;
   final int? role;
   String? accessToken;
   String? refreshToken;
@@ -45,7 +44,6 @@ class AppUser {
       this.username,
       this.dob,
       this.gender,
-      this.status,
       this.country,
       this.countryCode,
       this.role,
@@ -70,8 +68,7 @@ class AppUser {
       this.blockReason,
       this.isBlocked,
       this.isBlockedUntil,
-      this.ageGroup
-      });
+      this.ageGroup});
 
 // Receive from login
   static AppUser fromJson(Map<String, dynamic> json) => AppUser(
@@ -82,7 +79,6 @@ class AppUser {
         email: json['user']['email'],
         dob: json['user']['profile']['dob'],
         gender: json['user']['profile']['gender'],
-        status: json['user']['profile']['status'],
         accessToken: json['access'],
         refreshToken: json['refresh'],
         city: json['user']['profile']['city'],
@@ -100,6 +96,7 @@ class AppUser {
         isBlockedUntil: json['user']['is_blocked_until'],
         blockReason: json['user']['block_reason'] ?? '',
         displayName: json['user']['profile']['display_name'],
+        ageGroup: json['user']['profile']['age_group'],
       );
 
   static AppUser fromSecureJson(Map<String, dynamic> json) => AppUser(
@@ -111,7 +108,6 @@ class AppUser {
         email: json['email'],
         dob: json['profile']['dob'],
         gender: json['profile']['gender'],
-        status: json['profile']['status'],
         city: json['profile']['city'],
         profileImage: json['profile']['image'],
         coverImage: json['profile']['cover_image'],
@@ -125,6 +121,7 @@ class AppUser {
         isBlocked: json['is_blocked'] ?? false,
         isBlockedUntil: json['is_blocked_until'],
         blockReason: json['block_reason'] ?? '',
+        ageGroup: json['profile']['age_group'],
       );
 
 // Receive from profile page
@@ -139,7 +136,6 @@ class AppUser {
         countryCode: json['user']['profile']['country_code'],
         dob: json['user']['dob'],
         gender: json['user']['gender'],
-        status: json['user']['status'],
         hallName: json['user']['hall_name'],
         city: json['user']['city'],
         profileImage: json['user']['image'],
@@ -154,24 +150,25 @@ class AppUser {
         isBlocked: json['is_blocked'] ?? false,
         isBlockedUntil: json['is_blocked_until'],
         blockReason: json['block_reason'] ?? '',
+        ageGroup: json['user']['profile']['age_group'],
       );
 
 // Receive from user list
   static AppUser fromUserList(Map<String, dynamic> json) => AppUser(
-      id: json['id'],
-      outerId: json['user_account'],
-      fullname: json['fullname'],
-      displayName: json['display_name'],
-      username: json['username'],
-      email: json['email'],
-      dob: json['dob'],
-      gender: json['gender'],
-      status: json['status'],
-      hallName: json['hall_name'],
-      city: json['city'],
-      profileImage: json['image'],
-      coverImage: json['cover_image'],
-      isNotificationOff: json['is_notification_off']);
+        id: json['id'],
+        outerId: json['user_account'],
+        fullname: json['fullname'],
+        displayName: json['display_name'],
+        username: json['username'],
+        email: json['email'],
+        dob: json['dob'],
+        gender: json['gender'],
+        hallName: json['hall_name'],
+        city: json['city'],
+        profileImage: json['image'],
+        coverImage: json['cover_image'],
+        isNotificationOff: json['is_notification_off'],
+      );
 
   // User Registration
   static AppUser fromUserModel(UserRegisterModel user) => AppUser(
@@ -183,18 +180,20 @@ class AppUser {
 
   Map<String, dynamic> toAppUserMap() {
     return {
+      "id": id,
       "username": username,
       "email": email,
-      "user": {
+      "fullname": fullname,
+      "phone_number": phoneNumber,
+      "profile": {
+        "id": id,
         "fullname": fullname,
-        "phone_number": phoneNumber,
-        "dob": dob,
         "gender": gender,
-        "status": status,
         "city": city,
         "role": role,
         'cover_image': coverImage,
         'display_name': displayName,
+        'age_group': ageGroup,
       }
     };
   }

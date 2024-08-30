@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:savyminds/data/fcm_data.dart';
@@ -17,27 +19,31 @@ class UserDetailsProvider extends ChangeNotifier {
 
   void setUserDetails(AppUser user) {
     _user = user;
-        _user?.avatarImage = SharedPreferencesHelper.getString(SharedPreferenceValues.avatarImage);
-
+    cacheUserDetails();
     notifyListeners();
   }
 
   void setDisplayName(String name) {
     _user?.displayName = name;
+    cacheUserDetails();
     notifyListeners();
   }
+
   void setAvatarImage(String avatar) {
     _user?.avatarImage = avatar;
+    cacheUserDetails();
     notifyListeners();
   }
 
   void setProfileImage(String image) {
     _user?.profileImage = image;
+    cacheUserDetails();
     notifyListeners();
   }
 
   setAgeGroup(String ageGroup) {
     _user?.ageGroup = ageGroup;
+    cacheUserDetails();
     notifyListeners();
   }
 
@@ -58,5 +64,14 @@ class UserDetailsProvider extends ChangeNotifier {
         .then((value) async {
       value != null ? await FCMFunctions().setFCMToken(value) : null;
     });
+  }
+
+  /// cache user details ///
+  cacheUserDetails() {
+    if (_user != null) {
+      SharedPreferencesHelper.setString(
+          key: SharedPreferenceValues.credentials,
+          value: jsonEncode(_user?.toAppUserMap()));
+    }
   }
 }
