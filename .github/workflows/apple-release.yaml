@@ -76,8 +76,6 @@ jobs:
           cd ios
           gem list
           sudo gem uninstall cocoapods && sudo gem install cocoapods
-          # pod install
-          # pod --version
 
       - name: Cache Flutter and Cocoapods dependencies
         uses: actions/cache@v3
