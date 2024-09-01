@@ -203,6 +203,12 @@ class _PersonalizationState extends State<Personalization> {
                           controller: searchController,
                           hintText: 'Search Categories',
                           noPrefix: true,
+                          onChanged: (value) {
+                            lg("Search category: $value");
+                            final c = Provider.of<CategoryProvider>(context,listen: false);
+                            c.searchCategories(value ?? '');
+                            return '';
+                          },
                         ),
                         if (selectedCategories.isNotEmpty)
                           SizedBox(height: d.pSH(16)),
@@ -235,40 +241,56 @@ class _PersonalizationState extends State<Personalization> {
                               )),
                         SizedBox(height: d.pSH(32)),
                         categoriesReady
-                            ? Padding(
-                                padding: EdgeInsets.all(d.pSH(8.0)),
-                                child: Wrap(
-                                  spacing: d.pSW(10),
-                                  runSpacing: d.pSH(10),
-                                  children: [
-                                    ...List.generate(
-                                      categoryProvider.categories.length,
-                                      (index) => CategoryBadge(
-                                        onTap: () {
-                                          if (selectedCategories.contains(
-                                              categoryProvider
-                                                  .categories[index])) {
-                                            selectedCategories.remove(
-                                                categoryProvider
-                                                    .categories[index]);
-                                          } else {
-                                            selectedCategories.add(
-                                                categoryProvider
-                                                    .categories[index]);
-                                          }
-                                          setState(() {});
-                                        },
-                                        text: categoryProvider
-                                            .categories[index].name,
-                                        isSelected: selectedCategories.any(
-                                            (element) =>
-                                                element.name ==
-                                                categoryProvider
-                                                    .categories[index].name),
-                                      ),
-                                    ),
-                                  ],
-                                ))
+                            ? Consumer<CategoryProvider>(
+                              builder: (context,value,child) {
+                                return Padding(
+                                    padding: EdgeInsets.all(d.pSH(8.0)),
+                                    child: value
+                                            .searchedCategories.isEmpty
+                                        ? Container(
+                                            height: d.pSH(50),
+                                            alignment: Alignment.center,
+                                            child: CustomText(
+                                              textAlign: TextAlign.center,
+                                              label:
+                                                  "We could not find this '${searchController.text}' category",
+                                            ))
+                                        : Wrap(
+                                            spacing: d.pSW(10),
+                                            runSpacing: d.pSH(10),
+                                            children: [
+                                              ...List.generate(
+                                                value
+                                                    .searchedCategories.length,
+                                                (index) => CategoryBadge(
+                                                  onTap: () {
+                                                    if (selectedCategories.contains(
+                                                        value
+                                                            .searchedCategories[index])) {
+                                                      selectedCategories.remove(
+                                                          value
+                                                              .searchedCategories[index]);
+                                                    } else {
+                                                      selectedCategories.add(
+                                                          value
+                                                              .searchedCategories[index]);
+                                                    }
+                                                    setState(() {});
+                                                  },
+                                                  text: value
+                                                      .searchedCategories[index].name,
+                                                  isSelected: selectedCategories
+                                                      .any((element) =>
+                                                          element.name ==
+                                                          value
+                                                              .searchedCategories[index]
+                                                              .name),
+                                                ),
+                                              ),
+                                            ],
+                                          ));
+                              }
+                            )
                             : Center(
                                 child: Container(
                                   height: d.pSH(20),
