@@ -77,20 +77,20 @@ jobs:
         run: echo "GITHUB_TOKEN=" >> $GITHUB_ENV
 
       - name: Authenticate gh CLI
-        run: echo ${{ secrets.ANDROID_SAVYMINDS_TOKEN }} | gh auth login --with-token
+        run: echo ${{ secrets.TOKEN_GITHUB }} | gh auth login --with-token
         env:
-          GITHUB_TOKEN: ${{ secrets.ANDROID_SAVYMINDS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
 
       - name: Update GitHub Secret with New Version Code
         run: |
           echo "Updating GitHub secret with new version code"
           gh secret set VERSION_CODE -b"${{ steps.increment_version.outputs.new_version_code }}"
         env:
-          GITHUB_TOKEN: ${{ secrets.ANDROID_SAVYMINDS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
           GITHUB_REPOSITORY: ${{ github.repository }}
 
       - name: Reassign GITHUB_TOKEN
-        run: echo "GITHUB_TOKEN=${{ secrets.ANDROID_SAVYMINDS_TOKEN }}" >> $GITHUB_ENV
+        run: echo "GITHUB_TOKEN=${{ secrets.TOKEN_GITHUB }}" >> $GITHUB_ENV
 
       - name: Set up Java
         uses: actions/setup-java@v3
