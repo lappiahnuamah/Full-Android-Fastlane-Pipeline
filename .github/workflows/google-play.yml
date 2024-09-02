@@ -99,7 +99,7 @@ jobs:
 
       - name: Build Android App Package
         run: |
-          rm pubspec.lock
+          # rm pubspec.lock
           cd android
           flutter pub get
           flutter clean
