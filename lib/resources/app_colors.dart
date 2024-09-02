@@ -92,4 +92,11 @@ class AppColors {
     const Color(0xFFD9FFFD).withOpacity(.5),
     const Color(0xFFF8D7EF).withOpacity(.5),
   ];
+
+  ////Perfect Gradients //////
+  ///
+  static const List<Color> loginBackGradient = [
+    Color(0xFFD9FFFD),
+    Color(0xFFF8D7EF),
+  ];
 }

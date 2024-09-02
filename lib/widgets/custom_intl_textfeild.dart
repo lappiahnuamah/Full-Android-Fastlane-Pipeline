@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/intl_phone_number_input-develop/lib/intl_phone_number_input.dart';
 
 class CustomIntlTextFeild extends StatefulWidget {
@@ -48,6 +49,7 @@ class _CustomIntlTextFeildState extends State<CustomIntlTextFeild> {
   @override
   Widget build(BuildContext context) {
     Brightness bright = Theme.of(context).brightness;
+    Size size = MediaQuery.of(context).size;
     d.init(context);
     return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,7 +65,9 @@ class _CustomIntlTextFeildState extends State<CustomIntlTextFeild> {
                         TextStyle(
                             color: bright == Brightness.dark
                                 ? AppColors.kTrendEmojiColor
-                                : AppColors.kFormLabelColor),
+                                : AppColors.kFormLabelColor,
+                            fontSize:
+                                d.isTablet ? getFontSize(11, size) : null),
                   ),
                 ),
           InternationalPhoneNumberInput(
@@ -82,7 +86,8 @@ class _CustomIntlTextFeildState extends State<CustomIntlTextFeild> {
             spaceBetweenSelectorAndTextField: 0,
             inputDecoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(
-                  horizontal: d.pSW(10), vertical: d.pSH(10)),
+                  horizontal: d.pSW(10),
+                  vertical: d.isTablet ? d.pSH(15) : d.pSH(10)),
               fillColor: bright == Brightness.dark
                   ? AppColors.kDarkCardColor
                   : Colors.white,
@@ -132,12 +137,12 @@ class _CustomIntlTextFeildState extends State<CustomIntlTextFeild> {
                       ? AppColors.kTrendEmojiColor
                       : AppColors.kHintColor),
               contentPadding: EdgeInsets.symmetric(
-                  horizontal: d.pSW(10), vertical: d.pSH(10)),
+                  horizontal: d.pSW(10),
+                  vertical: d.isTablet ? d.pSH(15) : d.pSH(10)),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                    color: bright == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
+                    color:
+                        bright == Brightness.dark ? Colors.white : Colors.black,
                     width: bright == Brightness.dark ? d.pSH(1) : d.pSH(0.5)),
               ),
               focusedErrorBorder: OutlineInputBorder(
@@ -148,9 +153,8 @@ class _CustomIntlTextFeildState extends State<CustomIntlTextFeild> {
               ),
               enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                      color: bright == Brightness.dark
-                          ? Colors.grey
-                          : Colors.grey,
+                      color:
+                          bright == Brightness.dark ? Colors.grey : Colors.grey,
                       width: d.pSH(0.5))),
             ),
           )

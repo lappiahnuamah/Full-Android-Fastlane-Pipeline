@@ -15,6 +15,8 @@ class ProfileFunctions {
             .getAccessToken();
     final user = Provider.of<UserDetailsProvider>(context, listen: false)
         .getUserDetails();
+
+    log('user id: ${user.id}');
     try {
       http.Response response =
           await http.patch(Uri.parse(AuthUrl.profile + '${user.id}/'),

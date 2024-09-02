@@ -77,7 +77,7 @@ class AuthValidate {
     // String  _value = value.replace(\s\s+/g, ' ');
     if (value == null || value.trim().isEmpty) {
       return 'Please enter full name';
-    } else if (value.length <= 4) {
+    } else if (value.length <4) {
       return 'Name should be at least 4 characters';
     } else if (value.length > 50) {
       return 'Name should be at most 50 characters';

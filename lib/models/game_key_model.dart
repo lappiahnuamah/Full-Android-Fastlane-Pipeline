@@ -6,6 +6,7 @@ class GameKeyModel extends Equatable {
   final String name;
   final int amount;
   final String icon;
+  final String inactiveIcon;
   final bool isLocked;
   final GameKeyType type;
 
@@ -14,6 +15,7 @@ class GameKeyModel extends Equatable {
     required this.name,
     required this.amount,
     required this.icon,
+    required this.inactiveIcon,
     required this.isLocked,
     required this.type,
   });
@@ -25,6 +27,7 @@ class GameKeyModel extends Equatable {
     String? icon,
     bool? isLocked,
     GameKeyType? type,
+    String? inactiveIcon,
   }) {
     return GameKeyModel(
       id: id ?? this.id,
@@ -33,6 +36,7 @@ class GameKeyModel extends Equatable {
       icon: icon ?? this.icon,
       isLocked: isLocked ?? this.isLocked,
       type: type ?? this.type,
+      inactiveIcon: inactiveIcon ?? this.inactiveIcon,
     );
   }
 
@@ -44,10 +48,9 @@ class GameKeyModel extends Equatable {
       icon: json['icon'] ?? "",
       isLocked: json['is_locked'] ?? true,
       type: GameKeyType.values[json['type'] ?? 0],
+      inactiveIcon: json['inactive_icon'] ?? "",
     );
   }
-
-  
 
   @override
   List<Object?> get props => [id, name, amount, icon, isLocked];

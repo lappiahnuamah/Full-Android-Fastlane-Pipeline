@@ -3,24 +3,28 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
+import 'package:savyminds/data/shared_preference_values.dart';
 import 'package:savyminds/database/new_game_db_functions.dart';
 import 'package:savyminds/functions/auth/auth_functions.dart';
 import 'package:savyminds/functions/games/game_function.dart';
 import 'package:savyminds/models/auth/app_user.dart';
+import 'package:savyminds/providers/audio_provider.dart';
 import 'package:savyminds/providers/dark_theme_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
+import 'package:savyminds/resources/app_gradients.dart';
+import 'package:savyminds/resources/app_hero_tags.dart';
 import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/screens/authentication/login_options_screen.dart';
 import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
 import 'package:savyminds/screens/game/game/components/game_background.dart';
-import 'package:savyminds/utils/cache/save_secure.dart';
+import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/enums/auth_eums.dart';
+import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -32,7 +36,6 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   // Create storage
-  final storage = const FlutterSecureStorage();
   Uri? uri;
   @override
   void initState() {
@@ -54,10 +57,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     d.init(context);
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(
         children: [
-          const GameBackground(),
+          GameBackground(
+            backgroundGradient: AppGradients.landingGradient,
+          ),
           /////////////////////////////////////////
           /////////////// TERATECK SOLUTIONS ////////////////
           Align(
@@ -66,28 +72,36 @@ class _SplashScreenState extends State<SplashScreen> {
               padding: EdgeInsets.all(d.pSH(10.0)),
               child: Text(
                 "®Terateck Solutions",
-                style: TextStyle(fontSize: d.pSH(17)),
+                style: TextStyle(fontSize: getFontSize(17, size)),
               ),
             ),
           ),
-          /////////////////////////////////////////®Terateck Solutions
+          /////////////////////////////////////////
           /////////////// APP LOGO ////////////////
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgPicture.asset(AppImages.gameLogoSvg),
-                SvgPicture.asset(
-                  AppImages.savvyMinds,
-                  height: d.pSH(50),
+                Hero(
+                  tag: AppHeroTags.savvyMindsLogo,
+                  child: SvgPicture.asset(AppImages.gameLogoSvg,
+                      height: d.isTablet ? d.pSH(120) : null),
                 ),
-                const Text(
+                Hero(
+                  tag: AppHeroTags.savvyMindsText,
+                  child: SvgPicture.asset(
+                    AppImages.savvyMinds,
+                    height: d.isTablet ? d.pSH(60) : d.pSH(50),
+                  ),
+                ),
+                Text(
                   'Think you are smart?',
                   style: TextStyle(
                       fontFamily: 'Architects_Daughter',
                       fontWeight: FontWeight.w300,
                       letterSpacing: 1.8,
-                      height: 1.5),
+                      height: 1.5,
+                      fontSize: d.isTablet ? getFontSize(18, size) : null),
                 ),
               ],
             ),
@@ -103,28 +117,33 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> navigatorPage(context) async {
     try {
       // read all values
-      Map<String, String> allValues = await allSecureStorage();
+      final credentials =
+          SharedPreferencesHelper.getString(SharedPreferenceValues.credentials);
+      final keepMeLoggedIn = SharedPreferencesHelper.getString(
+          SharedPreferenceValues.keepMeLoggedIn);
+      final tokenExpireDate = SharedPreferencesHelper.getString(
+          SharedPreferenceValues.tokenExpireDate);
+      final accessToken =
+          SharedPreferencesHelper.getString(SharedPreferenceValues.accessToken);
 
       //Have saved credentials
-      if (allValues['credentials'] != null &&
-          allValues['keepMeLoggedIn'] == "true") {
+      if (credentials.isNotEmpty && keepMeLoggedIn == "true") {
         bool tokenHasExpired = true;
 
-        tokenHasExpired = allValues['tokenExpireDate'] != null &&
-                allValues['tokenExpireDate']!.isNotEmpty
-            ? DateTime.parse((allValues['tokenExpireDate']!))
-                .isBefore(DateTime.now())
+        tokenHasExpired = tokenExpireDate.isNotEmpty
+            ? DateTime.parse((tokenExpireDate)).isBefore(DateTime.now())
             : true;
 
         log('token has expired: ${tokenHasExpired}');
         // Check is token has expired
         if (tokenHasExpired) {
-          getNewApiAccessToken(allValues);
+          getNewApiAccessToken(credentials: credentials);
         }
 
         /// active token
         else {
-          loadAndSendUserHome(context, allValues);
+          loadAndSendUserHome(context,
+              credentials: credentials, accessToken: accessToken);
         }
       } else {
         nextScreen(context, const LoginOptionsScreen());
@@ -135,15 +154,17 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  void loadAndSendUserHome(context, Map<String, String> allValues) {
-    log('access token: ${allValues['accessToken']}');
-    log('credentials: ${allValues['credentials']}');
+  Future<void> loadAndSendUserHome(BuildContext context,
+      {required String credentials, required String accessToken}) async {
+    log('access token: ${accessToken}');
+    log('credentials: ${credentials}');
+    AudioProvider audioProvider = context.read<AudioProvider>();
     Provider.of<UserDetailsProvider>(context, listen: false)
-        .setAccessToken(allValues['accessToken']!);
-    AppUser user =
-        AppUser.fromSecureJson(json.decode(allValues['credentials'] ?? ''));
+        .setAccessToken(accessToken);
+    AppUser user = AppUser.fromSecureJson(json.decode(credentials));
     Provider.of<UserDetailsProvider>(context, listen: false)
         .setUserDetails(user);
+    await audioProvider.loadCachedAudioSettings();
     if (context.mounted) {
       GameFunction().getGameStreaks(context: context);
     }
@@ -154,11 +175,12 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  getNewApiAccessToken(Map<String, String> allValues) async {
+  getNewApiAccessToken({required String credentials}) async {
     try {
       final userDetailsProvider =
           Provider.of<UserDetailsProvider>(context, listen: false);
-      final refresh = allValues['refreshToken'] ?? '';
+      final refresh = SharedPreferencesHelper.getString(
+          SharedPreferenceValues.refreshToken);
       final response = await Authentications()
           .apiTokenRefresh(context: context, refreshToken: refresh);
 
@@ -168,8 +190,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
         //access token isn't null
         if (access != null) {
-          AppUser user =
-              AppUser.fromUserDetails(json.decode(allValues['credentials']!));
+          AppUser user = AppUser.fromUserDetails(json.decode(credentials));
 
           //Token exxpire in 28 days
           user.aTokenExpireDate =
@@ -182,7 +203,7 @@ class _SplashScreenState extends State<SplashScreen> {
           userDetailsProvider.setUserDetails(user);
           userDetailsProvider.setAccessToken(access);
 
-          userSecureStorage(user, true, null);
+          SharedPreferencesHelper.userSecureStorage(user, true, null);
           if (context.mounted) {
             GameFunction().getGameStreaks(context: context);
           }
@@ -193,14 +214,14 @@ class _SplashScreenState extends State<SplashScreen> {
           }
         }
       } else {
-        clearStorageData();
+        SharedPreferencesHelper.clearCache();
         if (context.mounted) {
           nextScreen(context, const LoginOptionsScreen());
         }
         Fluttertoast.showToast(msg: 'Session expired');
       }
     } catch (e) {
-      clearStorageData();
+      SharedPreferencesHelper.clearCache();
       if (context.mounted) {
         nextScreen(context, const LoginOptionsScreen());
       }
@@ -247,7 +268,7 @@ class _SplashScreenState extends State<SplashScreen> {
             nextScreen(context, const CustomBottomNav());
           }
         } else {
-          clearStorageData();
+          SharedPreferencesHelper.clearCache();
           if (context.mounted) {
             nextScreen(context, const LoginOptionsScreen());
             Fluttertoast.showToast(msg: 'Session expired');
@@ -255,7 +276,7 @@ class _SplashScreenState extends State<SplashScreen> {
           Fluttertoast.showToast(msg: 'Session expired');
         }
       } else {
-        clearStorageData();
+        SharedPreferencesHelper.clearCache();
         if (context.mounted) {
           nextScreen(context, const LoginOptionsScreen());
           Fluttertoast.showToast(msg: 'Session expired');

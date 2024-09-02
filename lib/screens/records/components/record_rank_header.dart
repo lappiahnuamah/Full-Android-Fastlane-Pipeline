@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/resources/app_colors.dart';
-import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class RecordRankHeader extends StatelessWidget {
@@ -16,7 +15,6 @@ class RecordRankHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
 
     return InkWell(
       onTap: onTapped,
@@ -35,7 +33,7 @@ class RecordRankHeader extends StatelessWidget {
         child: Center(
           child: CustomText(
             label: title,
-            fontSize: getFontSize(13, size),
+            fontSize: 13,
             color: isSelected ? Colors.white : AppColors.blueBird,
           ),
         ),

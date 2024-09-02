@@ -6,6 +6,7 @@ import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/game_key_model.dart';
 import 'package:savyminds/models/games/game_streak_model.dart';
 import 'package:savyminds/resources/app_enums.dart';
+import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/extensions/extensions.dart';
 
@@ -34,43 +35,48 @@ class GameItemsProvider extends ChangeNotifier {
   ];
 
   static Map<GameKeyType, GameKeyModel> initialKeyMap = {
-    GameKeyType.goldenKey: const GameKeyModel(
+    GameKeyType.goldenKey: GameKeyModel(
       id: 1,
       name: 'Golden Key',
       amount: 0,
-      icon: 'assets/icons/game_keys/golden_key.svg',
+      icon: AppImages.goldenKey,
+      inactiveIcon: AppImages.goldenInactiveKey,
       isLocked: false,
       type: GameKeyType.goldenKey,
     ),
-    GameKeyType.fiftyFifty: const GameKeyModel(
+    GameKeyType.fiftyFifty: GameKeyModel(
       id: 1,
       name: 'Fifty fity Key',
       amount: 0,
-      icon: 'assets/icons/game_keys/fifty_fifty.svg',
+      icon: AppImages.fiftyFiftyKey,
+      inactiveIcon: AppImages.fiftyFiftyInactiveKey,
       isLocked: false,
       type: GameKeyType.fiftyFifty,
     ),
-    GameKeyType.swapKey: const GameKeyModel(
+    GameKeyType.swapKey: GameKeyModel(
       id: 1,
       name: 'Swap Key',
       amount: 0,
-      icon: 'assets/icons/game_keys/swap_key.svg',
+      icon: AppImages.swapKey,
+      inactiveIcon: AppImages.swapKeyInactive,
       isLocked: false,
       type: GameKeyType.swapKey,
     ),
-    GameKeyType.freezeTimeKey: const GameKeyModel(
+    GameKeyType.freezeTimeKey: GameKeyModel(
       id: 1,
       name: 'Freeze Time Key',
       amount: 0,
-      icon: 'assets/icons/game_keys/freeze_time_key.svg',
+      icon: AppImages.freezeTimeKey,
+      inactiveIcon: AppImages.freezeTimeInactiveKey,
       isLocked: false,
       type: GameKeyType.freezeTimeKey,
     ),
-    GameKeyType.retakeKey: const GameKeyModel(
+    GameKeyType.retakeKey: GameKeyModel(
       id: 1,
       name: 'Retake Key',
       amount: 0,
-      icon: 'assets/icons/game_keys/retake_key.svg',
+      icon: AppImages.retakeKey,
+      inactiveIcon: AppImages.retakeKeyInactive,
       isLocked: false,
       type: GameKeyType.retakeKey,
     )

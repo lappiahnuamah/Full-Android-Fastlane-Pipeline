@@ -42,4 +42,25 @@ class AppImages {
   static String mysteryBox = "assets/icons/game_keys/mystery_box.svg";
   static String retakeKey = "assets/icons/game_keys/retake_key.svg";
   static String swapKey = "assets/icons/game_keys/swap_key.svg";
+
+  //Inactive Key
+  static String fiftyFiftyInactiveKey =
+      "assets/icons/game_keys/fifty_fifty_inactive.svg";
+  static String goldenInactiveKey =
+      "assets/icons/game_keys/golden_inactive.svg";
+  static String doublePointsInactive =
+      "assets/icons/game_keys/times_two_inactive.svg";
+  static String freezeTimeInactiveKey =
+      "assets/icons/game_keys/freeze_inactive.svg";
+  static String hintInactiveKey = "assets/icons/game_keys/hint_inactive.svg";
+  static String mysteryBoxInactive =
+      "assets/icons/game_keys/mystery_box_inactive.svg";
+  static String retakeKeyInactive =
+      "assets/icons/game_keys/retake_inactive.svg";
+  static String swapKeyInactive = "assets/icons/game_keys/swap_inactive.svg";
+
+  //
+  static String freezeSnowIcon = "assets/icons/freeze_snow.svg";
+
+  static String avataar = "assets/icons/Avatar.svg";
 }

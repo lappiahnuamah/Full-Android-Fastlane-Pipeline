@@ -5,15 +5,11 @@ import 'package:savyminds/functions/games/game_function.dart';
 import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
-import 'package:savyminds/screens/authentication/splashscreen.dart';
 import 'package:savyminds/screens/profile/components/key_card.dart';
 import 'package:savyminds/screens/records/components/record_rank_header.dart';
-import 'package:savyminds/utils/cache/content_mgt.dart';
-import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
-import 'package:savyminds/utils/func.dart';
+import 'package:savyminds/screens/settings/settings.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
-import 'package:savyminds/widgets/retake_key_display.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -35,12 +31,11 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Consumer2<GameItemsProvider, UserDetailsProvider>(
         builder: (context, gameItemsProvider, userDetailsProvider, child) {
       return Padding(
-        padding: EdgeInsets.all(d.pSH(16)),
+        padding:
+            EdgeInsets.symmetric(horizontal: d.pSW(16), vertical: d.pSH(16)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -50,19 +45,19 @@ class _ProfileState extends State<Profile> {
                 CustomText(
                   label: 'Profile',
                   fontWeight: FontWeight.w700,
-                  fontSize: getFontSize(24, size),
+                  fontSize: 24,
                 ),
-
-                // InkWell(
-                //   onTap: () {
-                //     nextScreen(context, const Personalization());
-                //     //ƒ().clearAll();
-                //   },
-                //   child: const Icon(
-                //     Icons.settings,
-                //     color: AppColors.hintTextBlack,
-                //   ),
-                // ),
+                InkWell(
+                  onTap: () {
+                    nextScreen(context, const Settings());
+                    //ƒ().clearAll();
+                  },
+                  child: Icon(
+                    Icons.settings,
+                    color: AppColors.hintTextBlack,
+                    size: d.isTablet ? 50 : null,
+                  ),
+                ),
               ],
             ),
             SizedBox(height: d.pSH(22)),
@@ -75,7 +70,7 @@ class _ProfileState extends State<Profile> {
                       label:
                           '${userDetailsProvider.getUserDetails().displayName ?? userDetailsProvider.getUserDetails().username}',
                       fontWeight: FontWeight.w500,
-                      fontSize: getFontSize(25, size),
+                      fontSize: d.isTablet ? 22 : 25,
                     ),
                     SizedBox(height: d.pSH(12)),
 
@@ -87,13 +82,13 @@ class _ProfileState extends State<Profile> {
                         CustomText(
                           label: 'Current Streaks  ',
                           fontWeight: FontWeight.w300,
-                          fontSize: getFontSize(16, size),
+                          fontSize: 16,
                         ),
                         CustomText(
                           label:
                               '${gameItemsProvider.gameStreaks.streaks} ${gameItemsProvider.gameStreaks.streaks > 1 ? "Days" : "Day"}',
                           fontWeight: FontWeight.w500,
-                          fontSize: getFontSize(16, size),
+                          fontSize: 16,
                         ),
                       ],
                     ),
@@ -105,40 +100,14 @@ class _ProfileState extends State<Profile> {
                         CustomText(
                           label: 'Games so far  ',
                           fontWeight: FontWeight.w300,
-                          fontSize: getFontSize(16, size),
+                          fontSize: 16,
                         ),
                         CustomText(
                           label: '${gameItemsProvider.gameStreaks.gamesPlayed}',
                           fontWeight: FontWeight.w500,
-                          fontSize: getFontSize(16, size),
+                          fontSize: 16,
                         ),
                       ],
-                    ),
-                    SizedBox(height: d.pSH(20)),
-
-                    InkWell(
-                      onTap: () {
-                        showLogoutDialog();
-                      },
-                      child: Container(
-                        width: size.width * 0.3,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: d.pSW(10), vertical: d.pSH(4)),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: AppColors.kGameRed,
-                          ),
-                        ),
-                        child: Center(
-                          child: CustomText(
-                            label: 'Log Out',
-                            fontSize: getFontSize(13, size),
-                            color: AppColors.kGameRed,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
                     ),
                     SizedBox(height: d.pSH(35)),
 
@@ -149,7 +118,7 @@ class _ProfileState extends State<Profile> {
                         CustomText(
                           label: 'Savvy Store',
                           fontWeight: FontWeight.w500,
-                          fontSize: getFontSize(23, size),
+                          fontSize: d.isTablet ? 21 : 23,
                         ),
                         RecordRankHeader(
                             title: 'Open Store',
@@ -166,7 +135,7 @@ class _ProfileState extends State<Profile> {
                         CustomText(
                           label: 'Current Plan',
                           fontWeight: FontWeight.w300,
-                          fontSize: getFontSize(19, size),
+                          fontSize: d.isTablet ? 17 : 19,
                         ),
                         SizedBox(
                           width: d.pSW(15),
@@ -174,7 +143,7 @@ class _ProfileState extends State<Profile> {
                         CustomText(
                           label: 'Limited User',
                           fontWeight: FontWeight.w500,
-                          fontSize: getFontSize(19, size),
+                          fontSize: d.isTablet ? 17 : 19,
                         ),
                       ],
                     ),
@@ -182,14 +151,14 @@ class _ProfileState extends State<Profile> {
                     CustomText(
                       label: 'User Keys',
                       fontWeight: FontWeight.w500,
-                      fontSize: getFontSize(19, size),
+                      fontSize: d.isTablet ? 17 : 19,
                     ),
                     SizedBox(height: d.pSH(3)),
 
                     //Keys
                     GridView(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
+                        crossAxisCount: d.isTablet ? 5 : 4,
                         crossAxisSpacing: d.pSW(8),
                         mainAxisSpacing: d.pSH(8),
                         childAspectRatio: 1,
@@ -221,7 +190,7 @@ class _ProfileState extends State<Profile> {
                     //       CustomText(
                     //         label: 'Achievements',
                     //         fontWeight: FontWeight.w500,
-                    //         fontSize: getFontSize(23, size),
+                    //         fontSize: 23,
                     //       ),
                     //     ])
                   ],
@@ -232,43 +201,5 @@ class _ProfileState extends State<Profile> {
         ),
       );
     });
-  }
-
-  Future<void> showLogoutDialog() async {
-    await showAdaptiveDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Log Out'),
-          content: const Text('Are you sure you want to log out?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child:
-                  const Text('Cancel', style: TextStyle(color: Colors.black)),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                logout();
-              },
-              child: const Text(
-                'Log Out',
-                style: TextStyle(color: AppColors.kGameRed),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> logout() async {
-    gameItemsProvider.clearStreaks();
-    ContentManagement().clearAll();
-    SharedPreferencesHelper.clearCache();
-    nextScreenCloseOthers(context, const SplashScreen());
   }
 }

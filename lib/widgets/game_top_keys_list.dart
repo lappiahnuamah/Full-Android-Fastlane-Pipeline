@@ -38,30 +38,31 @@ class GameTopKeysList extends StatelessWidget {
                   onTap: onHintPressed,
                   child: SvgPicture.asset(
                     AppImages.hintKey,
-                    height: d.pSH(33),
+                    height: d.pSH(d.isTablet ? 43 : 33),
                   )).animate()
-                ..shimmer(duration: 1000.ms)
-                ..scale(duration: 1000.ms),
+                ..shimmer(duration: 700.ms)
+                ..scale(duration: 700.ms),
             SizedBox(height: d.pSH(10)),
             if ((showMysteryBox || showTimesTwo) && showHint)
-              SizedBox(width: d.pSH(34)),
+              SizedBox(width: d.pSH(d.isTablet ? 40 : 34)),
             if (showMysteryBox)
               InkWell(
                   onTap: onMysteryBoxPressed,
                   child: SvgPicture.asset(
                     AppImages.mysteryBox,
-                    height: d.pSH(43),
+                    height: d.pSH(d.isTablet ? 53 : 43),
                   )).animate()
                 ..shimmer(duration: 1000.ms)
                 ..moveY(duration: 1000.ms),
             SizedBox(height: d.pSH(10)),
-            if (showMysteryBox && showTimesTwo) SizedBox(width: d.pSH(30)),
+            if (showMysteryBox && showTimesTwo)
+              SizedBox(width: d.pSH(d.isTablet ? 35 : 30)),
             if (showTimesTwo)
               InkWell(
                   onTap: onTimesTwoPressed,
                   child: SvgPicture.asset(
                     AppImages.doublePoints,
-                    height: d.pSH(33),
+                    height: d.pSH(d.isTablet ? 43 : 33),
                   )).animate()
                 ..shimmer(duration: 1000.ms)
                 ..shakeY(duration: 1000.ms),

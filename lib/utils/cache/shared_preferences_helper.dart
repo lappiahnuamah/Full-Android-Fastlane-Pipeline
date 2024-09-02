@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:savyminds/data/shared_preference_values.dart';
+import 'package:savyminds/models/auth/app_user.dart';
+import 'package:savyminds/utils/enums/auth_eums.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesHelper {
@@ -84,5 +87,44 @@ class SharedPreferencesHelper {
   // Clear cache
   static clearCache() {
     _prefs?.clear();
+  }
+
+  //////
+  static Future userSecureStorage(
+      AppUser user, bool? keepLoggedIn, dynamic response) async {
+    if (response != null) {
+      setString(
+        key: SharedPreferenceValues.credentials,
+        value: jsonEncode(response),
+      );
+    }
+    setString(
+      key: SharedPreferenceValues.accessToken,
+      value: '${user.accessToken}',
+    );
+    setString(
+      key: SharedPreferenceValues.refreshToken,
+      value: '${user.refreshToken}',
+    );
+    setString(
+      key: SharedPreferenceValues.tokenExpireDate,
+      value: '${user.aTokenExpireDate}',
+    );
+    setString(
+      key: SharedPreferenceValues.keepMeLoggedIn,
+      value: 'true',
+    );
+    setString(
+      key: SharedPreferenceValues.authType,
+      value: AuthType.api.name,
+    );
+  }
+
+  ///
+  static Future saveAuthType(AuthType type) async {
+    setString(
+      key: 'authType',
+      value: type.name,
+    );
   }
 }

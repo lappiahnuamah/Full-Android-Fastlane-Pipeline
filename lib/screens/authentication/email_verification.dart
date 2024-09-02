@@ -7,6 +7,7 @@ import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/auth/auth_functions.dart';
 import 'package:savyminds/models/error_response.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/resources/app_gradients.dart';
 import 'package:savyminds/screens/authentication/reset_password.dart';
 import 'package:savyminds/utils/validator.dart';
 import 'package:savyminds/widgets/load_indicator.dart';
@@ -44,6 +45,7 @@ class _EmailVerificationState extends State<EmailVerification> {
     d.init(context);
     return PageTemplate(
       pageTitle: "Email Verification",
+      backgroundGradient: AppGradients.landingGradient,
       child: Stack(
         children: [
           SizedBox(
@@ -123,7 +125,7 @@ class _EmailVerificationState extends State<EmailVerification> {
                               //////// Allow password reset
                               final otpVerifyResponse = await Authentications()
                                   .confirmPasswordRequestOTP(context,
-                                      widget.username, widget.email, otpText);
+                                      widget.username , widget.email, otpText);
                               if (otpVerifyResponse == 200) {
                                 Navigator.of(context).pushReplacement(
                                   PageRouteBuilder(
@@ -131,6 +133,7 @@ class _EmailVerificationState extends State<EmailVerification> {
                                           ResetPassword(
                                             email: widget.email,
                                             username: widget.username,
+                                            otp: otpText,
                                           )),
                                 );
                               } else if (otpVerifyResponse is ErrorResponse) {

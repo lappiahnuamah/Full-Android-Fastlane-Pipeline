@@ -8,12 +8,14 @@ class CustomButton extends StatelessWidget {
       required this.onTap,
       required this.child,
       this.enabled = true,
-      this.color})
+      this.color,
+      this.height})
       : super(key: key);
   final VoidCallback onTap;
   final Widget child;
   final bool? enabled;
   final Color? color;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class CustomButton extends StatelessWidget {
     d.init(context);
     return SizedBox(
       width: double.infinity,
-      height: d.pSH(45),
+      height: height ?? (d.isTablet ? d.pSH(52) : d.pSH(45)),
       child: TextButton(
         // key: const Key('customButton'),
         style: TextButton.styleFrom(

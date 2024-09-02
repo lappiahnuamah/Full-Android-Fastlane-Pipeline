@@ -1,0 +1,5 @@
+name: savvyminds
+
+packages:
+  - apps/**
+  - packages/**

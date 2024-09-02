@@ -10,13 +10,12 @@ import 'package:savyminds/providers/appsocket_provider.dart';
 import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
-import 'package:savyminds/screens/game/players.dart';
+// import 'package:savyminds/screens/game/players.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/number_utils.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
 
 import '../../../../../data/app_data.dart';
-import '../../../../../utils/next_screen.dart';
 
 class ScoreGameState extends StatefulWidget {
   const ScoreGameState(
@@ -136,7 +135,7 @@ class _ScoreGameStateState extends State<ScoreGameState> {
                               onTap: () {
                                 gameSocket.closeSocket();
                                 gameProvider.resetMultiGameBadges();
-                                nextScreen(context, const PlayersSelect());
+                                // nextScreen(context, const PlayersSelect());
                               },
                               buttonText: 'RETURN HOME',
                               fontSize: getFontSize(20, size),

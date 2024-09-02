@@ -8,7 +8,6 @@ import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_enums.dart';
 import 'package:savyminds/resources/app_fonts.dart';
 import 'package:savyminds/resources/app_images.dart';
-import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class RetakeKeyDisplay extends StatefulWidget {
@@ -22,8 +21,6 @@ class RetakeKeyDisplay extends StatefulWidget {
 class _RetakeKeyDisplayState extends State<RetakeKeyDisplay> {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Consumer<GameItemsProvider>(
         builder: (context, gameItemsProvider, chikd) {
       final retakeCount =
@@ -35,7 +32,7 @@ class _RetakeKeyDisplayState extends State<RetakeKeyDisplay> {
           children: [
             CustomText(
               label: 'You answered incorrectly!',
-              fontSize: getFontSize(38, size),
+              fontSize: 38,
               fontWeight: FontWeight.bold,
               fontFamily: AppFonts.caveat,
               color: AppColors.kGameRed,
@@ -43,7 +40,7 @@ class _RetakeKeyDisplayState extends State<RetakeKeyDisplay> {
             SizedBox(height: d.pSH(10)),
             CustomText(
               label: 'You have a chance to retake the question',
-              fontSize: getFontSize(30, size),
+              fontSize: 30,
               fontWeight: FontWeight.bold,
               fontFamily: AppFonts.caveat,
               textAlign: TextAlign.center,
@@ -68,7 +65,7 @@ class _RetakeKeyDisplayState extends State<RetakeKeyDisplay> {
                     child: CustomText(
                       label: retakeCount.toString(),
                       color: AppColors.kPrimaryColor,
-                      fontSize: getFontSize(24, size),
+                      fontSize: 24,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -80,17 +77,18 @@ class _RetakeKeyDisplayState extends State<RetakeKeyDisplay> {
               onTap: widget.onRetakeTapped,
               child: Container(
                 padding: EdgeInsets.symmetric(
-                    vertical: d.pSH(5), horizontal: d.pSW(12)),
+                    vertical: d.pSH(5), horizontal: d.pSW(14)),
                 decoration: BoxDecoration(
+                  color: AppColors.everGreen,
                   borderRadius: BorderRadius.circular(d.pSH(22)),
                   border: Border.all(color: AppColors.everGreen, width: 1),
                 ),
                 child: CustomText(
                   label: 'Retake Question',
-                  fontSize: getFontSize(24, size),
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
                   fontFamily: AppFonts.caveat,
-                  color: AppColors.everGreen,
+                  color: Colors.white,
                 ),
               ),
             )
