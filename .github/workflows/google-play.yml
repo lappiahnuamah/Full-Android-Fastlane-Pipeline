@@ -30,14 +30,15 @@ jobs:
           bundle exec fastlane get_version_info
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
 
       - name: Increment Version Code and Update Version Name
         id: increment_version
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git pull origin DevOps_SavyMinds
+          git pull origin uat
 
           cd android
           currentVersionCode=$(grep -o 'flutter.versionCode\s*=\s*[0-9]\+' version.properties | cut -d'=' -f2 | tr -d ' ')
@@ -58,9 +59,8 @@ jobs:
           currentSuffix=${currentVersionName#"$versionNamePrefix"}
           newSuffix=$((currentSuffix + 1))
           newVersionName="${versionNamePrefix}${newSuffix}"
-          newVersionCode=$((currentVersionCode + 1))
-
-          sed -i "s/flutter.versionCode=[0-9]\+/flutter.versionCode=$newVersionCode/" version.properties
+          
+          sed -i "s/flutter.versionCode=[0-9]\+/flutter.versionCode=$currentVersionCode/" version.properties
           sed -i "s/flutter.versionName=[^ ]\+/flutter.versionName=$newVersionName/" version.properties
 
           echo "Updated version.properties:"
@@ -68,18 +68,10 @@ jobs:
 
           git add version.properties
           git commit -m "chore: increment version code to $newVersionCode and update version name to $newVersionName"
-          git push origin DevOps_SavyMinds
+          git push origin uat
 
-          echo "::set-output name=new_version_code::$newVersionCode"
+          echo "::set-output name=new_version_code::$currentVersionCode"
           echo "::set-output name=new_version_name::$newVersionName"
-
-      - name: Clear GITHUB_TOKEN
-        run: echo "GITHUB_TOKEN=" >> $GITHUB_ENV
-      - name: Authenticate gh CLI
-        run: echo ${{ secrets.TOKEN_GITHUB }} | gh auth login --with-token
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
-
       - name: Update GitHub Secret with New Version Code
         run: |
           echo "Updating GitHub secret with new version code"
@@ -87,9 +79,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-
-      - name: Reassign GITHUB_TOKEN
-        run: echo "GITHUB_TOKEN=${{ secrets.TOKEN_GITHUB }}" >> $GITHUB_ENV
 
       - name: Set up Java
         uses: actions/setup-java@v3
@@ -114,9 +103,6 @@ jobs:
           cd android
           flutter pub get
           flutter clean
-          rm -rf ~/.gradle/caches/
-          rm -rf build/
-          rm -rf android/build/
           flutter build appbundle --release --no-tree-shake-icons
 
       - name: Sign the Android App Bundle
@@ -131,7 +117,8 @@ jobs:
         run: |
           cd build/app/outputs/bundle/release
           jarsigner -verify -verbose -certs app-release.aab
-
+      
+      
       - name: Deploy to Google Play
         run: |
           cd android
