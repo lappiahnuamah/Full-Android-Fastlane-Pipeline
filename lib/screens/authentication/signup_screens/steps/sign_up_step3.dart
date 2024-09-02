@@ -8,7 +8,7 @@ import 'package:savyminds/models/error_response.dart';
 import 'package:savyminds/models/user_register_model.dart';
 import 'package:savyminds/providers/registration_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
-import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
+import 'package:savyminds/screens/settings/personalization.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/func_new.dart';
 import 'package:savyminds/utils/next_screen.dart';
@@ -70,8 +70,9 @@ class _SignUpStep3State extends State<SignUpStep3>
               SizedBox(
                 width: double.infinity,
                 child: Padding(
-                  padding: EdgeInsets.only(
-                      top: d.pSH(0), left: d.pSW(25), right: d.pSW(25)),
+                  padding: d.isTablet
+                      ? EdgeInsets.symmetric(horizontal: size.width * 0.12)
+                      : EdgeInsets.only(left: d.pSW(25), right: d.pSW(25)),
                   child: Align(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -81,7 +82,7 @@ class _SignUpStep3State extends State<SignUpStep3>
                           'We have sent a 6 digit OTP to \n ${userInfo.email ?? 'your email address'}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: d.pSH(17),
+                            fontSize: getFontSize(15, size),
                           ),
                         ),
                         SizedBox(
@@ -145,7 +146,7 @@ class _SignUpStep3State extends State<SignUpStep3>
                                     ? 'You will receive an OTP in'
                                     : "I did not receive the code.",
                                 style: TextStyle(
-                                  fontSize: d.pSH(17),
+                                  fontSize: getFontSize(15, size),
                                   color: bright == Brightness.dark
                                       ? AppColors.kTrendEmojiColor
                                       : AppColors.kSecondaryColor,
@@ -169,7 +170,7 @@ class _SignUpStep3State extends State<SignUpStep3>
                                           ? Colors.white
                                           : AppColors.kPrimaryColor,
                                       fontFamily: "Sofia",
-                                      fontSize: d.pSH(16),
+                                      fontSize: getFontSize(14, size),
                                     )),
                               ),
                             ]),
@@ -267,7 +268,7 @@ class _SignUpStep3State extends State<SignUpStep3>
             });
             Fluttertoast.showToast(msg: "Activated successfully");
             if (context.mounted) {
-              nextScreen(context, const CustomBottomNav());
+              nextScreen(context, const Personalization());
             }
           } else {
             setState(() {

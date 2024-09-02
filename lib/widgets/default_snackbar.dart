@@ -17,7 +17,7 @@ showSnackBar(BuildContext context, msg) {
             color: Colors.white,
           ),
         ),
-        duration: const Duration(seconds: 2),
+        duration: const Duration(seconds: 5),
         behavior: SnackBarBehavior.floating,
         elevation: 3.0,
         backgroundColor: Colors.black.withOpacity(0.8),
@@ -71,3 +71,5 @@ showGameNotification(BuildContext context, OverlayModel data) {
     );
   }, duration: const Duration(seconds: 2));
 }
+
+

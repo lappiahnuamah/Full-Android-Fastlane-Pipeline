@@ -8,7 +8,6 @@ import 'package:savyminds/api_urls/category_url.dart';
 import 'package:savyminds/api_urls/game_url.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/data/shared_preference_values.dart';
-import 'package:savyminds/functions/contests/contests_functions.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:savyminds/models/categories/category_level_model.dart';
@@ -17,6 +16,7 @@ import 'package:savyminds/models/categories/user_category_points.dart';
 import 'package:savyminds/models/games/question_model.dart';
 import 'package:savyminds/models/http_response_model.dart';
 import 'package:savyminds/providers/categories_provider.dart';
+import 'package:savyminds/providers/records_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/connection_check.dart';
@@ -84,8 +84,8 @@ class CategoryFunctions {
       lg('point submit: ${response.body} : points: $totalPoints');
 
       // Add type points
-      await ContestFunctions().submitGameTypePoints(
-          context: context, gameType: gameTypeId, totalPoints: totalPoints);
+      // await ContestFunctions().submitGameTypePoints(
+      //     context: context, gameType: gameTypeId, totalPoints: totalPoints);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = json.decode(response.body);
@@ -143,6 +143,8 @@ class CategoryFunctions {
     final String accessToken =
         Provider.of<UserDetailsProvider>(context, listen: false)
             .getAccessToken();
+
+    log('accessToken: $accessToken');
     try {
       final response =
           await http.post(Uri.parse('${CategoryUrl.categories}favorite/'),
@@ -186,26 +188,41 @@ class CategoryFunctions {
   }
 
   Future getCategoryLevel(context, int id) async {
-    final String accessToken =
-        Provider.of<UserDetailsProvider>(context, listen: false)
-            .getAccessToken();
-
-    CategoryProvider categoryProvider =
-        Provider.of<CategoryProvider>(context, listen: false);
     try {
-      final response = await http.get(
-        Uri.parse('${CategoryUrl.getMyLevel(id)}'),
-        headers: {
-          "content-type": "application/json",
-          "accept": "application/json",
-          "Authorization": " Bearer $accessToken"
-        },
-      );
-      log('level:${response.body}');
-      if (response.statusCode == 200) {
-        final level = CategoryLevelModel.fromJson(jsonDecode(response.body));
-        categoryProvider.setCategoryLevel(id, level);
-        return level;
+      final String accessToken =
+          Provider.of<UserDetailsProvider>(context, listen: false)
+              .getAccessToken();
+
+      CategoryProvider categoryProvider =
+          Provider.of<CategoryProvider>(context, listen: false);
+
+      if (await ConnectionCheck().hasConnection()) {
+        final result = SharedPreferencesHelper.getString(
+            SharedPreferenceValues.categoryLevel + id.toString());
+
+        if (result.isNotEmpty && result != "null") {
+          final level = CategoryLevelModel.fromJson(jsonDecode(result));
+          categoryProvider.setCategoryLevel(id, level);
+        }
+        final response = await http.get(
+          Uri.parse('${CategoryUrl.getMyLevel(id)}'),
+          headers: {
+            "content-type": "application/json",
+            "accept": "application/json",
+            "Authorization": " Bearer $accessToken"
+          },
+        );
+        log('level:${response.body}');
+        if (response.statusCode == 200) {
+          final level = CategoryLevelModel.fromJson(jsonDecode(response.body));
+          SharedPreferencesHelper.setString(
+              key: SharedPreferenceValues.categoryLevel + id.toString(),
+              value: response.body);
+          categoryProvider.setCategoryLevel(id, level);
+          return level;
+        } else {
+          return null;
+        }
       } else {
         return null;
       }
@@ -266,10 +283,23 @@ class CategoryFunctions {
 
   Future<List<CategoryRankModel>> getCategoryRanks(
       {required BuildContext context}) async {
-    final hasConnection = await ConnectionCheck().hasConnection();
     try {
+      final hasConnection = await ConnectionCheck().hasConnection();
+      RecordsProvider recordsProvider =
+          Provider.of<RecordsProvider>(context, listen: false);
       if (hasConnection) {
         if (context.mounted) {
+          final result = SharedPreferencesHelper.getString(
+              SharedPreferenceValues.categoryRanks);
+          recordsProvider.setRanksIsLoading(isLoading: true, gameType: '');
+
+          if (result.isNotEmpty && result != "null") {
+            final categoryRankList = ((jsonDecode(result) ?? []) as List)
+                .map((e) => CategoryRankModel.fromJson(e))
+                .toList();
+            recordsProvider.setCategoryRanks(categoryRankList);
+            recordsProvider.setRanksIsLoading(isLoading: false, gameType: '');
+          }
           String accessToken =
               Provider.of<UserDetailsProvider>(context, listen: false)
                   .getAccessToken();
@@ -283,10 +313,22 @@ class CategoryFunctions {
             },
           );
           if (response.statusCode == 200) {
-            return ((jsonDecode(response.body) ?? []) as List)
-                .map((e) => CategoryRankModel.fromJson(e))
-                .toList();
+            SharedPreferencesHelper.setString(
+                key: SharedPreferenceValues.categoryRanks,
+                value: response.body);
+            final categoryRanksList =
+                ((jsonDecode(response.body) ?? []) as List)
+                    .map((e) => CategoryRankModel.fromJson(e))
+                    .toList();
+            recordsProvider.setCategoryRanks(categoryRanksList);
+
+            return categoryRanksList;
           } else {
+            // SharedPreferencesHelper.setString(
+            //     key: SharedPreferenceValues.categoryRanks,
+            //     value: jsonEncode([]));
+            recordsProvider.setRanksIsLoading(isLoading: false, gameType: '');
+
             return [];
           }
         }

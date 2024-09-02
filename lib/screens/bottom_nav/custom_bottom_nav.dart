@@ -1,9 +1,10 @@
-import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
+import 'package:savyminds/providers/audio_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/screens/categories/categories.dart';
 import 'package:savyminds/screens/contest/contest.dart';
@@ -22,17 +23,16 @@ class CustomBottomNav extends StatefulWidget {
 
 class _CustomBottomNavState extends State<CustomBottomNav> {
   int currentIndex = 0;
+  final GlobalKey<SoloQuestState> _soloQuestKey = GlobalKey<SoloQuestState>();
+  final GlobalKey<ContestState> _contestKey = GlobalKey<ContestState>();
+  late AudioProvider audioProvider;
 
   @override
   void initState() {
     currentIndex = widget.currentIndex;
-    playMusic();
+    audioProvider = context.read<AudioProvider>();
+    audioProvider.startGameBackgroundMusic();
     super.initState();
-  }
-
-  void playMusic() async {
-    FlameAudio.bgm.initialize();
-    FlameAudio.bgm.play('game_intro.mp3', volume: 0.5);
   }
 
   @override
@@ -46,22 +46,60 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
           bottomNavigationBar: bottomNavigationBar(),
           body: Stack(
             children: [
-              const GameBackground(),
+              GameBackground(
+                leftPosition: _getLeftPosition(),
+                rightPosition: _getRightPosition(),
+              ),
               SafeArea(
-                child: IndexedStack(
-                  index: currentIndex,
-                  children: const [
-                    Categories(),
-                    SoloQuest(),
-                    Contest(),
-                    Records(),
-                    Profile()
-                  ],
-                ),
+                child: IndexedStack(index: currentIndex, children: [
+                  Categories(),
+                  SoloQuest(
+                    key: _soloQuestKey,
+                  ),
+                  Contest(
+                    key: _contestKey,
+                  ),
+                  Records(),
+                  Profile()
+                ]),
               ),
             ],
           )),
     );
+  }
+
+  _getLeftPosition() {
+    switch (currentIndex) {
+      case 0:
+        return -d.pSW(10);
+      case 1:
+        return -d.pSW(43);
+      case 2:
+        return d.pSW(0);
+      case 3:
+        return null;
+      case 4:
+        return null;
+      default:
+        return null;
+    }
+  }
+
+  _getRightPosition() {
+    switch (currentIndex) {
+      case 0:
+        return null;
+      case 1:
+        return null;
+      case 2:
+        return d.pSW(0);
+      case 3:
+        return -d.pSW(43);
+      case 4:
+        return -d.pSW(10);
+      default:
+        return null;
+    }
   }
 
   Widget bottomNavigationBar() {
@@ -97,6 +135,11 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
         setState(() {
           currentIndex = index;
         });
+        if (index == 1) {
+          _soloQuestKey.currentState?.startAnimations();
+        } else if (index == 2) {
+          _contestKey.currentState?.startAnimations();
+        }
       },
       backgroundColor: bright == Brightness.dark
           ? AppColors.kDarkBottomNavBarColor

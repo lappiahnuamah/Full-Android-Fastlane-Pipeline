@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/contests/contests_functions.dart';
-import 'package:savyminds/models/solo_quest/game_type_rank_model.dart';
+import 'package:savyminds/providers/records_provider.dart';
 import 'package:savyminds/screens/records/record_ranks.dart';
+import 'package:savyminds/widgets/custom_text.dart';
 
 class SoloQuestRanks extends StatefulWidget {
   const SoloQuestRanks({super.key});
@@ -12,9 +14,6 @@ class SoloQuestRanks extends StatefulWidget {
 }
 
 class _SoloQuestRanksState extends State<SoloQuestRanks> {
-  List<GameTypeRankModel> categoryRanks = [];
-  bool isLoading = true;
-
   @override
   void initState() {
     super.initState();
@@ -26,59 +25,97 @@ class _SoloQuestRanksState extends State<SoloQuestRanks> {
         .getGameTypeRank(context: context, gameType: "Single Player");
     if (!mounted) return;
 
-    setState(() {
-      categoryRanks = result;
-      isLoading = false;
-    });
     return result;
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Column(children: [
+    return Consumer<RecordsProvider>(builder: (context, value, child) {
+      return Column(children: [
+        Expanded(
+          child: Column(
+            children: [
+              SoloQuestRankTableHeader(size: size),
+              SizedBox(height: d.pSH(10)),
+              Expanded(
+                child: Builder(builder: (context) {
+                  if (value.soloQuestRankIsLoading &&
+                      value.soloQuestRanks.isEmpty) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  if (!value.soloQuestRankIsLoading &&
+                      value.soloQuestRanks.isEmpty) {
+                    return Center(
+                      child: CustomText(label: 'No data found'),
+                    );
+                  }
+
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ...List.generate(value.soloQuestRanks.length, (index) {
+                          final rank = value.soloQuestRanks[index];
+                          return Padding(
+                            padding: EdgeInsets.only(bottom: d.pSH(10.0)),
+                            child: SoloQuestRankRow(
+                              rank: rank.rank.toString(),
+                              level: rank.level.toString(),
+                              name: rank.gameTypeName,
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                  );
+                }),
+              )
+            ],
+          ),
+        ),
+      ]);
+    });
+  }
+}
+
+class SoloQuestRankTableHeader extends StatelessWidget {
+  const SoloQuestRankTableHeader({
+    super.key,
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
       Expanded(
-        child: Column(
-          children: [
-            CategoryRankTableHeader(size: size),
-            SizedBox(height: d.pSH(10)),
-            Expanded(
-              child: Builder(builder: (context) {
-                if (isLoading) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-
-                if (categoryRanks.isEmpty) {
-                  return Center(
-                    child: Text('No data found'),
-                  );
-                }
-
-                return SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      ...List.generate(categoryRanks.length, (index) {
-                        final rank = categoryRanks[index];
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: d.pSH(10.0)),
-                          child: CustomRankRow(
-                            gamesPlayed: rank.numberOfPlays.toString(),
-                            rank: rank.rank.toString(),
-                            points: rank.totalPoints.toString(),
-                            name: rank.gameTypeName,
-                          ),
-                        );
-                      }),
-                    ],
-                  ),
-                );
-              }),
-            )
-          ],
+        flex: 5,
+        child: SizedBox(height: d.pSH(15)),
+      ),
+      Expanded(
+        flex: 2,
+        child: CustomText(
+          label: "Level",
+          fontSize: 16,
+          textAlign: TextAlign.end,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      Expanded(
+        flex: 2,
+        child: CustomText(
+          label: "Rank",
+          fontSize: 16,
+          textAlign: TextAlign.end,
+          fontWeight: FontWeight.w600,
         ),
       ),
     ]);
   }
 }
+
+//

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/resources/app_colors.dart';
-import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class CategoryPlaceholder extends StatelessWidget {
@@ -19,7 +18,6 @@ class CategoryPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return InkWell(
       onTap: onTap,
       child: SizedBox(
@@ -43,11 +41,11 @@ class CategoryPlaceholder extends StatelessWidget {
                   CustomText(
                     label: '?',
                     color: AppColors.notSelectedColor,
-                    fontSize: getFontSize(width * 0.2, size),
+                    fontSize: d.isTablet ? width * 0.14 : width * 0.2,
                   ),
                   CustomText(
                     label: label ?? 'Select Category',
-                    fontSize: getFontSize(width * 0.1, size),
+                    fontSize: d.isTablet ? width * 0.05 : width * 0.1,
                     color: AppColors.notSelectedColor,
                     textAlign: TextAlign.center,
                   ),

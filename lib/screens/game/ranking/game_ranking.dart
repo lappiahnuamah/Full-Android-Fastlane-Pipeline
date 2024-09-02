@@ -9,6 +9,7 @@ import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/utils/enums/game_enums.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/number_utils.dart';
+import 'package:savyminds/widgets/custom_text.dart';
 import 'package:savyminds/widgets/page_template.dart';
 
 import '../../../data/app_data.dart';
@@ -56,7 +57,7 @@ class _GameRankingState extends State<GameRanking> {
               )
             : game.gameRankings.isEmpty
                 ? const Center(
-                    child: Text('No data found'),
+                    child: CustomText(label: 'No data found'),
                   )
                 : Column(
                     children: [

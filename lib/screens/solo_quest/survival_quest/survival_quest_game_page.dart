@@ -95,9 +95,6 @@ class _SurvivalQuestGamePlayState extends State<SurvivalQuestGamePlay>
                 milliseconds: 400,
               ),
               curve: Curves.easeIn);
-          // gameProvider.addSelectedAnswer(
-          //     option: selectedAnswer,
-          //     questioinId: questionList[selectedIndex].id);
           if (selectedAnswer == null) {
             answerStreak = 0;
           }

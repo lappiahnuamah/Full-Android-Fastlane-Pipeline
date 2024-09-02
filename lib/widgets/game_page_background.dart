@@ -3,8 +3,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:savyminds/constants.dart';
 
 class GamePageBackground extends StatelessWidget {
-  const GamePageBackground({super.key, required this.icon});
+  const GamePageBackground({
+    super.key,
+    required this.icon,
+    this.questIcon,
+  });
   final String icon;
+  final String? questIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +35,8 @@ class GamePageBackground extends StatelessWidget {
 
         Positioned(
           top: d.pSH(379),
-          left: d.pSH(198),
+          left: d.isTablet ? null : d.pSH(198),
+          right: d.isTablet ? 0 : null,
           child: Opacity(
             opacity: 0.5,
             child: RotationTransition(
@@ -61,6 +67,7 @@ class GamePageBackground extends StatelessWidget {
             ),
           ),
         ),
+
         //Background Design
         Opacity(
           opacity: 0.85,
@@ -75,6 +82,24 @@ class GamePageBackground extends StatelessWidget {
             ),
           ),
         ),
+
+        if (questIcon != null)
+          Positioned(
+            top: d.pSH(340),
+            left: d.pSH(0),
+            child: Opacity(
+              opacity: 1,
+              child: RotationTransition(
+                turns: const AlwaysStoppedAnimation(-30 / 360),
+                child: SvgPicture.network(
+                  questIcon!,
+                  height: d.pSH(90),
+                  colorFilter:
+                      const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }

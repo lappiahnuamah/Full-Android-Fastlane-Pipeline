@@ -6,9 +6,11 @@ import 'package:savyminds/models/categories/category_level_model.dart';
 
 class CategoryProvider extends ChangeNotifier {
   List<CategoryModel> _categories = [];
+  List<CategoryModel> _searchedCategories = [];
   List<CategoryModel> _favoriteCategories = [];
 
   List<CategoryModel> get categories => _categories;
+  List<CategoryModel> get searchedCategories => _searchedCategories;
   List<CategoryModel> get favoriteCategories => _favoriteCategories;
 
   Map<int, CategoryLevelModel> _categoryLevels = {};
@@ -16,6 +18,23 @@ class CategoryProvider extends ChangeNotifier {
 //
   void setCategories(List<CategoryModel> categories) {
     _categories = categories;
+    _searchedCategories = categories;
+    notifyListeners();
+  }
+
+  void searchCategories(String c) {
+    if (c.isNotEmpty) {
+      String pattern = c.toLowerCase();
+      RegExp regExp = RegExp(pattern, caseSensitive: false);
+      final l = _categories
+          .where((category) => regExp.hasMatch(category.name.toLowerCase()))
+          .toList();
+
+      _searchedCategories = l;
+    } else {
+      _searchedCategories = _categories;
+    }
+
     notifyListeners();
   }
 
@@ -27,6 +46,7 @@ class CategoryProvider extends ChangeNotifier {
 //
   void addCategories(List<CategoryModel> categories) {
     _categories.addAll(categories);
+    _searchedCategories = _categories;
     notifyListeners();
   }
 

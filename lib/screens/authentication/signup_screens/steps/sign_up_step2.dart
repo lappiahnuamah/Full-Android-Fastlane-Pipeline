@@ -69,9 +69,12 @@ class _SignUpStep2State extends State<SignUpStep2> {
                 Form(
                   key: _secondSignUpFormKey,
                   child: Container(
-                    padding: EdgeInsets.only(
-                        left: d.pSW(25), right: d.pSW(25), top: d.pSH(4)),
+                    padding: d.isTablet
+                        ? EdgeInsets.symmetric(horizontal: size.width * 0.12)
+                        : EdgeInsets.only(
+                            left: d.pSW(25), right: d.pSW(25), top: d.pSH(4)),
                     child: Scaffold(
+                      backgroundColor: Colors.transparent,
                       body: Column(
                         children: [
                           Expanded(

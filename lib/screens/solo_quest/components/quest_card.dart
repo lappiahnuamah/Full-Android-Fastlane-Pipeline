@@ -5,7 +5,6 @@ import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_images.dart';
 import 'package:savyminds/screens/solo_quest/daily_training/daily_training.dart';
-import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/next_screen.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
@@ -15,11 +14,13 @@ class QuestCard extends StatelessWidget {
       required this.quest,
       this.isMultiCard = false,
       this.isDailyTraining = false,
-      required this.onTap});
+      required this.onTap,
+      this.iconHeroTag});
   final QuestModel quest;
   final bool isMultiCard;
   final bool isDailyTraining;
   final VoidCallback onTap;
+  final String? iconHeroTag;
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +29,21 @@ class QuestCard extends StatelessWidget {
       onTap: onTap,
       child: Stack(
         children: [
-          SvgPicture.asset(
-            quest.isLocked
-                ? AppImages.darkQuestCardSvg
-                : isMultiCard
-                    ? AppImages.redQuestCardSvg
-                    : AppImages.blueQuestCardSvg,
-            fit: BoxFit.fill,
-            width: double.infinity,
-            height: d.pSH(74),
+          Hero(
+            tag: iconHeroTag ?? 'Logo-${quest.name}',
+            child: SizedBox(
+              width: size.width,
+              child: SvgPicture.asset(
+                quest.isLocked
+                    ? AppImages.darkQuestCardSvg
+                    : isMultiCard
+                        ? AppImages.redQuestCardSvg
+                        : AppImages.blueQuestCardSvg,
+                fit: BoxFit.fill,
+                width: size.width,
+                height: d.isTablet ? d.pSW(80) : d.pSW(74),
+              ),
+            ),
           ),
           Container(
             width: double.infinity,
@@ -49,6 +56,7 @@ class QuestCard extends StatelessWidget {
                 child: SvgPicture.asset(
                   AppImages.closedLock,
                   fit: BoxFit.cover,
+                  height: d.isTablet ? d.pSW(13) : null,
                   colorFilter: const ColorFilter.mode(
                       Color(0xFF717582), BlendMode.srcIn),
                 ),
@@ -61,13 +69,15 @@ class QuestCard extends StatelessWidget {
                 child: Row(
                   children: [
                     SizedBox(
-                      height: d.pSH(51),
-                      width: d.pSH(59),
+                      height: d.isTablet ? d.pSH(61) : d.pSW(51),
+                      width: d.isTablet ? d.pSH(69) : d.pSW(59),
                       child: Stack(
                         children: [
                           SvgPicture.asset(
                             "assets/icons/quest_icon_container.svg",
                             fit: BoxFit.fill,
+                            height: d.isTablet ? d.pSH(61) : d.pSW(51),
+                            width: d.isTablet ? d.pSH(69) : d.pSW(59),
                             colorFilter: ColorFilter.mode(
                               quest.isLocked
                                   ? const Color(0xFF717582)
@@ -80,8 +90,13 @@ class QuestCard extends StatelessWidget {
                           Align(
                             child: isDailyTraining
                                 ? SvgPicture.asset(
-                                    "assets/icons/daily_training_icon.svg")
-                                : SvgPicture.network(quest.icon),
+                                    "assets/icons/daily_training_icon.svg",
+                                    height: d.isTablet ? d.pSH(35) : null,
+                                  )
+                                : SvgPicture.network(
+                                    quest.icon,
+                                    height: d.isTablet ? d.pSH(35) : null,
+                                  ),
                           )
                         ],
                       ),
@@ -146,7 +161,7 @@ class QuestCard extends StatelessWidget {
                           CustomText(
                             label: quest.subtitle,
                             fontWeight: FontWeight.w300,
-                            fontSize: getFontSize(12, size),
+                            fontSize: 12,
                           ),
                         ],
                       ),

@@ -4,7 +4,6 @@ import 'package:savyminds/constants.dart';
 import 'package:savyminds/models/game_key_model.dart';
 import 'package:savyminds/resources/app_colors.dart';
 import 'package:savyminds/resources/app_images.dart';
-import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
 
 class KeyCard extends StatelessWidget {
@@ -14,7 +13,6 @@ class KeyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -34,7 +32,7 @@ class KeyCard extends StatelessWidget {
               )
             : CustomText(
                 label: gameKey.amount.toString(),
-                fontSize: getFontSize(20, size),
+                fontSize: 20,
                 fontWeight: FontWeight.w500,
               ),
       ],

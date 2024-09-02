@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -6,11 +7,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/animations/lightening_animation.dart';
 import 'package:savyminds/constants.dart';
+import 'package:savyminds/data/shared_preference_values.dart';
 import 'package:savyminds/functions/categories/categories_functions.dart';
 import 'package:savyminds/models/categories/categories_model.dart';
 import 'package:savyminds/models/categories/category_level_model.dart';
 import 'package:savyminds/models/level_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
+import 'package:savyminds/providers/audio_provider.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
@@ -21,6 +24,7 @@ import 'package:savyminds/screens/categories/components/category_placeholder.dar
 import 'package:savyminds/screens/categories/components/level_card.dart';
 import 'package:savyminds/screens/categories/select_categoiries.dart';
 import 'package:savyminds/screens/solo_quest/training_mode/training_mode_game_page.dart';
+import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/func_new.dart';
 import 'package:savyminds/utils/next_screen.dart';
@@ -30,6 +34,8 @@ import 'package:savyminds/widgets/load_indicator.dart';
 import 'package:savyminds/widgets/page_template.dart';
 import 'package:savyminds/widgets/quest_icon_desc_card.dart';
 import 'package:savyminds/widgets/trasformed_button.dart';
+
+import '../../../animations/scaling_animation.dart';
 
 class TrainingMode extends StatefulWidget {
   const TrainingMode(
@@ -48,8 +54,8 @@ class TrainingMode extends StatefulWidget {
 class _TrainingModeState extends State<TrainingMode> {
   late CategoryProvider categoryProvider;
   late GameProvider gameProvider;
-  bool isLoading = false;
   bool questionsLoading = false;
+  late AudioProvider audioProvider;
 
   CategoryModel? selectedCategory;
   List levelList = [];
@@ -59,6 +65,7 @@ class _TrainingModeState extends State<TrainingMode> {
   void initState() {
     categoryProvider = context.read<CategoryProvider>();
     gameProvider = context.read<GameProvider>();
+    audioProvider = context.read<AudioProvider>();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       selectedCategory = widget.category;
@@ -70,15 +77,20 @@ class _TrainingModeState extends State<TrainingMode> {
   }
 
   getCategoryLevel() async {
-    setState(() {
-      isLoading = true;
-    });
-    await CategoryFunctions()
-        .getCategoryLevel(context, selectedCategory?.id ?? 0);
+    setState(() {});
+    final result = SharedPreferencesHelper.getString(
+        SharedPreferenceValues.categoryLevel +
+            (selectedCategory?.id ?? 0).toString());
+    lg("Category level from cache: $result");
 
-    setState(() {
-      isLoading = false;
-    });
+    if (result.isNotEmpty && result != "null") {
+      final level = CategoryLevelModel.fromJson(jsonDecode(result));
+      categoryProvider.setCategoryLevel(selectedCategory?.id ?? 0, level);
+    }
+
+    await CategoryFunctions()
+        .getCategoryLevel(context, selectedCategory?.id ?? 0)
+        .then((value) {});
   }
 
   @override
@@ -97,8 +109,8 @@ class _TrainingModeState extends State<TrainingMode> {
                   SizedBox(height: d.pSH(40)),
                   selectedCategory != null
                       ? SizedBox(
-                          height: 159.6,
-                          width: 187,
+                          height: d.isTablet ? d.pSW(179) : d.pSW(159.6),
+                          width: d.isTablet ? d.pSW(230) : d.pSW(187),
                           child: CategoryCard(
                             category: selectedCategory!,
                             hidePlay: true,
@@ -109,8 +121,8 @@ class _TrainingModeState extends State<TrainingMode> {
                             Padding(
                               padding: EdgeInsets.only(bottom: d.pSH(5)),
                               child: CategoryPlaceholder(
-                                height: 159,
-                                width: 187,
+                                height: d.pSW(159),
+                                width: d.pSW(187),
                                 label: 'Click here to select a category ',
                                 onTap: () async {
                                   final result = await nextScreen(
@@ -137,49 +149,40 @@ class _TrainingModeState extends State<TrainingMode> {
                                 },
                                 child: SvgPicture.asset(
                                   AppImages.randomIcon,
+                                  height: d.isTablet ? d.pSW(45) : null,
                                 ),
                               ),
                             )
                           ],
                         ),
                   SizedBox(height: d.pSH(30)),
-                  isLoading
-                      ? SizedBox(
-                          height: d.pSH(60),
-                          width: double.infinity,
-                          child: const Center(
-                            child: CircularProgressIndicator(
-                              color: AppColors.kPrimaryColor,
-                            ),
-                          ),
-                        )
-                      : Consumer<CategoryProvider>(
-                          builder: (context, catProv, chils) {
-                          final CategoryLevelModel? catLevel = catProv
-                              .getCategoryLevel(selectedCategory?.id ?? 0);
-                          return catLevel != null
-                              ? Wrap(
-                                  runSpacing: d.pSH(10),
-                                  spacing: d.pSW(15),
-                                  alignment: WrapAlignment.center,
-                                  children: [
-                                    ...List.generate(
-                                      catLevel.levels.length,
-                                      (index) {
-                                        final _level = catLevel.levels[index];
-                                        if (_level.isCurrentLevel) {
-                                          level = _level.name;
-                                        }
-                                        return LevelCard(
-                                          level: _level,
-                                          totalPoints: catLevel.totalPoints,
-                                        );
-                                      },
-                                    )
-                                  ],
-                                )
-                              : const SizedBox();
-                        }),
+                  Consumer<CategoryProvider>(
+                      builder: (context, catProv, chils) {
+                    final CategoryLevelModel? catLevel =
+                        catProv.getCategoryLevel(selectedCategory?.id ?? 0);
+                    return catLevel != null
+                        ? Wrap(
+                            runSpacing: d.pSW(10),
+                            spacing: d.isTablet ? d.pSW(20) : d.pSW(15),
+                            alignment: WrapAlignment.center,
+                            children: [
+                              ...List.generate(
+                                catLevel.levels.length,
+                                (index) {
+                                  final _level = catLevel.levels[index];
+                                  if (_level.isCurrentLevel) {
+                                    level = _level.name;
+                                  }
+                                  return LevelCard(
+                                    level: _level,
+                                    totalPoints: catLevel.totalPoints,
+                                  );
+                                },
+                              )
+                            ],
+                          )
+                        : const SizedBox();
+                  }),
                   SizedBox(height: d.pSH(20)),
                   RichText(
                       textAlign: TextAlign.center,
@@ -218,22 +221,27 @@ class _TrainingModeState extends State<TrainingMode> {
                   SizedBox(
                     height: d.pSH(30),
                   ),
-                  if (selectedCategory != null) const AvailableKeysWidget(),
+                  if (selectedCategory != null)
+                    const AvailableKeysWidget(
+                      showShop: false,
+                    ),
                   SizedBox(
-                    height: d.pSH(30),
+                    height: d.isTablet ? d.pSH(50) : d.pSH(30),
                   ),
                   if (selectedCategory != null)
-                    SizedBox(
-                      width: d.pSH(240),
-                      child: TransformedButton(
-                        onTap: () {
-                          getQuestions();
-                        },
-                        buttonColor: AppColors.kGameGreen,
-                        buttonText: ' START ',
-                        textColor: Colors.white,
-                        textWeight: FontWeight.bold,
-                        height: d.pSH(66),
+                    ScalingAnimationWidget(
+                      child: SizedBox(
+                        width: d.pSH(d.isTablet ? 340 : 240),
+                        child: TransformedButton(
+                          onTap: () {
+                            getQuestions();
+                          },
+                          buttonColor: AppColors.kGameGreen,
+                          buttonText: ' START ',
+                          textColor: Colors.white,
+                          textWeight: FontWeight.bold,
+                          height: d.pSH(d.isTablet ? 76 : 66),
+                        ),
                       ),
                     ),
                   SizedBox(height: d.pSH(16)),
@@ -279,14 +287,18 @@ class _TrainingModeState extends State<TrainingMode> {
         log('is daily training on init page: ${widget.isDailyTraining}');
 
         nextScreen(
-            context,
-            TrainingModeGamePage(
-                category: selectedCategory!,
-                questionList: result.questions,
-                swapQuestions: result.swapQuestions,
-                quest: widget.quest,
-                level: level,
-                isDailyTraining: widget.isDailyTraining));
+          context,
+          TrainingModeGamePage(
+              category: selectedCategory!,
+              questionList: result.questions,
+              swapQuestions: result.swapQuestions,
+              quest: widget.quest,
+              level: level,
+              isDailyTraining: widget.isDailyTraining),
+          TransitionType.combined,
+        ).then((value) {
+          audioProvider.startGameBackgroundMusic();
+        });
       }
     } else {
       Fluttertoast.showToast(

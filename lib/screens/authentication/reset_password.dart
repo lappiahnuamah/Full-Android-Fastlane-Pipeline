@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/auth/auth_functions.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/resources/app_gradients.dart';
 import 'package:savyminds/utils/validator.dart';
 import 'package:savyminds/widgets/custom_button.dart';
 import 'package:savyminds/widgets/custom_textfeild.dart';
@@ -15,9 +16,11 @@ import '../../widgets/default_snackbar.dart';
 import 'login.dart';
 
 class ResetPassword extends StatefulWidget {
-  const ResetPassword({Key? key, this.email, this.username}) : super(key: key);
+  const ResetPassword({Key? key, this.email, this.username, this.otp})
+      : super(key: key);
   final String? email;
   final String? username;
+  final String? otp;
 
   @override
   State<ResetPassword> createState() => _ResetPasswordState();
@@ -39,6 +42,7 @@ class _ResetPasswordState extends State<ResetPassword> {
     d.init(context);
     return PageTemplate(
       pageTitle: "Reset Password",
+      backgroundGradient: AppGradients.landingGradient,
       child: SafeArea(
         child: Stack(
           children: [
@@ -49,7 +53,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                 key: _passwordFormKey,
                 child: SingleChildScrollView(
                   child: Column(children: [
-                    ////////////////////////////////////////////////////////////////////
+                    ////////////////////////////////////////////////////////
                     //////////////(-Setting new password -)/////////////////
 
                     Text(
@@ -125,7 +129,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                       height: d.pSH(30),
                     ),
 
-
                     Text(
                       "Your password must have at least 8 characters | 1 uppercase letter |\n 1 lowercase letter | 1 number | 1 symbol",
                       textAlign: TextAlign.center,
@@ -155,8 +158,9 @@ class _ResetPasswordState extends State<ResetPassword> {
                                   .resetLoginPassword(
                                       context,
                                       passwordController.text.trim(),
-                                      widget.email!,
-                                      widget.username!,
+                                      widget.email ?? '',
+                                      widget.username ?? '',
+                                      widget.otp ?? '',
                                       confirmPasswordController.text.trim());
 
                               if (resetResponse == 201) {

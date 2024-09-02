@@ -22,6 +22,7 @@ class CategoryCard extends StatefulWidget {
     this.borderRadius,
     this.greyedOut = false,
     this.isDailyTraining = false,
+    this.isFavCategory = false,
   });
   final CategoryModel category;
   final int? index;
@@ -31,6 +32,8 @@ class CategoryCard extends StatefulWidget {
   final double? borderRadius;
   final bool greyedOut;
   final bool isDailyTraining;
+
+  final bool isFavCategory;
 
   @override
   State<CategoryCard> createState() => _CategoryCardState();
@@ -54,19 +57,22 @@ class _CategoryCardState extends State<CategoryCard> {
                 log('is daily training on card: ${widget.isDailyTraining}');
 
                 nextScreen(
-                    context,
-                    TrainingMode(
-                      category: widget.category,
-                      quest: soloQuestProvider.getQuestByName('Training Mode'),
-                      isDailyTraining: widget.isDailyTraining,
-                    ));
+                  context,
+                  TrainingMode(
+                    category: widget.category,
+                    quest: soloQuestProvider.getQuestByName('Training Mode'),
+                    isDailyTraining: widget.isDailyTraining,
+                  ),
+                  TransitionType.fade,
+                );
               } else {}
             }
           : null,
       child: Stack(
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: d.pSH(4)),
+            padding: EdgeInsets.symmetric(
+                horizontal: d.isTablet ? d.pSW(25) : d.pSW(4)),
             child: Transform(
               alignment: Alignment.center,
               transform: Matrix4.identity()
@@ -90,10 +96,10 @@ class _CategoryCardState extends State<CategoryCard> {
                     ),
                     if (widget.category.icon.isNotEmpty)
                       Positioned(
-                        left: -d.pSH(50),
+                        left: -d.pSW(50),
                         top: d.pSH(20),
                         child: RotationTransition(
-                          turns: const AlwaysStoppedAnimation(40 / 360),
+                          turns: AlwaysStoppedAnimation(d.pSW(40 / 360)),
                           child: SvgPicture.network(
                             widget.category.icon,
                             fit: BoxFit.cover,
@@ -125,20 +131,26 @@ class _CategoryCardState extends State<CategoryCard> {
                       children: [
                         if (widget.category.icon.isNotEmpty)
                           SizedBox(
-                            height: widget.iconSize ?? d.pSH(45),
-                            child: SvgPicture.network(
-                              widget.category.icon,
-                              fit: BoxFit.fitHeight,
-                              height: widget.iconSize,
-                            ),
-                          ),
+                              height: widget.iconSize ?? d.pSH(45),
+                              child: Hero(
+                                tag: widget.isFavCategory
+                                    ? 'Fav-category-Logo-${widget.category.name}'
+                                    : 'Category-Logo-${widget.category.name}',
+                                child: SvgPicture.network(
+                                  widget.category.icon,
+                                  fit: d.isTablet
+                                      ? BoxFit.fitWidth
+                                      : BoxFit.fitHeight,
+                                  height: widget.iconSize,
+                                ),
+                              )),
                         SizedBox(height: d.pSH(6)),
                         CustomText(
                           label: widget.category.name,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           textAlign: TextAlign.center,
-                          fontSize: widget.fontSize ?? d.pSH(14),
+                          fontSize: widget.fontSize ?? 13,
                         )
                       ],
                     ),
@@ -153,17 +165,21 @@ class _CategoryCardState extends State<CategoryCard> {
                             if (!(widget.category.isLocked ||
                                 widget.greyedOut)) {
                               nextScreen(
-                                  context,
-                                  TrainingMode(
-                                    category: widget.category,
-                                    quest: soloQuestProvider
-                                        .getQuestByName('Training Mode'),
-                                    isDailyTraining: widget.isDailyTraining,
-                                  ));
+                                context,
+                                TrainingMode(
+                                  category: widget.category,
+                                  quest: soloQuestProvider
+                                      .getQuestByName('Training Mode'),
+                                  isDailyTraining: widget.isDailyTraining,
+                                ),
+                                TransitionType.fade,
+                              );
                             } else {}
                           },
                           child: Padding(
-                            padding: EdgeInsets.all(d.pSH(8)),
+                            padding: EdgeInsets.symmetric(
+                                vertical: d.isTablet ? d.pSH(18) : d.pSH(8),
+                                horizontal: d.isTablet ? d.pSW(35) : d.pSW(8)),
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                   vertical: d.pSH(3), horizontal: d.pSW(5)),
@@ -181,7 +197,7 @@ class _CategoryCardState extends State<CategoryCard> {
                                         ? AppImages.openedLock
                                         : AppImages.playCategoryIcon,
                                     fit: BoxFit.cover,
-                                    height: d.pSH(10),
+                                    height: d.isTablet ? d.pSH(15) : d.pSH(10),
                                   ),
                                   SizedBox(width: d.pSW(5)),
                                   CustomText(
@@ -208,10 +224,13 @@ class _CategoryCardState extends State<CategoryCard> {
           //Lock
           if ((widget.category.isLocked))
             Padding(
-              padding: EdgeInsets.all(d.pSH(12)),
+              padding: EdgeInsets.symmetric(
+                  vertical: d.isTablet ? d.pSH(20) : d.pSH(12),
+                  horizontal: d.isTablet ? d.pSW(40) : d.pSW(12)),
               child: SvgPicture.asset(
                 AppImages.closedLock,
                 fit: BoxFit.cover,
+                height: d.isTablet ? d.pSH(20) : null,
               ),
             ),
         ],

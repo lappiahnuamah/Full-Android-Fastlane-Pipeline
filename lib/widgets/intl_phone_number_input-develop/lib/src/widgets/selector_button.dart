@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/resources/app_colors.dart';
 
-
 import '../../intl_phone_number_input.dart';
 import '../../intl_phone_number_input_test.dart';
 import '../models/country_model.dart';
@@ -40,6 +39,7 @@ class SelectorButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bright = Theme.of(context).brightness;
+    // Size size = MediaQuery.of(context).size;
     return selectorConfig.selectorType == PhoneInputSelectorType.DROPDOWN
         ? countries.isNotEmpty && countries.length > 1
             ? DropdownButtonHideUnderline(
@@ -75,10 +75,11 @@ class SelectorButton extends StatelessWidget {
               elevation: 0,
               shape: RoundedRectangleBorder(
                   side: BorderSide(
-                      color: bright == Brightness.dark
-                          ? AppColors.kDarkBorderColor
-                          : AppColors.kBorderColor,
-                      width: d.pSH(0.5),),
+                    color: bright == Brightness.dark
+                        ? AppColors.kDarkBorderColor
+                        : AppColors.kBorderColor,
+                    width: d.pSH(0.5),
+                  ),
                   borderRadius: BorderRadius.circular(d.pSH(4))),
               color: bright == Brightness.dark
                   ? AppColors.kDarkCardColor
@@ -118,8 +119,7 @@ class SelectorButton extends StatelessWidget {
                   textStyle: selectorTextStyle,
                 ),
               ),
-            )
-          );
+            ));
   }
 
   /// Converts the list [countries] to `DropdownMenuItem`

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:savyminds/providers/appsocket_provider.dart';
+import 'package:savyminds/providers/audio_provider.dart';
 import 'package:savyminds/providers/categories_provider.dart';
 import 'package:savyminds/providers/contest_provider.dart';
 import 'package:savyminds/providers/dark_theme_provider.dart';
@@ -13,6 +14,7 @@ import 'package:savyminds/providers/game_items_provider.dart';
 import 'package:savyminds/providers/game_metric_provider.dart';
 import 'package:savyminds/providers/game_provider.dart';
 import 'package:savyminds/providers/game_type_provider.dart';
+import 'package:savyminds/providers/records_provider.dart';
 import 'package:savyminds/providers/registration_provider.dart';
 import 'package:savyminds/providers/solo_quest_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
@@ -20,6 +22,15 @@ import 'package:savyminds/screens/authentication/splashscreen.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/theme_manager.dart';
 import 'firebase_options.dart';
+
+ class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+  }
+}
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,10 +40,14 @@ void main() async {
   SecurityContext.defaultContext
       .setTrustedCertificatesBytes(data.buffer.asUint8List());
 
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await SharedPreferencesHelper().init();
+
+   HttpOverrides.global = MyHttpOverrides();
+
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => UserDetailsProvider()),
@@ -41,11 +56,13 @@ void main() async {
     ChangeNotifierProvider(create: (_) => GameProvider()),
     ChangeNotifierProvider(create: (_) => GameMetricsProvider()),
     ChangeNotifierProvider(create: (_) => GameWebSocket()),
+    ChangeNotifierProvider(create: (_) => RecordsProvider()),
     ChangeNotifierProvider(create: (_) => CategoryProvider()),
     ChangeNotifierProvider(create: (_) => SoloQuestProvider()),
     ChangeNotifierProvider(create: (_) => ContestProvider()),
     ChangeNotifierProvider(create: (_) => GameItemsProvider()),
-    ChangeNotifierProvider(create: (_) => GameTypeProvider())
+    ChangeNotifierProvider(create: (_) => GameTypeProvider()),
+    ChangeNotifierProvider(create: (_)=> AudioProvider())
   ], child: const MyApp()));
 }
 

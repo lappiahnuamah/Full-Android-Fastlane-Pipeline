@@ -6,7 +6,10 @@ import 'package:savyminds/functions/auth/auth_functions.dart';
 import 'package:savyminds/functions/auth/profile_functions.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/resources/app_colors.dart';
+import 'package:savyminds/resources/app_gradients.dart';
 import 'package:savyminds/screens/bottom_nav/custom_bottom_nav.dart';
+import 'package:savyminds/screens/settings/personalization.dart';
+import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/utils/validator.dart';
 import 'package:savyminds/widgets/custom_button.dart';
 import 'package:savyminds/widgets/custom_text.dart';
@@ -14,8 +17,10 @@ import 'package:savyminds/widgets/custom_textfeild_with_label.dart';
 import 'package:savyminds/widgets/page_template.dart';
 
 class ChangeDisplayName extends StatefulWidget {
-  const ChangeDisplayName({super.key, required this.username});
+  const ChangeDisplayName(
+      {super.key, required this.username, this.fromSettingsPage = false});
   final String username;
+  final bool fromSettingsPage;
 
   @override
   State<ChangeDisplayName> createState() => _ChangeDisplayNameState();
@@ -35,13 +40,19 @@ class _ChangeDisplayNameState extends State<ChangeDisplayName> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return PopScope(
-      canPop: false,
+      canPop: widget.fromSettingsPage,
       child: PageTemplate(
           pageTitle: 'Change Display Name',
+          showBackBtn: widget.fromSettingsPage,
+          backgroundGradient: AppGradients.landingGradient,
           child: Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: d.pSW(25), vertical: d.pSH(16)),
+            padding: d.isTablet
+                ? EdgeInsets.symmetric(
+                    horizontal: size.width * 0.12, vertical: d.pSH(16))
+                : EdgeInsets.symmetric(
+                    horizontal: d.pSW(25), vertical: d.pSH(16)),
             child: Form(
               key: _nameFormKey,
               child: Column(
@@ -50,14 +61,14 @@ class _ChangeDisplayNameState extends State<ChangeDisplayName> {
                   CustomText(
                     label:
                         "Please choose a display name that will be visible to others. Make sure it's unique, appropriate, and reflects how you'd like to be identified.",
-                    fontSize: d.pSH(17),
+                    fontSize: 15,
                     fontWeight: FontWeight.w400,
                   ),
                   const SizedBox(height: 20),
                   ////////////////////////////////////////////////////
                   //////////////(- Email textfeild -)/////////////////
                   CustomTextFieldWithLabel(
-                    initialValue: widget.username,
+                    //initialValue: widget.username,
                     controller: usernameController,
                     labelText: 'Display Name',
                     hintText: "Enter display name",
@@ -94,24 +105,25 @@ class _ChangeDisplayNameState extends State<ChangeDisplayName> {
                             'Save',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: d.pSH(16),
+                                fontSize: getFontSize(14, size),
                                 fontWeight: FontWeight.w500),
                           ),
                   ),
                   SizedBox(height: d.pSH(40)),
-                  Align(
-                    child: InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(PageRouteBuilder(
-                              pageBuilder: (_, __, ___) =>
-                                  const CustomBottomNav()));
-                        },
-                        child: CustomText(
-                          label: 'Skip',
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.blueBird,
-                        )),
-                  ),
+                  if (!widget.fromSettingsPage)
+                    Align(
+                      child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(PageRouteBuilder(
+                                pageBuilder: (_, __, ___) =>
+                                    const Personalization()));
+                          },
+                          child: CustomText(
+                            label: 'Skip',
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.blueBird,
+                          )),
+                    ),
                 ],
               ),
             ),
@@ -130,18 +142,22 @@ class _ChangeDisplayNameState extends State<ChangeDisplayName> {
       final result = await Authentications().checkDisplayName(
           context: context, username: usernameController.text);
 
-      if (result) {
+      if (result == true) {
         final response = await ProfileFunctions().updateDisplayName(
             context: context, displayName: usernameController.text);
         if (response) {
           Fluttertoast.showToast(msg: 'Display name updated successfully');
           final userProvider = context.read<UserDetailsProvider>();
           userProvider.setDisplayName(usernameController.text);
-
-          Navigator.of(context).push(
-            PageRouteBuilder(
-                pageBuilder: (_, __, ___) => const CustomBottomNav()),
-          );
+          if (widget.fromSettingsPage) {
+            Fluttertoast.showToast(msg: 'Display name updated successfully');
+            Navigator.of(context).pop();
+          } else {
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                  pageBuilder: (_, __, ___) => const CustomBottomNav()),
+            );
+          }
         } else {
           Fluttertoast.showToast(msg: 'Failed to update display name');
         }

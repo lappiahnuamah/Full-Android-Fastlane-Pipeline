@@ -4,12 +4,13 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:savyminds/api_urls/auth_url.dart';
-import 'package:savyminds/utils/cache/save_secure.dart';
+import 'package:savyminds/data/shared_preference_values.dart';
+import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 
 class FCMFunctions {
   Future setFCMToken(String? token) async {
-    Map<String, String> allValues = await allSecureStorage();
-    String accessToken = allValues['accessToken'] ?? '';
+    String accessToken =
+        SharedPreferencesHelper.getString(SharedPreferenceValues.accessToken);
 
     try {
       final response = await http.post(

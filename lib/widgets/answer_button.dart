@@ -88,7 +88,8 @@ class _AnswerButtonState extends State<AnswerButton>
                             ? _scaleAnimation.value
                             : 1.0,
                         child: Container(
-                          width: d.getPhoneScreenWidth() * 0.7,
+                          width: d.getPhoneScreenWidth() *
+                              (d.isTablet ? 0.6 : 0.7),
                           constraints: BoxConstraints(minHeight: d.pSH(58)),
                           margin: const EdgeInsets.symmetric(vertical: 5),
                           child: TransformedButton(
@@ -104,14 +105,24 @@ class _AnswerButtonState extends State<AnswerButton>
                                 : null,
                             buttonText: widget.answer.text, // answer.text,
                             fontSize: widget.answer.text.length > 40
-                                ? 15
+                                ? d.isTablet
+                                    ? 12
+                                    : 15
                                 : widget.answer.text.length > 25
-                                    ? 17
-                                    : 19,
+                                    ? d.isTablet
+                                        ? 15
+                                        : 17
+                                    : d.isTablet
+                                        ? 17
+                                        : 19,
                             textWeight: FontWeight.w500,
                             isReversed: !widget.isReversed,
                             padding: EdgeInsets.symmetric(
                                 horizontal: d.pSH(10), vertical: d.pSH(5)),
+                            animateText: true,
+                            width: d.getPhoneScreenWidth() *
+                                (d.isTablet ? 0.6 : 0.7),
+                            // constraints: BoxConstraints(minHeight: d.pSH(58)),
                           ),
                         ));
                   }),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:savyminds/animations/bouncing_animation.dart';
+import 'package:savyminds/animations/marquee_list.dart';
 import 'package:savyminds/constants.dart';
 
 class SubmitPageBackground extends StatelessWidget {
@@ -13,22 +15,29 @@ class SubmitPageBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Positioned(
-          top: -d.pSH(5),
-          bottom: -d.pSH(60),
-          left: 0,
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(
-                7,
-                (index) => SvgPicture.network(
-                  gameIcon,
-                  colorFilter: const ColorFilter.mode(
-                      Color(0xFF525252), BlendMode.srcIn),
-                  height: d.pSH(70),
-                ),
-              ).toList()),
+        Positioned.fill(
+          child: Opacity(
+            opacity: 0.5,
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: MarqueeList(
+                children: List.generate(
+                  21,
+                  (index) => Padding(
+                    padding: EdgeInsets.only(bottom: d.isTablet ? 90 : 70),
+                    child: SvgPicture.network(
+                      gameIcon,
+                      colorFilter: const ColorFilter.mode(
+                          Color(0xFF525252), BlendMode.srcIn),
+                      height: d.pSH(d.isTablet ? 80 : 70),
+                    ),
+                  ),
+                ).toList(),
+                scrollDirection: Axis.vertical,
+                scrollDuration: const Duration(seconds: 3),
+              ),
+            ),
+          ),
         ),
 
 //Bouncing
@@ -42,7 +51,7 @@ class SubmitPageBackground extends StatelessWidget {
                 turns: const AlwaysStoppedAnimation(135 / 360),
                 child: SvgPicture.network(
                   icon,
-                  height: d.pSH(150),
+                  height: d.pSH(d.isTablet ? 170 : 150),
                   colorFilter:
                       const ColorFilter.mode(Colors.black54, BlendMode.srcIn),
                 ),

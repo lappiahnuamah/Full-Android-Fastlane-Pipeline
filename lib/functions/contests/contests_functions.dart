@@ -12,6 +12,7 @@ import 'package:savyminds/models/http_response_model.dart';
 import 'package:savyminds/models/solo_quest/game_type_rank_model.dart';
 import 'package:savyminds/models/solo_quest/quest_model.dart';
 import 'package:savyminds/providers/contest_provider.dart';
+import 'package:savyminds/providers/records_provider.dart';
 import 'package:savyminds/providers/user_details_provider.dart';
 import 'package:savyminds/utils/cache/shared_preferences_helper.dart';
 import 'package:savyminds/utils/connection_check.dart';
@@ -57,10 +58,28 @@ class ContestFunctions {
 
   Future<List<GameTypeRankModel>> getGameTypeRank(
       {required BuildContext context, required String gameType}) async {
-    final hasConnection = await ConnectionCheck().hasConnection();
     try {
+      final hasConnection = await ConnectionCheck().hasConnection();
+
+      RecordsProvider recordsProvider =
+          Provider.of<RecordsProvider>(context, listen: false);
+
       if (hasConnection) {
+        recordsProvider.setRanksIsLoading(isLoading: true, gameType: gameType);
+
         if (context.mounted) {
+          final result = SharedPreferencesHelper.getString(
+              SharedPreferenceValues.soloAndMultiRanks + gameType);
+
+          if (result.isNotEmpty && result != "null") {
+            final rankList = ((jsonDecode(result)['results'] ?? []) as List)
+                .map((e) => GameTypeRankModel.fromJson(e))
+                .toList();
+            recordsProvider.contestQuestRank(
+                contestRanks: rankList, gameType: gameType);
+            recordsProvider.setRanksIsLoading(
+                isLoading: false, gameType: gameType);
+          }
           String accessToken =
               Provider.of<UserDetailsProvider>(context, listen: false)
                   .getAccessToken();
@@ -76,10 +95,18 @@ class ContestFunctions {
           );
           log('game type: ${response.body}');
           if (response.statusCode == 200) {
-            return ((jsonDecode(response.body)['results'] ?? []) as List)
-                .map((e) => GameTypeRankModel.fromJson(e))
-                .toList();
+            SharedPreferencesHelper.setString(
+                key: SharedPreferenceValues.soloAndMultiRanks + gameType,
+                value: response.body);
+            final ranksList =
+                ((jsonDecode(response.body)['results'] ?? []) as List)
+                    .map((e) => GameTypeRankModel.fromJson(e))
+                    .toList();
+            recordsProvider.contestQuestRank(
+                contestRanks: ranksList, gameType: gameType);
           } else {
+            recordsProvider.setRanksIsLoading(
+                isLoading: false, gameType: gameType);
             return [];
           }
         }

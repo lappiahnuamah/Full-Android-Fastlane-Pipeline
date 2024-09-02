@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:savyminds/constants.dart';
 import 'package:savyminds/functions/contests/contests_functions.dart';
-import 'package:savyminds/models/solo_quest/game_type_rank_model.dart';
+import 'package:savyminds/providers/records_provider.dart';
 import 'package:savyminds/screens/records/record_ranks.dart';
 import 'package:savyminds/utils/func.dart';
 import 'package:savyminds/widgets/custom_text.dart';
@@ -14,9 +15,6 @@ class ContestRanks extends StatefulWidget {
 }
 
 class _ContestRanksState extends State<ContestRanks> {
-  List<GameTypeRankModel> categoryRanks = [];
-  bool isLoading = true;
-
   @override
   void initState() {
     super.initState();
@@ -28,59 +26,59 @@ class _ContestRanksState extends State<ContestRanks> {
         .getGameTypeRank(context: context, gameType: "Multiplayer");
     if (!mounted) return;
 
-    setState(() {
-      categoryRanks = result;
-      isLoading = false;
-    });
     return result;
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Column(children: [
-      Expanded(
-        child: Column(
-          children: [
-            ContestRankTableHeader(size: size),
-            SizedBox(height: d.pSH(10)),
-            Expanded(
-              child: Builder(builder: (context) {
-                if (isLoading) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
+    return Consumer<RecordsProvider>(builder: (context, value, child) {
+      return Column(children: [
+        Expanded(
+          child: Column(
+            children: [
+              ContestRankTableHeader(size: size),
+              SizedBox(height: d.pSH(10)),
+              Expanded(
+                child: Builder(builder: (context) {
+                  if (value.multiQuestRankIsLoading &&
+                      value.multiQuestRanks.isEmpty) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
 
-                if (categoryRanks.isEmpty) {
-                  return Center(
-                    child: Text('No data found'),
-                  );
-                }
+                  if (!value.multiQuestRankIsLoading &&
+                      value.multiQuestRanks.isEmpty) {
+                    return Center(
+                      child: CustomText(label: 'No data found'),
+                    );
+                  }
 
-                return SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      ...List.generate(categoryRanks.length, (index) {
-                        final rank = categoryRanks[index];
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: d.pSH(10.0)),
-                          child: ContestRankRow(
-                            level: rank.level,
-                            rank: rank.rank.toString(),
-                            name: rank.gameTypeName,
-                          ),
-                        );
-                      }),
-                    ],
-                  ),
-                );
-              }),
-            )
-          ],
+                  return SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        ...List.generate(value.multiQuestRanks.length, (index) {
+                          final rank = value.multiQuestRanks[index];
+                          return Padding(
+                            padding: EdgeInsets.only(bottom: d.pSH(10.0)),
+                            child: ContestRankRow(
+                              level: rank.level,
+                              rank: rank.rank.toString(),
+                              name: rank.gameTypeName,
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                  );
+                }),
+              )
+            ],
+          ),
         ),
-      ),
-    ]);
+      ]);
+    });
   }
 }
 
