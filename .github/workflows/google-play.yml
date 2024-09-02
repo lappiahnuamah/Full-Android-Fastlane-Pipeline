@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - DevOps_SavyMinds
+
 jobs:
   deploy:
     runs-on: self-hosted
@@ -29,8 +30,7 @@ jobs:
           bundle exec fastlane get_version_info
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Increment Version Code and Update Version Name
         id: increment_version
@@ -58,8 +58,9 @@ jobs:
           currentSuffix=${currentVersionName#"$versionNamePrefix"}
           newSuffix=$((currentSuffix + 1))
           newVersionName="${versionNamePrefix}${newSuffix}"
-          
-          sed -i "s/flutter.versionCode=[0-9]\+/flutter.versionCode=$currentVersionCode/" version.properties
+          newVersionCode=$((currentVersionCode + 1))
+
+          sed -i "s/flutter.versionCode=[0-9]\+/flutter.versionCode=$newVersionCode/" version.properties
           sed -i "s/flutter.versionName=[^ ]\+/flutter.versionName=$newVersionName/" version.properties
 
           echo "Updated version.properties:"
@@ -69,21 +70,27 @@ jobs:
           git commit -m "chore: increment version code to $newVersionCode and update version name to $newVersionName"
           git push origin DevOps_SavyMinds
 
-          echo "::set-output name=new_version_code::$currentVersionCode"
+          echo "::set-output name=new_version_code::$newVersionCode"
           echo "::set-output name=new_version_name::$newVersionName"
 
+      - name: Clear GITHUB_TOKEN
+        run: echo "GITHUB_TOKEN=" >> $GITHUB_ENV
+
       - name: Authenticate gh CLI
-        run: echo ${{ secrets.ANROID_SAVYMINDS_TOKEN}} | gh auth login --with-token
+        run: echo ${{ secrets.ANDROID_SAVYMINDS_TOKEN }} | gh auth login --with-token
         env:
-          GITHUB_TOKEN: ${{ secrets.ANROID_SAVYMINDS_TOKEN}}
+          GITHUB_TOKEN: ${{ secrets.ANDROID_SAVYMINDS_TOKEN }}
 
       - name: Update GitHub Secret with New Version Code
         run: |
           echo "Updating GitHub secret with new version code"
           gh secret set VERSION_CODE -b"${{ steps.increment_version.outputs.new_version_code }}"
         env:
-          GITHUB_TOKEN: ${{ secrets.ANROID_SAVYMINDS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ANDROID_SAVYMINDS_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+
+      - name: Reassign GITHUB_TOKEN
+        run: echo "GITHUB_TOKEN=${{ secrets.ANDROID_SAVYMINDS_TOKEN }}" >> $GITHUB_ENV
 
       - name: Set up Java
         uses: actions/setup-java@v3
@@ -120,7 +127,7 @@ jobs:
             -keystore $KEYSTORE_PATH \
             -storepass ${{ secrets.KEYSTORE_STORE_PASSWORD }} \
             app-release.aab ${{ secrets.KEYSTORE_KEY_ALIAS }}
-      # Comment out for now
+
       - name: Verify the APK
         run: |
           cd build/app/outputs/bundle/release
