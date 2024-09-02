@@ -71,12 +71,13 @@ jobs:
 
           echo "::set-output name=new_version_code::$currentVersionCode"
           echo "::set-output name=new_version_name::$newVersionName"
+
       - name: Update GitHub Secret with New Version Code
         run: |
           echo "Updating GitHub secret with new version code"
           gh secret set VERSION_CODE -b"${{ steps.increment_version.outputs.new_version_code }}"
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+          GITHUB_TOKEN: ${{ secrets.ANROID_SAVYMINDS_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
 
       - name: Set up Java
