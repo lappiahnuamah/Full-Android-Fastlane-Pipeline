@@ -35,9 +35,9 @@ jobs:
       - name: Increment Version Code and Update Version Name
         id: increment_version
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git pull origin uat
+          git config --local user.email "lappiahnuamahfbc1999@gmail.com"
+          git config --local user.name "lappiahnuamah"
+          git pull origin DevOps_savyMinds
 
           cd android
           currentVersionCode=$(grep -o 'flutter.versionCode\s*=\s*[0-9]\+' version.properties | cut -d'=' -f2 | tr -d ' ')
