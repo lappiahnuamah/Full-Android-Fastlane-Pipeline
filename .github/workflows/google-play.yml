@@ -75,7 +75,6 @@ jobs:
 
       - name: Clear GITHUB_TOKEN
         run: echo "GITHUB_TOKEN=" >> $GITHUB_ENV
-
       - name: Authenticate gh CLI
         run: echo ${{ secrets.TOKEN_GITHUB }} | gh auth login --with-token
         env:
