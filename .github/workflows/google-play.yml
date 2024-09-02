@@ -37,7 +37,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git pull origin DevOps_savyMinds
+          git pull origin DevOps_SavyMinds
 
           cd android
           currentVersionCode=$(grep -o 'flutter.versionCode\s*=\s*[0-9]\+' version.properties | cut -d'=' -f2 | tr -d ' ')
@@ -119,7 +119,7 @@ jobs:
         run: |
           cd build/app/outputs/bundle/release
           jarsigner -verify -verbose -certs app-release.aab
-          
+
       - name: Deploy to Google Play
         run: |
           cd android
