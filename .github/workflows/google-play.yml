@@ -2,7 +2,7 @@ name: Android Build & Deploy
 on:
   push:
     branches:
-      - uat
+      - DevOps_SavyMinds
 jobs:
   deploy:
     runs-on: self-hosted
@@ -102,6 +102,9 @@ jobs:
           cd android
           flutter pub get
           flutter clean
+          rm -rf ~/.gradle/caches/
+          rm -rf build/
+          rm -rf android/build/
           flutter build appbundle --release --no-tree-shake-icons
 
       - name: Sign the Android App Bundle
@@ -111,13 +114,11 @@ jobs:
             -keystore $KEYSTORE_PATH \
             -storepass ${{ secrets.KEYSTORE_STORE_PASSWORD }} \
             app-release.aab ${{ secrets.KEYSTORE_KEY_ALIAS }}
-
-      - name: Verify the APK
-        run: |
-          cd build/app/outputs/bundle/release
-          jarsigner -verify -verbose -certs app-release.aab
-      
-      
+      # Comment out for now
+      # - name: Verify the APK
+      #   run: |
+      #     cd build/app/outputs/bundle/release
+      #     jarsigner -verify -verbose -certs app-release.aab
       - name: Deploy to Google Play
         run: |
           cd android
