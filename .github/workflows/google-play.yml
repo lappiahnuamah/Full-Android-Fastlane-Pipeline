@@ -38,7 +38,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git pull origin uat
+          git pull origin DevOps_SavyMinds
 
           cd android
           currentVersionCode=$(grep -o 'flutter.versionCode\s*=\s*[0-9]\+' version.properties | cut -d'=' -f2 | tr -d ' ')
@@ -68,7 +68,7 @@ jobs:
 
           git add version.properties
           git commit -m "chore: increment version code to $newVersionCode and update version name to $newVersionName"
-          git push origin uat
+          git push origin DevOps_SavyMinds
 
           echo "::set-output name=new_version_code::$currentVersionCode"
           echo "::set-output name=new_version_name::$newVersionName"
